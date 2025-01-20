@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -11,4 +12,4 @@ Route::prefix('users')->middleware('auth:api')->group(function () {
     Route::delete('{id}', 'UserController@destroy');
 });
 */
-Route::apiResource('users', UserController::class);
+
