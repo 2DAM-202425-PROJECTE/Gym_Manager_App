@@ -53,19 +53,4 @@ class UserController extends Controller
         return response()->json(null, 204);
     }
 
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('YourAppName')->plainTextToken;
-            return response()->json(['token' => $token], 200);
-        }
-
-        return response()->json(['message' => 'Unauthorized'], 401);
-    }
 }

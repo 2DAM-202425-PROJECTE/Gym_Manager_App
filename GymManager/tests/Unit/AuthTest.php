@@ -4,13 +4,14 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_can_login_with_correct_credentials()
     {
 
@@ -31,7 +32,7 @@ class AuthTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_cannot_login_with_incorrect_credentials()
     {
         // Intentar hacer login con credenciales incorrectas

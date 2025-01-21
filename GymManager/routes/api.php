@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 */
 
-Route::post('login', [UserController::class, 'login']);
+Route::post('login', [AuthController::class, 'login']);
 
 Route::apiResource('users', UserController::class);
