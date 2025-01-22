@@ -1,7 +1,7 @@
 export default function Registre() {
     return (
         <div>
-        <h1>Registre</h1>
+        <h1>formulari Registre</h1>
         </div>
     )
 }
