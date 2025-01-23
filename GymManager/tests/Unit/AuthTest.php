@@ -34,15 +34,13 @@ class AuthTest extends TestCase
     /** @test */
     public function it_cannot_login_with_incorrect_credentials()
     {
-        // Intentar hacer login con credenciales incorrectas
         $loginData = [
-            'email' => 'nonexistentuser@example.com',  // Usuario inexistente
-            'password' => 'wrongpassword',             // Contraseña incorrecta
+            'email' => 'nonexistentuser@example.com',
+            'password' => 'wrongpassword',
         ];
 
         $response = $this->postJson('/api/login', $loginData);
 
-        // Verificar que el login falla y que el status es 401 (no autorizado)
         $response->assertStatus(401);
         $response->assertJson([
             'message' => 'Unauthorized',
