@@ -53,6 +53,14 @@ class UserCrudTest extends TestCase
                 'name' => $user->name,
                 'email' => $user->email,
         ]);
+    }    /** @test */
+    public function it_cant_show_a_user_inexistent()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->getJson('/api/users/' . $user->id+1);
+
+        $response->assertStatus(404);
     }
     #[Test]    public function it_can_update_a_user()
     {
