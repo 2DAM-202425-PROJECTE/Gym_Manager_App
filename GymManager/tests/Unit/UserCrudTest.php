@@ -16,6 +16,7 @@ class UserCrudTest extends TestCase
             'name' => 'Florian',
             'email' => 'florian@example.com',
             'password' => 'Contraseña',
+            'role' => 'admin'
         ];
 
         $response = $this->postJson('/api/users', $data);
@@ -24,7 +25,7 @@ class UserCrudTest extends TestCase
         $response->assertJson([
                 'name' => 'Florian',
                 'email' => 'florian@example.com',
-                'role' => 'client',
+                'role' => 'admin'
         ]);
         $this->assertDatabaseHas('users', [
             'email' => 'florian@example.com',

@@ -19,7 +19,9 @@ class UserController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8',
+            'role' => 'nullable|string|in:client,admin,trainer'
         ]);
+        $validated['role'] = $validated['role'] ?? 'client';
 
         $user = User::create($validated);
 

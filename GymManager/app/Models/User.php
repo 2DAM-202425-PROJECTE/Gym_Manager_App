@@ -11,6 +11,13 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 
+enum Role: string
+{
+    case CLIENT = 'client';
+    case ADMIN = 'admin';
+    case TRAINER = 'trainer';
+}
+
 class User extends Authenticatable
 {
     use HasApiTokens;
@@ -34,11 +41,11 @@ class User extends Authenticatable
         'role',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    public function isRole(Role $role): bool
+    {
+        return $this->role === $role->value;
+    }
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -46,20 +53,10 @@ class User extends Authenticatable
         'two_factor_secret',
     ];
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array<int, string>
-     */
     protected $appends = [
         'profile_photo_url',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
