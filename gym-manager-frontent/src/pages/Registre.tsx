@@ -83,7 +83,7 @@ export default function Registre() {
         </form>
         <p className="text-center text-[#70FFEA] mt-6">
           Ja tens un compte?{' '}
-          <a href="/login" className="font-semibold text-[#5DC0BF] hover:underline">
+          <a href="/" className="font-semibold text-[#5DC0BF] hover:underline">
             Inicia sessió
           </a>
         </p>
