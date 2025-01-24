@@ -4,9 +4,9 @@ namespace Tests\Unit;
 
 use App\Models\Membresia;
 use App\Models\User;
-use PHPUnit\Framework\TestCase;
-
-class MembresiaTest extends TestCase
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
+class MembreTest extends TestCase
 {
     protected $user;
 
@@ -16,7 +16,9 @@ class MembresiaTest extends TestCase
 
         $this->user = User::factory()->create();
     }
-    public function it_creates_a_membresia_successfully()
+
+    #[Test]
+    public function it_creates_a_membresia_successfully(): void
     {
         $data = [
             'user_id' => $this->user->id,
@@ -36,9 +38,13 @@ class MembresiaTest extends TestCase
 
         $membresia = Membresia::latest()->first();
         $this->assertNotEmpty($membresia->qr_data);
+
+        $resposedos = $this->getJson(`/api/users/${$this->user->id}/membresias`);
+
+        $resposedos->assertStatus(404);
     }
 
-    /** @test */
+    #[Test]
     public function it_requires_user_id_to_create_membresia()
     {
         // Datos incompletos (falta user_id)

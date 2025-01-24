@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +13,11 @@ class Membresia extends Model
     protected $fillable = [
         'user_id',
         'fecha_fin',
-        'estado',
         'qr_data',
     ];
+
+    public function getFechaFinAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
 }

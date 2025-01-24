@@ -45,6 +45,10 @@ class User extends Authenticatable
     {
         return $this->role === $role->value;
     }
+    public function membresia()
+    {
+        return $this->hasOne(Membresia::class);
+    }
 
     protected $hidden = [
         'password',

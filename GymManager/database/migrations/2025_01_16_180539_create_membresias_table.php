@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->date('fecha_fin');
-            $table->boolean('estado');
             $table->string('qr_data');
             $table->timestamps();
         });

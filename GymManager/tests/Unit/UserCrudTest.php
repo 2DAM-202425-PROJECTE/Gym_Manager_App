@@ -53,8 +53,8 @@ class UserCrudTest extends TestCase
                 'name' => $user->name,
                 'email' => $user->email,
         ]);
-    }    /** @test */
-    public function it_cant_show_a_user_inexistent()
+    }
+    #[Test] public function it_cant_show_a_user_inexistent()
     {
         $user = User::factory()->create();
 
