@@ -1,8 +1,8 @@
 <?php
-// app/Http/Controllers/MembresiaController.php
 namespace App\Http\Controllers;
 
 use App\Models\Membresia;
+use BaconQrCode\Encoder\QrCode;
 use Illuminate\Http\Request;
 
 class MembresiaController extends Controller
@@ -13,11 +13,20 @@ class MembresiaController extends Controller
             'user_id' => 'required|exists:users,id',
             'fecha_fin' => 'required|date',
             'estado' => 'required|boolean',
-            'qr_data' => 'required|string',
         ]);
 
-        // Crear la membresía
-        $membresia = Membresia::create($request->all());
+        // Generar los datos del QR antes de crear la membresía
+        $qrData = QrCode::format('png')
+            ->size(300)
+            ->generate("User ID: {$request->user_id}, Fecha Fin: {$request->fecha_fin}");
+
+        // Crear la membresía con todos los datos, incluido el QR
+        $membresia = Membresia::create([
+            'user_id' => $request->user_id,
+            'fecha_fin' => $request->fecha_fin,
+            'estado' => $request->estado,
+            'qr_data' => base64_encode($qrData), // Guardar el QR codificado en base64
+        ]);
 
         return response()->json($membresia, 201);
     }
