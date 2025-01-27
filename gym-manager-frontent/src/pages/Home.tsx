@@ -308,31 +308,7 @@ const GymDashboard = () => {
               </button>
             </div>
 
-            {/* Notificaciones */}
-            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold mb-4 flex items-center">
-                <Bell className="mr-2 text-blue-400" /> Notificaciones
-              </h2>
-              <ul className="space-y-4">
-                <li className="flex items-start bg-gray-700 p-3 rounded-lg">
-                  <TrendingUp className="mr-3 text-green-400 flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold">¡Has subido de nivel!</h3>
-                    <p className="text-sm text-gray-400">Felicidades por tu progreso constante.</p>
-                  </div>
-                </li>
-                <li className="flex items-start bg-gray-700 p-3 rounded-lg">
-                  <Heart className="mr-3 text-red-400 flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold">Recuerda hidratarte</h3>
-                    <p className="text-sm text-gray-400">Mantén una buena hidratación durante tus entrenamientos.</p>
-                  </div>
-                </li>
-              </ul>
-              <button className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-colors">
-                Ver Todas
-              </button>
-            </div>
+           
           </div>
         </div>
       </main>
@@ -370,6 +346,7 @@ const GymDashboard = () => {
               <a href="#" className="text-blue-400 hover:text-blue-300 transition-colors">
                 Instagram
               </a>
+              
               <a href="#" className="text-blue-400 hover:text-blue-300 transition-colors">
                 Twitter
               </a>
