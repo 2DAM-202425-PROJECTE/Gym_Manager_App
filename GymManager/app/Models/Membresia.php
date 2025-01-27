@@ -16,6 +16,11 @@ class Membresia extends Model
         'qr_data',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function getFechaFinAttribute($value)
     {
         return Carbon::parse($value)->format('Y-m-d');
