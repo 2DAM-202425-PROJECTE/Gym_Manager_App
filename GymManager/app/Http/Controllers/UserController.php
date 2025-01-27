@@ -13,13 +13,24 @@ class UserController extends Controller
         return User::all();
     }
 
+    public function membresia($id){
+        $user = User::findOrFail($id);
+        $memb = $user->membresias;
+        if ($memb->isEmpty() || $memb == null) {
+            return response()->json(['message' => 'No tiene membresias'], 404);
+        }
+        return response()->json($user->membresias);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8',
+            'role' => 'nullable|string|in:client,admin,trainer'
         ]);
+        $validated['role'] = $validated['role'] ?? 'client';
 
         $user = User::create($validated);
 
@@ -53,19 +64,4 @@ class UserController extends Controller
         return response()->json(null, 204);
     }
 
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('YourAppName')->plainTextToken;
-            return response()->json(['token' => $token], 200);
-        }
-
-        return response()->json(['message' => 'Unauthorized'], 401);
-    }
 }

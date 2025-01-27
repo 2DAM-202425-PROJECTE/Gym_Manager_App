@@ -3,19 +3,20 @@ namespace Tests\Unit;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class UserCrudTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_create_a_user()
+    #[Test]    public function it_can_create_a_user()
     {
         $data = [
             'name' => 'Florian',
             'email' => 'florian@example.com',
             'password' => 'Contraseña',
+            'role' => 'admin'
         ];
 
         $response = $this->postJson('/api/users', $data);
@@ -24,13 +25,13 @@ class UserCrudTest extends TestCase
         $response->assertJson([
                 'name' => 'Florian',
                 'email' => 'florian@example.com',
+                'role' => 'admin'
         ]);
         $this->assertDatabaseHas('users', [
             'email' => 'florian@example.com',
         ]);
     }
-    /** @test */
-    public function it_can_list_users()
+    #[Test]    public function it_can_list_users()
     {
         User::factory()->count(3)->create();
 
@@ -40,8 +41,7 @@ class UserCrudTest extends TestCase
         $response->assertJsonCount(3);
     }
 
-    /** @test */
-    public function it_can_show_a_user()
+    #[Test]    public function it_can_show_a_user()
     {
         $user = User::factory()->create();
 
@@ -53,8 +53,8 @@ class UserCrudTest extends TestCase
                 'name' => $user->name,
                 'email' => $user->email,
         ]);
-    }    /** @test */
-    public function it_cant_show_a_user_inexistent()
+    }
+    #[Test] public function it_cant_show_a_user_inexistent()
     {
         $user = User::factory()->create();
 
@@ -62,8 +62,7 @@ class UserCrudTest extends TestCase
 
         $response->assertStatus(404);
     }
-    /** @test */
-    public function it_can_update_a_user()
+    #[Test]    public function it_can_update_a_user()
     {
         $user = User::factory()->create();
         $newData = [
@@ -85,7 +84,7 @@ class UserCrudTest extends TestCase
             'email' => 'updated@example.com',
         ]);
     }
-    /** @test */
+    /**test*/
     public function it_can_delete_a_user()
     {
         $user = User::factory()->create();
@@ -98,7 +97,5 @@ class UserCrudTest extends TestCase
             'id' => $user->id,
         ]);
     }
-
-
 
 }
