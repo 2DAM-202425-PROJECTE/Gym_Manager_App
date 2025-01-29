@@ -8,6 +8,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import Profile from './pages/Profile';
 import Pago from './pages/Pago';
 import { UserProvider } from './context/userContext';
+import Admin from './pages/Admin';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/profile" element={<Profile />} />
           <Route path='/pago' element={<Pago />} />
+          <Route path='/admin' element={<Admin />} />
       </Routes>
     </div>
     </UserProvider>

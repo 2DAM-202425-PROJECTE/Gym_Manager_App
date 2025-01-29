@@ -16,8 +16,16 @@ export default function Login() {
   const handleClick = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const user = await login({ email: name, password: password }) as User;
+
+    if (user.error) return;
+    console.log(user);
+
     setUser(user);
-    navigate('/');
+
+    if(user.role === 'admin') {
+      navigate('/admin');
+      return;
+    }else navigate('/');
 
   }
 
