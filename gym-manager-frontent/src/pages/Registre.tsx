@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
 import { TextFieldNormal } from "../components/textFields/TextFieldNormal";
+import { register } from '../api/user/auth';
+import { User } from '../type/user';
+import { UseUser } from '../customHooks/useUser';
+import { useNavigate } from 'react-router-dom';
 
 export default function Registre() {
   const [nom, setName] = useState('');
   const [correu, setCorreu] = useState('');
   const [contrasenya, setPassword] = useState('');
   const [confirmContrasenya, setConfirmContrasenya] = useState('');
+  const { setUser } = UseUser();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (contrasenya !== confirmContrasenya) {
       alert('Les contrasenyes no coincideixen');
       return;
     }
-    // Lògica de registre
-    console.log({ nom, correu, contrasenya });
+    
+    const user = await register({ name: nom, email: correu, password: contrasenya }) as User;
+    setUser(user);
+    navigate('/');
   };
 
   return (

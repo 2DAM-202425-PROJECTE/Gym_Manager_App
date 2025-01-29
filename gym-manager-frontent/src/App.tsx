@@ -7,11 +7,13 @@ import Home from './pages/Home';
 import ForgotPassword from './pages/ForgotPassword';
 import Profile from './pages/Profile';
 import Pago from './pages/Pago';
+import { UserProvider } from './context/userContext';
 
 function App() {
 
   return (
-    <div>
+    <UserProvider>
+      <div>
        <Routes>
           <Route index element={<Home />}/>
           <Route path="/login" element={<Login />} />
@@ -21,6 +23,7 @@ function App() {
           <Route path='/pago' element={<Pago />} />
       </Routes>
     </div>
+    </UserProvider>
     )
 }
 
