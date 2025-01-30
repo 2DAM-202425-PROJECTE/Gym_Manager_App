@@ -22,6 +22,9 @@ export default function Registre() {
     try{
 
     const user = await register({ name: nom, email: correu, password: contrasenya }) as User;
+
+    if(user.error) return;
+
     setUser(user);
     navigate('/');
     }catch(error){

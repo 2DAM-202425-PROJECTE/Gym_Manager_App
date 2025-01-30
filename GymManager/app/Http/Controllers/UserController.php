@@ -15,11 +15,11 @@ class UserController extends Controller
 
     public function membresia($id){
         $user = User::findOrFail($id);
-        $memb = $user->membresias;
-        if ($memb->isEmpty() || $memb == null) {
+        $memb = $user->membresia;
+        if ($memb === null) {
             return response()->json(['message' => 'No tiene membresias'], 404);
         }
-        return response()->json($user->membresias);
+        return response()->json($user->membresia);
     }
 
     public function store(Request $request)
