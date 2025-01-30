@@ -16,4 +16,9 @@ class Tarifa extends Model
         'meses',
     ];
 
+
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
+    }
 }
