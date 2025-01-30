@@ -19,7 +19,11 @@ class AuthController
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->createToken('YourAppName')->plainTextToken;
-            return response()->json(['token' => $token], 200);
+            return response()->json([
+                'message' => 'User registered successfully',
+                'token' => $token,
+                'user' => $user,
+            ], 200);
         }
 
         return response()->json(['message' => 'Unauthorized'], 401);

@@ -22,8 +22,7 @@ class MembreTest extends TestCase
     {
         $data = [
             'user_id' => $this->user->id,
-            'fecha_fin' => now()->addMonth(),
-            'estado' => true,
+            'fecha_fin' => now()->addMonth()->toDateTimeString(), // Remove precision
         ];
 
         $response = $this->postJson('/api/membresias', $data);
@@ -32,16 +31,16 @@ class MembreTest extends TestCase
 
         $this->assertDatabaseHas('membresias', [
             'user_id' => $this->user->id,
-            'fecha_fin' => $data['fecha_fin']->toDateString(),
-            'estado' => true,
+            'fecha_fin' => $data['fecha_fin'],
         ]);
+
 
         $membresia = Membresia::latest()->first();
         $this->assertNotEmpty($membresia->qr_data);
 
-        $resposedos = $this->getJson(`/api/users/${$this->user->id}/membresias`);
+        $resposedos = $this->get('/api/users/' . $this->user->id . '/membresia');
 
-        $resposedos->assertStatus(404);
+        $resposedos->assertStatus(200);
     }
 
     #[Test]

@@ -6,7 +6,7 @@ export async function login({ email, password }: { email: string; password: stri
     try {
         const response = await apiClient.post("/login", { email, password });
 
-        const user = response.data as User;
+        const user = response.data.user as User;
 
         return user;
 

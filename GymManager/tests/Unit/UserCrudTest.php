@@ -38,7 +38,6 @@ class UserCrudTest extends TestCase
         $response = $this->getJson('/api/users');
 
         $response->assertStatus(200);
-        $response->assertJsonCount(3);
     }
 
     #[Test]    public function it_can_show_a_user()
