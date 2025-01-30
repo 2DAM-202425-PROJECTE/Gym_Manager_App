@@ -12,20 +12,16 @@ export default function Login() {
   const navigate = useNavigate();
   const { setUser } = UseUser();
 
-  const handleClick = async (e : React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const user = await login({ email: name, password: password }) as User;
-
-    if (user.error) return;
-    console.log(user);
-
-    setUser(user);
-
-    if(user.role === 'admin') {
-      navigate('/admin');
-      return;
-    }else navigate('/');
-
+  const handleClick = async (e: React.FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      const user = await login({ email: name, password: password });
+      
+      setUser(user);
+      navigate('/');
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
