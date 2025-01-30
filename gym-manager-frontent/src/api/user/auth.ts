@@ -2,7 +2,6 @@ import apiClient from "../prefijo";
 import { User } from "../../type/user";
 
 export async function login({ email, password }: { email: string; password: string }) {
-
     try {
         const response = await apiClient.post("/login", { email, password });
 

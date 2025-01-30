@@ -10,4 +10,7 @@ export type User = {
     two_factor_confirmed_at: string | null;
     role: string;
     profile_photo_url: string;
+    // isNew?: boolean;
   };
+
+  

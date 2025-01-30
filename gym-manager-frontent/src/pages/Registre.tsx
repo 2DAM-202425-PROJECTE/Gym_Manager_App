@@ -19,10 +19,14 @@ export default function Registre() {
       alert('Les contrasenyes no coincideixen');
       return;
     }
-    
+    try{
+
     const user = await register({ name: nom, email: correu, password: contrasenya }) as User;
     setUser(user);
     navigate('/');
+    }catch(error){
+      console.error(error);
+    }
   };
 
   return (

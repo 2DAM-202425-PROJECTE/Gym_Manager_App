@@ -4,14 +4,13 @@ import { login } from "../api/user/auth";
 import { useNavigate } from "react-router-dom";
 import { UseUser } from "../customHooks/useUser";
 import { User } from "../type/user";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { setUser } = UseUser()
-
-
+  const { setUser } = UseUser();
 
   const handleClick = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,7 +18,7 @@ export default function Login() {
     setUser(user);
     navigate('/');
 
-  }
+  };
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-br from-[#092756] to-[#670d10]">
