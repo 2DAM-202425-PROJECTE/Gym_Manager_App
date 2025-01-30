@@ -5,7 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { UseUser } from "../customHooks/useUser";
 import { User } from "../type/user";
 
+type LoginResponse = User | { error: string };
+
+
 export default function Login() {
+
+
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -15,14 +20,13 @@ export default function Login() {
 
   const handleClick = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const user = await login({ email: name, password: password }) as User;
+    const response = await login({ email: name, password: password }) as LoginResponse;
 
-    if (user.error) return;
-    console.log(user);
+    if ("error" in response) return;
 
-    setUser(user);
+    setUser(response);
 
-    if(user.role === 'admin') {
+    if(response.role === 'admin') {
       navigate('/admin');
       return;
     }else navigate('/');
