@@ -2,22 +2,21 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
+use App\Models\Membresia;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Membresia>
- */
 class MembresiaFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Membresia::class;
+
     public function definition(): array
     {
         return [
-            //
+            'user_id' => User::factory(),
+            'fecha_fin' => $this->faker->dateTimeBetween('now', '+1 year'),
+            'qr_data' => Str::uuid()->toString(),
         ];
     }
 }
