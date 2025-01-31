@@ -44,6 +44,8 @@ const GestionUsuarios: React.FC = () => {
     contrasenya: "",
   })
   const [editingId, setEditingId] = useState<number | null>(null)
+  const [showConfirm, setShowConfirm] = useState<number | null>(null)
+  const [error, setError] = useState<string>("")
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -52,13 +54,22 @@ const GestionUsuarios: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Validación: Verificar que todos los campos estén llenos
+    if (!nuevoUsuario.nombre || !nuevoUsuario.correu || !nuevoUsuario.contrasenya) {
+      setError("Por favor, completa todos los campos.")
+      return
+    }
+
     const newUsuario: Usuario = {
       id_usuari: Date.now(),
       ...nuevoUsuario,
       fecha_de_registre: new Date().toISOString().split("T")[0],
     }
+
     setUsuarios((prev) => [...prev, newUsuario])
     setNuevoUsuario({ nombre: "", correu: "", rol: "client", contrasenya: "" })
+    setError("") // Limpiar mensaje de error si la validación es exitosa
   }
 
   const handleEdit = (id: number) => {
@@ -72,6 +83,11 @@ const GestionUsuarios: React.FC = () => {
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
     const { name, value } = e.target
     setUsuarios(usuarios.map((user) => (user.id_usuari === id ? { ...user, [name]: value } : user)))
+  }
+
+  const handleDelete = (id: number) => {
+    setUsuarios(usuarios.filter((usuario) => usuario.id_usuari !== id))
+    setShowConfirm(null)
   }
 
   const userStats = {
@@ -105,6 +121,10 @@ const GestionUsuarios: React.FC = () => {
               <p className="text-3xl font-bold">{userStats.entrenadores}</p>
             </div>
           </div>
+
+          {/* Mostrar error si algún campo está vacío */}
+          {error && <p className="text-red-600 mb-4">{error}</p>}
+
           <form onSubmit={handleSubmit} className="mb-6">
             <div className="grid grid-cols-2 gap-4">
               <input
@@ -136,12 +156,16 @@ const GestionUsuarios: React.FC = () => {
                 placeholder="Contraseña"
                 className="border p-2 rounded"
               />
-              <button type="submit" className="bg-[#092756] text-white px-4 py-2 rounded hover:bg-[#0b132b] col-span-2">
+              <button
+                type="submit"
+                className="bg-[#092756] text-white px-4 py-2 rounded hover:bg-[#0b132b] col-span-2"
+              >
                 Añadir Usuario
               </button>
             </div>
           </form>
         </div>
+
         <div>
           <h3 className="text-xl font-bold mb-4 text-[#092756]">Lista de Usuarios</h3>
           <div className="overflow-x-auto">
@@ -207,18 +231,24 @@ const GestionUsuarios: React.FC = () => {
                       {editingId === usuario.id_usuari ? (
                         <button
                           onClick={() => handleSave(usuario.id_usuari)}
-                          className="text-green-600 hover:text-green-800"
+                          className="bg-green-500 text-white px-4 py-1 rounded mr-2 hover:bg-green-600"
                         >
                           Guardar
                         </button>
                       ) : (
                         <button
                           onClick={() => handleEdit(usuario.id_usuari)}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="bg-blue-500 text-white px-4 py-1 rounded mr-2 hover:bg-blue-600"
                         >
                           Editar
                         </button>
                       )}
+                      <button
+                        onClick={() => setShowConfirm(usuario.id_usuari)}
+                        className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                      >
+                        Eliminar
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -227,9 +257,31 @@ const GestionUsuarios: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Confirmación de eliminación */}
+      {showConfirm !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <p className="mb-4 text-lg">¿Estás seguro de que quieres eliminar este usuario?</p>
+            <div>
+              <button
+                onClick={() => handleDelete(showConfirm)}
+                className="bg-red-500 text-white px-4 py-2 rounded mr-2 hover:bg-red-600"
+              >
+                Eliminar
+              </button>
+              <button
+                onClick={() => setShowConfirm(null)}
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
 export default GestionUsuarios
-

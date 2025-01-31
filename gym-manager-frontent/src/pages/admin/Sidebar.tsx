@@ -48,7 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
-        {isExpanded && <span className="ml-2 text-xl font-bold">Gym Admin</span>}
+        {isExpanded && <span className="ml-2 text-xl font-bold">GymManager Admin</span>}
       </div>
       <nav>
         {menuItems.map((item) => (
