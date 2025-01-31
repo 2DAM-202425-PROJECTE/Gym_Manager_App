@@ -6,7 +6,12 @@ import { UseUser } from "../customHooks/useUser";
 import { User } from "../type/user";
 import { toast } from "react-toastify";
 
+type LoginResponse = User | { error: string };
+
+
 export default function Login() {
+
+
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -16,18 +21,17 @@ export default function Login() {
 
   const handleClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const user = await login({ email: name, password: password });
-      setUser(user);
-      toast.success("Inici de sessio correcte");
-      navigate('/');
-    } catch (error: any) {
-      if (error.message === "Credenciales incorrectas. Verifica tu usuario y contraseña.") {
-        toast.error("Nom d'usuari o contrasenya incorrecta");
-      } else {
-        toast.error(error.message);
-      }
-    }
+    const response = await login({ email: name, password: password }) as LoginResponse;
+
+    if ("error" in response) return;
+
+    setUser(response);
+
+    if(response.role === 'admin') {
+      navigate('/admin');
+      return;
+    }else navigate('/');
+
   }
 
   return (

@@ -6,8 +6,12 @@ import { UseUser } from '../customHooks/useUser';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+type RegisterResponse = User | { error: string };
+
+
 export default function Registre() {
   const [nom, setName] = useState('');
+  const [cognom, setCognom] = useState('');
   const [correu, setCorreu] = useState('');
   const [contrasenya, setPassword] = useState('');
   const [confirmContrasenya, setConfirmContrasenya] = useState('');
@@ -16,25 +20,16 @@ export default function Registre() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (contrasenya !== confirmContrasenya) {
-      alert('Les contrasenyes no coincideixen');
+    const  nom_complet = nom + " " + cognom;
+    
+    const response = await register({ name: nom_complet, email: correu, password: contrasenya, confirmPassword: confirmContrasenya }) as RegisterResponse;
+
+    if ('error' in response) {
       return;
     }
 
-    try {
-      const user = await register({ name: nom, email: correu, password: contrasenya }) as User;
-      setUser(user);
-      toast.success("Registre completat correctament");
-      navigate('/');
-    } catch (error: any) {
-      if (error.message === "Correu electronic no valid") {
-        toast.error("Correu electronic no valid");
-      } else if (error.message === "Ja existeix un compte amb este email") {
-        toast.error("Ja existeix un compte amb este email");
-      } else {
-        toast.error(error.message);
-      }
-    }
+    setUser(response);
+    navigate('/');
   };
 
   return (
@@ -42,7 +37,11 @@ export default function Registre() {
       <div className="bg-transparent w-96 p-8 rounded-lg">
         <h1 className="text-white text-center text-2xl font-bold mb-6">Crea el teu compte</h1>
         <form onSubmit={handleSubmit}>
-          <TextFieldNormal value={nom} placeholder="Nom d'usuari" setValue={setName}></TextFieldNormal>
+          <div className='flex gap-4'> 
+            <TextFieldNormal value={nom} placeholder="Nom" setValue={setName}></TextFieldNormal>
+            <TextFieldNormal value={cognom} placeholder="Cognom" setValue={setCognom}></TextFieldNormal>
+
+          </div>
           <TextFieldNormal value={correu} placeholder="Correu electrònic" setValue={setCorreu}></TextFieldNormal>
           <TextFieldNormal value={contrasenya} placeholder="Contrasenya" setValue={setPassword} Constrasenya={true}></TextFieldNormal>
           <TextFieldNormal value={confirmContrasenya} placeholder="Confirma la contrasenya" setValue={setConfirmContrasenya} Constrasenya={true}></TextFieldNormal>
