@@ -9,11 +9,14 @@ import Profile from './pages/Profile';
 import Pago from './pages/Pago';
 import { UserProvider } from './context/userContext';
 import DashboardAdmin from './pages/admin/DashboardAdmin';
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18n'; 
 
 function App() {
 
   return (
-    <UserProvider>
+   <I18nextProvider i18n={i18n}>
+     <UserProvider>
       <div>
        <Routes>
           <Route index element={<Home />}/>
@@ -26,6 +29,7 @@ function App() {
       </Routes>
     </div>
     </UserProvider>
+   </I18nextProvider>
     )
 }
 
