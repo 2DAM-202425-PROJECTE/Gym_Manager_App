@@ -5,8 +5,12 @@ import { User } from '../type/user';
 import { UseUser } from '../customHooks/useUser';
 import { useNavigate } from 'react-router-dom';
 
+type RegisterResponse = User | { error: string };
+
+
 export default function Registre() {
   const [nom, setName] = useState('');
+  const [cognom, setCognom] = useState('');
   const [correu, setCorreu] = useState('');
   const [contrasenya, setPassword] = useState('');
   const [confirmContrasenya, setConfirmContrasenya] = useState('');
@@ -19,12 +23,16 @@ export default function Registre() {
       alert('Les contrasenyes no coincideixen');
       return;
     }
+
+    const  nom_complet = nom + " " + cognom;
     
-    const user = await register({ name: nom, email: correu, password: contrasenya }) as User;
+    const response = await register({ name: nom_complet, email: correu, password: contrasenya }) as RegisterResponse;
 
-    if(user.error) return;
+    if ('error' in response) {
+      return;
+    }
 
-    setUser(user);
+    setUser(response);
     navigate('/');
   };
 
@@ -33,7 +41,11 @@ export default function Registre() {
       <div className="bg-transparent w-96 p-8 rounded-lg">
         <h1 className="text-white text-center text-2xl font-bold mb-6">Crea el teu compte</h1>
         <form onSubmit={handleSubmit}>
-          <TextFieldNormal value={nom} placeholder="Nom d'usuari" setValue={setName}></TextFieldNormal>
+          <div className='flex gap-4'> 
+            <TextFieldNormal value={nom} placeholder="Nom" setValue={setName}></TextFieldNormal>
+            <TextFieldNormal value={cognom} placeholder="Cognom" setValue={setCognom}></TextFieldNormal>
+
+          </div>
           <TextFieldNormal value={correu} placeholder="Correu electrònic" setValue={setCorreu}></TextFieldNormal>
           <TextFieldNormal value={contrasenya} placeholder="Contrasenya" setValue={setPassword} Constrasenya={true}></TextFieldNormal>
           <TextFieldNormal value={confirmContrasenya} placeholder="Confirma la contrasenya" setValue={setConfirmContrasenya} Constrasenya={true}></TextFieldNormal>
