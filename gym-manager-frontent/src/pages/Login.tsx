@@ -10,19 +10,25 @@ export default function Login() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { setUser } = UseUser();
+  const { setUser } = UseUser()
+
+
 
   const handleClick = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
       const user = await login({ email: name, password: password });
-      
       setUser(user);
+      toast.success("Inici de sessio correcte");
       navigate('/');
     } catch (error: any) {
-      toast.error(error.message);
+      if (error.message === "Credenciales incorrectas. Verifica tu usuario y contraseña.") {
+        toast.error("Nom d'usuari o contrasenya incorrecta");
+      } else {
+        toast.error(error.message);
+      }
     }
-  };
+  }
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-br from-[#092756] to-[#670d10]">

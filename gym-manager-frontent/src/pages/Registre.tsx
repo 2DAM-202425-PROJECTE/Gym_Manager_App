@@ -4,6 +4,7 @@ import { register } from '../api/user/auth';
 import { User } from '../type/user';
 import { UseUser } from '../customHooks/useUser';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function Registre() {
   const [nom, setName] = useState('');
@@ -19,16 +20,20 @@ export default function Registre() {
       alert('Les contrasenyes no coincideixen');
       return;
     }
-    try{
 
-    const user = await register({ name: nom, email: correu, password: contrasenya }) as User;
-
-    if(user.error) return;
-
-    setUser(user);
-    navigate('/');
-    }catch(error){
-      console.error(error);
+    try {
+      const user = await register({ name: nom, email: correu, password: contrasenya }) as User;
+      setUser(user);
+      toast.success("Registre completat correctament");
+      navigate('/');
+    } catch (error: any) {
+      if (error.message === "Correu electronic no valid") {
+        toast.error("Correu electronic no valid");
+      } else if (error.message === "Ja existeix un compte amb este email") {
+        toast.error("Ja existeix un compte amb este email");
+      } else {
+        toast.error(error.message);
+      }
     }
   };
 
