@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { DefaultButton } from '../components/buttons/buttonDefault';
 import { SelectLanguage } from '../components/buttons/SelectLanguage';
+import { toast } from 'react-toastify';
 
 type RegisterResponse = User | { error: string };
 
@@ -17,23 +18,17 @@ export default function Registre() {
   const [contrasenya, setPassword] = useState('');
   const [confirmContrasenya, setConfirmContrasenya] = useState('');
   const { setUser } = UseUser();
-  
+
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (contrasenya !== confirmContrasenya) {
-      alert(t('registre.error.password_mismatch'));
-      return;
-    }
-
-    const nom_complet = `${nom} ${cognom}`;
+    const  nom_complet = nom + " " + cognom;
     
-    const response = await register({ name: nom_complet, email: correu, password: contrasenya }) as RegisterResponse;
+    const response = await register({ name: nom_complet, email: correu, password: contrasenya, confirmPassword: confirmContrasenya }) as RegisterResponse;
 
     if ('error' in response) {
-      alert(t(`registre.error.${response.error}`));
       return;
     }
 
