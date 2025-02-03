@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { UseUser } from "../customHooks/useUser";
 import { User } from "../type/user";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 type LoginResponse = User | { error: string };
 
@@ -30,7 +31,14 @@ export default function Login() {
     if(response.role === 'admin') {
       navigate('/admin');
       return;
-    }else navigate('/');
+    }else {
+      const user_id = response.id
+      
+      axios.get("")
+
+      navigate('/')
+    
+    };
 
   }
 

@@ -8,6 +8,7 @@ export async function login({ email, password }: { email: string; password: stri
         const user = response.data.user as User;
 
         toast.success('Inici de sessio correcte');
+        
         return user;
     } catch (error: any) {
         if (error.response) {
