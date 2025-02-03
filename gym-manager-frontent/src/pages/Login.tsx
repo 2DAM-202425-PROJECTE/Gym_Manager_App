@@ -7,6 +7,7 @@ import { User } from "../type/user";
 import { useTranslation } from "react-i18next";
 import { DefaultButton } from "../components/buttons/buttonDefault";
 import { SelectLanguage } from "../components/buttons/SelectLanguage";
+import axios from "axios";
 
 type LoginResponse = User | { error: string };
 
@@ -34,7 +35,14 @@ export default function Login() {
     if(response.role === 'admin') {
       navigate('/admin');
       return;
-    }else navigate('/');
+    }else {
+      const user_id = response.id
+      
+      axios.get("")
+
+      navigate('/')
+    
+    };
 
   }
 
