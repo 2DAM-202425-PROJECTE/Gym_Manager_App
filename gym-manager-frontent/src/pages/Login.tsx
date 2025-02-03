@@ -35,7 +35,7 @@ export default function Login() {
   }
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-[#092756] to-[#670d10]">
+    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-deep_blau to-granate">
       <div className="bg-transparent w-96 p-8 rounded-lg">
         <h1 className="text-white text-center text-2xl font-bold mb-6">Login</h1>
         <form onSubmit={(e) => handleClick(e)}>
@@ -43,7 +43,7 @@ export default function Login() {
           <TextFieldNormal value={password} placeholder="Constrasenya" setValue={setPassword} Constrasenya={true}></TextFieldNormal>
           <button
             type="submit"
-            className="w-full text-white text-center py-3 rounded-lg bg-gradient-to-b from-[#6eb6de] to-[#4a77d4] shadow-md hover:shadow-lg transition-shadow mb-4"
+            className="w-full text-white text-center py-3 rounded-lg bg-gradient-to-b from-blau_clar to-[#4a77d4] shadow-md hover:shadow-lg transition-shadow mb-4"
           >
             Login
           </button>
