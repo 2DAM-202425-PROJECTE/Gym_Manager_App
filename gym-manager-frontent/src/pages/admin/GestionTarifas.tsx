@@ -23,6 +23,7 @@ const GestionTarifas: React.FC = () => {
   const [showConfirm, setShowConfirm] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [filtro, setFiltro] = useState<{ precio?: number; meses?: number }>({})
 
   // Filtrar las tarifas según el filtro

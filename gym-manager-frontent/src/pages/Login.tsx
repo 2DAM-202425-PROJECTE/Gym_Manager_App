@@ -36,7 +36,8 @@ export default function Login() {
       navigate('/admin');
       return;
     }else {
-      const user_id = response.id
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const user_id = response.id as number;
       
       axios.get("")
 

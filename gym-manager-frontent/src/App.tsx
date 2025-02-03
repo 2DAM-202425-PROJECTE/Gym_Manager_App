@@ -8,7 +8,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import Profile from './pages/Profile';
 import Pago from './pages/Pago';
 import { UserProvider } from './context/userContext';
-import { Bounce, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 import DashboardAdmin from './pages/admin/DashboardAdmin';
 import { I18nextProvider } from 'react-i18next';
