@@ -7,7 +7,6 @@ import { User } from "../type/user";
 import { useTranslation } from "react-i18next";
 import { DefaultButton } from "../components/buttons/buttonDefault";
 import { SelectLanguage } from "../components/buttons/SelectLanguage";
-import { toast } from "react-toastify";
 
 type LoginResponse = User | { error: string };
 
