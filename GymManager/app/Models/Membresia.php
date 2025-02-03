@@ -21,6 +21,10 @@ class Membresia extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
+    }
     public function getFechaFinAttribute($value)
     {
         return Carbon::parse($value)->format('Y-m-d');

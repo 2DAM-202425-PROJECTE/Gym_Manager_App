@@ -4,6 +4,7 @@ import { login } from "../api/user/auth";
 import { useNavigate } from "react-router-dom";
 import { UseUser } from "../customHooks/useUser";
 import { User } from "../type/user";
+import { toast } from "react-toastify";
 
 type LoginResponse = User | { error: string };
 
@@ -18,7 +19,7 @@ export default function Login() {
 
 
 
-  const handleClick = async (e : React.FormEvent<HTMLFormElement>) => {
+  const handleClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const response = await login({ email: name, password: password }) as LoginResponse;
 

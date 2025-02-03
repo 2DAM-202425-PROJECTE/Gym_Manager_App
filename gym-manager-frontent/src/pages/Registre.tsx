@@ -4,6 +4,7 @@ import { register } from '../api/user/auth';
 import { User } from '../type/user';
 import { UseUser } from '../customHooks/useUser';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 type RegisterResponse = User | { error: string };
 
@@ -19,14 +20,9 @@ export default function Registre() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (contrasenya !== confirmContrasenya) {
-      alert('Les contrasenyes no coincideixen');
-      return;
-    }
-
     const  nom_complet = nom + " " + cognom;
     
-    const response = await register({ name: nom_complet, email: correu, password: contrasenya }) as RegisterResponse;
+    const response = await register({ name: nom_complet, email: correu, password: contrasenya, confirmPassword: confirmContrasenya }) as RegisterResponse;
 
     if ('error' in response) {
       return;
