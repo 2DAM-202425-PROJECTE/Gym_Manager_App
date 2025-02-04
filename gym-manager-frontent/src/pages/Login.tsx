@@ -4,7 +4,7 @@ import { login } from "../api/user/auth";
 import { useNavigate } from "react-router-dom";
 import { UseUser } from "../customHooks/useUser";
 import { User } from "../type/user";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import axios from "axios";
 
 type LoginResponse = User | { error: string };
@@ -33,11 +33,24 @@ export default function Login() {
       return;
     }else {
       const user_id = response.id
-      
-      axios.get("")
 
-      navigate('/')
-    
+      // Check if the user has a membership
+      try{
+        const response = await axios.get(`/users/${user_id.toString()}/membresia`);
+        
+        console.log(response);
+
+        if(response.data){
+          throw new Error('No tens cap membresia');
+        }
+
+        navigate('/');
+
+      }catch(error){
+        navigate('/pago');
+
+      }
+
     };
 
   }
