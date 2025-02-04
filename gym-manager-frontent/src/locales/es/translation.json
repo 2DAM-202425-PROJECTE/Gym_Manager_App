@@ -1,0 +1,27 @@
+{
+    "login": {
+        "title": "Iniciar sesión",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "submit": "Iniciar sesión",
+        "forgot": "¿Has olvidado la contraseña?",
+        "register": "Regístrate",
+        "error": {
+            "email": "El correo electrónico no es válido",
+            "password": "La contraseña es demasiado corta"
+        }
+    },
+    "registre": {
+        "title": "Crea tu cuenta",
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "submit": "Regístrate",
+        "login": "Iniciar sesión",
+        "error": {
+            "name": "El nombre es demasiado corto",
+            "email": "El correo electrónico no es válido",
+            "password": "La contraseña es demasiado corta"
+        }
+    }
+}

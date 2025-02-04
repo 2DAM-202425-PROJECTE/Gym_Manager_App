@@ -4,10 +4,12 @@ import { register } from '../api/user/auth';
 import { User } from '../type/user';
 import { UseUser } from '../customHooks/useUser';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { DefaultButton } from '../components/buttons/buttonDefault';
+import { SelectLanguage } from '../components/buttons/SelectLanguage';
 import { toast } from 'react-toastify';
 
 type RegisterResponse = User | { error: string };
-
 
 export default function Registre() {
   const [nom, setName] = useState('');
@@ -16,6 +18,8 @@ export default function Registre() {
   const [contrasenya, setPassword] = useState('');
   const [confirmContrasenya, setConfirmContrasenya] = useState('');
   const { setUser } = UseUser();
+
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,27 +39,23 @@ export default function Registre() {
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-br from-[#092756] to-[#670d10]">
       <div className="bg-transparent w-96 p-8 rounded-lg">
-        <h1 className="text-white text-center text-2xl font-bold mb-6">Crea el teu compte</h1>
-        <form onSubmit={handleSubmit}>
+        <h1 className="text-white text-center text-2xl font-bold mb-6">{t('registre.title')}</h1>
+        <form>
           <div className='flex gap-4'> 
-            <TextFieldNormal value={nom} placeholder="Nom" setValue={setName}></TextFieldNormal>
-            <TextFieldNormal value={cognom} placeholder="Cognom" setValue={setCognom}></TextFieldNormal>
-
+            <TextFieldNormal value={nom} placeholder={t('registre.name')} setValue={setName}></TextFieldNormal>
+            <TextFieldNormal value={cognom} placeholder={t('registre.surname')} setValue={setCognom}></TextFieldNormal>
           </div>
-          <TextFieldNormal value={correu} placeholder="Correu electrònic" setValue={setCorreu}></TextFieldNormal>
-          <TextFieldNormal value={contrasenya} placeholder="Contrasenya" setValue={setPassword} Constrasenya={true}></TextFieldNormal>
-          <TextFieldNormal value={confirmContrasenya} placeholder="Confirma la contrasenya" setValue={setConfirmContrasenya} Constrasenya={true}></TextFieldNormal>
-          <button
-            type="submit"
-            className="w-full text-white text-center py-3 rounded-lg bg-gradient-to-b from-[#6eb6de] to-[#4a77d4] shadow-md hover:shadow-lg transition-shadow"
-          >
-            Registra't
-          </button>
+          <TextFieldNormal value={correu} placeholder={t('registre.email')} setValue={setCorreu}></TextFieldNormal>
+          <TextFieldNormal value={contrasenya} placeholder={t('registre.password')} setValue={setPassword} Constrasenya={true}></TextFieldNormal>
+          <TextFieldNormal value={confirmContrasenya} placeholder={t('registre.confirm_password')} setValue={setConfirmContrasenya} Constrasenya={true}></TextFieldNormal>
+          <DefaultButton text= {t('registre.submit')} action={handleSubmit}></DefaultButton>
           <p className="text-white text-center mt-4">
-            Ja tens un compte? <a href="/login" className="text-blue-400 hover:underline">Inicia sessió</a>
+            {t('registre.already_have_account')} <a href="/login" className="text-blue-400 hover:underline">{t('registre.login')}</a>
           </p>
         </form>
       </div>
+      <SelectLanguage></SelectLanguage>
+
     </div>
   );
 }

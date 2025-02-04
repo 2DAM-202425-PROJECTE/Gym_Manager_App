@@ -1,15 +1,14 @@
-"use client"
-
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Calendar, Check, Info, ArrowRight, Zap } from "lucide-react"
+import apiClient from "../api/prefijo"
 
-const plans = [
-  { duration: 1, price: 59.99, color: "from-blue-800 to-blue-600" },
-  { duration: 3, price: 54.99, color: "from-blue-700 to-blue-500" },
-  { duration: 6, price: 49.99, color: "from-blue-600 to-blue-400" },
-  { duration: 12, price: 44.99, color: "from-blue-500 to-blue-300" },
-]
+type Tarifa = {
+  id: number;
+  nombre: string;
+  precio: number;
+  meses: number;
+}
 
 const features = [
   "Acceso 24/7 a todas las instalaciones",
@@ -24,6 +23,17 @@ export default function GymPricing() {
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null)
   const [showComparison, setShowComparison] = useState(false)
 
+  const [plans, setPlans] = useState<Tarifa[]>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await apiClient.get("/tarifas",);
+      const tarifas = response.data as Tarifa[];
+      setPlans(tarifas);
+    };
+    fetchData();
+  }, [])
+  
   return (
     <div className="py-12 bg-[#0b132b] min-h-screen text-white px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -42,34 +52,34 @@ export default function GymPricing() {
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {plans.map((plan, index) => (
             <motion.div
-              key={plan.duration}
+              key={plan.meses}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <div
                 className={`flex flex-col justify-between h-full bg-[#1c2541] border-2 rounded-lg transition-all duration-300 ${
-                  selectedPlan === plan.duration ? "border-white scale-105" : "border-[#1c2541] hover:border-[#092756]"
+                  selectedPlan === plan.meses ? "border-white scale-105" : "border-[#1c2541] hover:border-[#092756]"
                 }`}
-                onClick={() => setSelectedPlan(plan.duration)}
+                onClick={() => setSelectedPlan(plan.meses)}
               >
-                <div className={`bg-gradient-to-r ${plan.color} rounded-t-lg p-4`}>
+                <div className={`rounded-t-lg p-4`}>
                   <h3 className="text-xl sm:text-2xl font-semibold flex justify-between items-center">
                     <span>
-                      {plan.duration} {plan.duration === 1 ? "mes" : "meses"}
+                      {plan.meses} {plan.meses === 1 ? "mes" : "meses"}
                     </span>
                     <Calendar className="w-6 h-6" />
                   </h3>
                 </div>
                 <div className="text-center my-4 p-4">
-                  <span className="text-3xl sm:text-4xl font-extrabold">{plan.price.toFixed(2)}€</span>
+                  <span className="text-3xl sm:text-4xl font-extrabold">{plan.precio.toFixed(2)}€</span>
                   <span className="text-lg sm:text-xl font-medium text-gray-400">/mes</span>
-                  {plan.duration > 1 && (
-                    <p className="mt-2 text-sm text-gray-400">Total: {(plan.price * plan.duration).toFixed(2)}€</p>
+                  {plan.meses > 1 && (
+                    <p className="mt-2 text-sm text-gray-400">Total: {(plan.precio * plan.meses).toFixed(2)}€</p>
                   )}
-                  {plan.duration > 1 && (
+                  {plan.meses > 1 && (
                     <p className="mt-2 text-sm text-green-400">
-                      Ahorras {((59.99 - plan.price) * plan.duration).toFixed(2)}€
+                      Ahorras {((59.99 - plan.precio) * plan.meses).toFixed(2)}€
                     </p>
                   )}
                 </div>
@@ -147,13 +157,13 @@ export default function GymPricing() {
                 </thead>
                 <tbody>
                   {plans.map((plan) => (
-                    <tr key={plan.duration} className="border-b border-gray-700">
+                    <tr key={plan.meses} className="border-b border-gray-700">
                       <td className="py-2">
-                        {plan.duration} {plan.duration === 1 ? "mes" : "meses"}
+                        {plan.meses} {plan.meses === 1 ? "mes" : "meses"}
                       </td>
-                      <td className="text-right">{plan.price.toFixed(2)}€</td>
+                      <td className="text-right">{plan.precio.toFixed(2)}€</td>
                       <td className="text-right text-green-400">
-                        {plan.duration > 1 ? ((59.99 - plan.price) * plan.duration).toFixed(2) + "€" : "-"}
+                        {plan.meses > 1 ? ((59.99 - plan.precio) * plan.meses).toFixed(2) + "€" : "-"}
                       </td>
                     </tr>
                   ))}
