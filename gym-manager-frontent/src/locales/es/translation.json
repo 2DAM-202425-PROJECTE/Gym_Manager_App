@@ -23,5 +23,20 @@
             "email": "El correo electrónico no es válido",
             "password": "La contraseña es demasiado corta"
         }
+    },
+    "pago": {
+        "title": "Elige tu compromiso fitness",
+        "subtitul": "Todas las opciones incluyen acceso completo. Tú decides cuánto tiempo quieres transformar tu vida.",
+        "plans": "Todos los planes incluyen:",
+        "ajudaplanbtn": "¿Por qué elegir un plan más largo?",
+        "compararplanbtn": "Comparar planes",
+        "complan": "Comparación de planes",
+        "duracio": "Duración",
+        "preu": "Precio/mes",
+        "ahorro": "Ahorro total",
+        "mesinfo": "¿Necesitas más información?",
+        "contacta": "Contactanos",
+        "visita": "Visita nuestras instalaciones"
+
     }
 }

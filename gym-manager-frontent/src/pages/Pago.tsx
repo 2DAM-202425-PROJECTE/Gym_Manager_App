@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Calendar, Check, Info, ArrowRight, Zap } from "lucide-react"
 import apiClient from "../api/prefijo"
+import { useTranslation } from "react-i18next"
 
 type Tarifa = {
   id: number;
@@ -23,6 +24,8 @@ export default function GymPricing() {
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null)
   const [showComparison, setShowComparison] = useState(false)
 
+  const { t } = useTranslation()
+
   const [plans, setPlans] = useState<Tarifa[]>([])
 
   useEffect(() => {
@@ -43,9 +46,9 @@ export default function GymPricing() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-extrabold sm:text-4xl lg:text-5xl">Elige tu compromiso fitness</h2>
+          <h2 className="text-3xl font-extrabold sm:text-4xl lg:text-5xl">{t('pago.title')}</h2>
           <p className="mt-4 text-lg sm:text-xl text-gray-300">
-            Todas las opciones incluyen acceso completo. Tú decides cuánto tiempo quieres transformar tu vida.
+          {t('pago.subtitul')}
           </p>
         </motion.div>
 
@@ -100,7 +103,7 @@ export default function GymPricing() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <h3 className="text-2xl font-bold text-center mb-8">Todos los planes incluyen:</h3>
+          <h3 className="text-2xl font-bold text-center mb-8">{t('pago.plans')}</h3>
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, index) => (
               <motion.li
@@ -127,7 +130,7 @@ export default function GymPricing() {
             }
           >
             <Info className="w-4 h-4 mr-2" />
-            ¿Por qué elegir un plan más largo?
+            {t('pago.ajudaplanbtn')}
           </button>
 
           <button
@@ -135,7 +138,7 @@ export default function GymPricing() {
             onClick={() => setShowComparison(!showComparison)}
           >
             <Zap className="w-4 h-4 mr-2" />
-            Comparar planes
+            {t('pago.compararplanbtn')}
           </button>
         </div>
 
@@ -145,14 +148,14 @@ export default function GymPricing() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h4 className="text-xl font-bold mb-4">Comparación de planes</h4>
+            <h4 className="text-xl font-bold mb-4">{t('pago.complan')}</h4>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-700">
-                    <th className="text-left py-2">Duración</th>
-                    <th className="text-right py-2">Precio/mes</th>
-                    <th className="text-right py-2">Ahorro total</th>
+                    <th className="text-left py-2">{t('pago.duracio')}</th>
+                    <th className="text-right py-2">{t('pago.preu')}</th>
+                    <th className="text-right py-2">{t('pago.ahorro')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -180,13 +183,14 @@ export default function GymPricing() {
           transition={{ duration: 0.5, delay: 0.7 }}
         >
           <p className="text-lg sm:text-xl text-gray-300">
-            ¿Necesitas más información?{" "}
+
+            {t('pago.mesinfo')}{" "}
             <a href="#" className="text-[#092756] hover:underline">
-              Contáctanos
+            {t('pago.contacta')}
             </a>{" "}
             o{" "}
             <a href="#" className="text-[#092756] hover:underline">
-              visita nuestras instalaciones
+            {t('pago.visita')}
             </a>
           </p>
         </motion.div>

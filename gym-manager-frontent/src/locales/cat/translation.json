@@ -27,5 +27,25 @@
             "email": "El correu electrònic no és vàlid",
             "password": "La contrasenya és massa curta"
         }
-    }
+    },
+  
+    "pago": {
+    "title": "Tria el teu compromís fitness",
+    "subtitul": "Totes les opcions inclouen accés complet. Tu decideixes quant de temps vols transformar la teva vida.",
+    "plans": "Tots els plans inclouen:",
+    "ajudaplanbtn": "Per què triar un pla més llarg?",
+    "compararplanbtn": "Comparar plans",
+    "complan": "Comparació de plans",
+    "duracio": "Durada",
+    "preu": "Preu/mes",
+    "ahorro": "Estalvi total",
+    "mesinfo": "Necessites més informació?",
+    "contacta": "Contacta'ns",
+    "visita": "Visita les nostres instal·lacions",
+    "f1": "Accés a totes les instal·lacions"
 }
+
+}
+
+
+
