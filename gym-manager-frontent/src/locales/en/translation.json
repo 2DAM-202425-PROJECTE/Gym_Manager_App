@@ -1,0 +1,27 @@
+{
+    "login": {
+        "title": "Login",
+        "email": "Email",
+        "password": "Password",
+        "submit": "Login",
+        "forgot": "Forgot your password?",
+        "register": "Register",
+        "error": {
+            "email": "The email is not valid",
+            "password": "The password is too short"
+        }
+    },
+    "registre": {
+        "title": "Create your account",
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "submit": "Register",
+        "login": "Login",
+        "error": {
+            "name": "The name is too short",
+            "email": "The email is not valid",
+            "password": "The password is too short"
+        }
+    }
+}

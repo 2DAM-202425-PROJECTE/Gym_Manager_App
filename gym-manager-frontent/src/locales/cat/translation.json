@@ -1,0 +1,31 @@
+{
+    "login": {
+        "title": "Inicia sessió",
+        "email": "Correu electrònic",
+        "password": "Contrasenya",
+        "submit": "Inicia sessió",
+        "forgot": "Has oblidat la contrasenya?",
+        "register": "Registra't",
+        "error": {
+            "email": "El correu electrònic no és vàlid",
+            "password": "La contrasenya és massa curta"
+        }
+    },
+    "registre": {
+        "title": "Crea el teu compte",
+        "name": "Nom",
+        "surname": "Cognom",
+        "email": "Correu electrònic",
+        "password": "Contrasenya",
+        "confirm_password": "Confirma la contrasenya",
+        "submit": "Registra't",
+        "login": "Inicia sessió",
+        "already_have_account": "Ja tens un compte?",
+        "error": {
+            "password_mismatch": "Les contrasenyes no coincideixen",
+            "name": "El nom és massa curt",
+            "email": "El correu electrònic no és vàlid",
+            "password": "La contrasenya és massa curta"
+        }
+    }
+}
