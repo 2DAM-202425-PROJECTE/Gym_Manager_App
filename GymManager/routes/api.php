@@ -19,4 +19,5 @@ Route::apiResource('users', UserController::class);
 Route::apiResource('tarifas', TarifaController::class);
 
 Route::get('users/{id}/membresia', [UserController::class, 'membresia']);
+
 Route::apiResource('membresias', MembresiaController::class);
