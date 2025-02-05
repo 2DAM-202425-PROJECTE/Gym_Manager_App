@@ -1,5 +1,3 @@
-import axios from "axios"
-import { use } from "i18next"
 import type React from "react"
 import { useEffect, useState } from "react"
 import { Doughnut } from "react-chartjs-2"
@@ -8,6 +6,7 @@ import { TextFieldAdmin } from "../../components/textFields/TextFieldAdmin"
 import { toast } from "react-toastify"
 import { BlueButtonAdmin } from "../../components/buttons/BlueButtonAdmin"
 import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin"
+import { GreenButtonAdmin } from "../../components/buttons/GreenButtonAdmin"
 
 interface Tarifa {
   id: number
@@ -166,12 +165,7 @@ const GestionTarifas: React.FC = () => {
                   </td>
                   <td className="p-3">
                     {editingTarifa && editingTarifa.id === tarifa.id ? (
-                      <button
-                        onClick={() => handleSave()}
-                        className="text-green-600 hover:text-green-800"
-                      >
-                        Guardar
-                      </button>
+                      <GreenButtonAdmin text={"Guardar"} action={() => handleSave()} ></GreenButtonAdmin>
                     ) : (
                       <>
                           <BlueButtonAdmin text="Editar" action={() => handleEdit(tarifa)}></BlueButtonAdmin>
@@ -181,12 +175,7 @@ const GestionTarifas: React.FC = () => {
                           <div className="absolute bg-white shadow-md p-4 rounded w-[250px] mt-2">
                             <p className="text-sm text-[#092756]">¿Estás seguro de que deseas eliminar esta tarifa?</p>
                             <div className="flex justify-between mt-2">
-                              <button
-                                onClick={() => handleDelete(tarifa.id)}
-                                className="text-red-600 hover:text-red-800 text-sm"
-                              >
-                                Sí
-                              </button>
+                              <RedButtonAdmin text="Sí" action={() => handleDelete(tarifa.id)}></RedButtonAdmin>
                               <BlueButtonAdmin text="No" action={() => setShowConfirm(null)}></BlueButtonAdmin>
                 
                             </div>
