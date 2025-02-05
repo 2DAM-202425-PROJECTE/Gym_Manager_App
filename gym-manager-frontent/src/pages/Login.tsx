@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { UseUser } from "../customHooks/useUser";
 import { User } from "../type/user";
 import { useTranslation } from "react-i18next";
-import { DefaultButton } from "../components/buttons/buttonDefault";
+import { DefaultButton } from "../components/buttons/ButtonDefault";
 import { SelectLanguage } from "../components/buttons/SelectLanguage";
 import axios from "axios";
 

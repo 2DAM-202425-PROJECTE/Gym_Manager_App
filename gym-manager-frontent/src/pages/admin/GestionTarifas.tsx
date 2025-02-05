@@ -6,6 +6,8 @@ import { Doughnut } from "react-chartjs-2"
 import apiClient from "../../api/prefijo"
 import { TextFieldAdmin } from "../../components/textFields/TextFieldAdmin"
 import { toast } from "react-toastify"
+import { BlueButtonAdmin } from "../../components/buttons/BlueButtonAdmin"
+import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin"
 
 interface Tarifa {
   id: number
@@ -38,18 +40,9 @@ const GestionTarifas: React.FC = () => {
     precio: 0,
     meses: 1,
   })
-  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editingTarifa, setEditingTarifa] = useState<Tarifa | null>(null)
   const [showConfirm, setShowConfirm] = useState<number | null>(null)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [filtro, setFiltro] = useState<{ precio?: number; meses?: number }>({})
 
-  // Filtrar las tarifas según el filtro
-
-  const filteredTarifas = tarifas.filter((tarifa) => {
-    const matchesPrecio = filtro.precio ? tarifa.precio <= filtro.precio : true
-    const matchesMeses = filtro.meses ? tarifa.meses === filtro.meses : true
-    return matchesPrecio && matchesMeses
-  })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -62,9 +55,6 @@ const GestionTarifas: React.FC = () => {
       toast("El precio y la cantidad de meses deben ser mayores a 0.")
       return
     }
-
-    console.log(nuevaTarifa)
-
     const response = await apiClient.post("/tarifas", nuevaTarifa)
     
     setTarifas([...tarifas, response.data])
@@ -73,17 +63,28 @@ const GestionTarifas: React.FC = () => {
     toast("Tarifa añadida correctamente.")
   }
 
-  const handleEdit = (id: number) => {
-    setEditingId(id)
+  const handleEdit = (tarifa: Tarifa) => {
+    setEditingTarifa(tarifa)
   }
 
-  const handleSave = (id: number) => {
-    setEditingId(null)
+  const handleSave = async () => {
+    if (editingTarifa) {
+      try {
+        const response = await apiClient.put(`/tarifas/${editingTarifa.id}`, editingTarifa);
+        setTarifas(tarifas.map((tarifa) => (tarifa.id === response.data.id ? response.data : tarifa)));
+        toast("Tarifa editada correctamente.");
+        setEditingTarifa(null);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        toast("Error al editar la tarifa.");
+      }
+    }
   }
 
-  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setTarifas(tarifas.map((tarifa) => (tarifa.id === id ? { ...tarifa, [name]: Number(value) } : tarifa)))
+    setEditingTarifa((prev) => (prev ? { ...prev, [name]: value } : prev))
+
   }
 
   const handleDelete = async (id: number) => {
@@ -98,10 +99,10 @@ const GestionTarifas: React.FC = () => {
   }
 
   const chartData = {
-    labels: filteredTarifas.map((t) => `${t.meses} meses`),
+    labels: tarifas.map((t) => `${t.meses} meses`),
     datasets: [
       {
-        data: filteredTarifas.map((t) => t.precio),
+        data: tarifas.map((t) => t.precio),
         backgroundColor: ["#092756", "#1c2541", "#3a506b", "#5bc0be"],
       },
     ], 
@@ -145,57 +146,37 @@ const GestionTarifas: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredTarifas.map((tarifa : Tarifa) => (
+              {tarifas.map((tarifa : Tarifa) => (
                 <tr key={tarifa.id} className="border-b">
                   <td className="p-3">{tarifa.id}</td>
                   <td className="p-3">
-                    {editingId === tarifa.id ? (
-                      <input
-                        type="number"
-                        name="preu_tarifa"
-                        value={tarifa.precio}
-                        onChange={(e) => handleEditInputChange(e, tarifa.id)}
-                        className="border p-1 rounded w-full"
-                      />
+                    {editingTarifa && editingTarifa.id === tarifa.id ? (
+                      <TextFieldAdmin name="precio" value={editingTarifa.precio} handleChange={(e) => handleEditInputChange(e)} placeholder={""} ></TextFieldAdmin>
+
                     ) : (
                       `${tarifa.precio}€`
                     )}
                   </td>
                   <td className="p-3">
-                    {editingId === tarifa.id ? (
-                      <input
-                        type="number"
-                        name="cantidad_meses"
-                        value={tarifa.meses}
-                        onChange={(e) => handleEditInputChange(e, tarifa.id)}
-                        className="border p-1 rounded w-full"
-                      />
+                    {editingTarifa && editingTarifa.id === tarifa.id ? (
+                      <TextFieldAdmin name="meses" value={editingTarifa.meses} handleChange={(e) => handleEditInputChange(e)} placeholder={""} ></TextFieldAdmin>
                     ) : (
                       tarifa.meses
                     )}
                   </td>
                   <td className="p-3">
-                    {editingId === tarifa.id ? (
+                    {editingTarifa && editingTarifa.id === tarifa.id ? (
                       <button
-                        onClick={() => handleSave(tarifa.id)}
+                        onClick={() => handleSave()}
                         className="text-green-600 hover:text-green-800"
                       >
                         Guardar
                       </button>
                     ) : (
                       <>
-                        <button
-                          onClick={() => handleEdit(tarifa.id)}
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          onClick={() => setShowConfirm(tarifa.id)}
-                          className="text-red-600 hover:text-red-800 ml-4"
-                        >
-                          Eliminar
-                        </button>
+                          <BlueButtonAdmin text="Editar" action={() => handleEdit(tarifa)}></BlueButtonAdmin>
+                          <RedButtonAdmin text="Eliminar" action={() => setShowConfirm(tarifa.id)}></RedButtonAdmin>
+
                         {showConfirm === tarifa.id && (
                           <div className="absolute bg-white shadow-md p-4 rounded w-[250px] mt-2">
                             <p className="text-sm text-[#092756]">¿Estás seguro de que deseas eliminar esta tarifa?</p>
@@ -206,12 +187,8 @@ const GestionTarifas: React.FC = () => {
                               >
                                 Sí
                               </button>
-                              <button
-                                onClick={() => setShowConfirm(null)}
-                                className="text-blue-600 hover:text-blue-800 text-sm"
-                              >
-                                No
-                              </button>
+                              <BlueButtonAdmin text="No" action={() => setShowConfirm(null)}></BlueButtonAdmin>
+                
                             </div>
                           </div>
                         )}
