@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { DefaultButton } from "../components/buttons/buttonDefault";
 import { SelectLanguage } from "../components/buttons/SelectLanguage";
 import axios from "axios";
+import apiClient from "../api/prefijo";
 
 type LoginResponse = User | { error: string };
 
@@ -42,6 +43,18 @@ export default function Login() {
       axios.get("")
 
       navigate('/')
+      try {
+        const membershipResponse = await apiClient.get(`/users/${user_id}/membresia`);
+
+
+        if (membershipResponse.data.message) {
+          navigate('/');
+        } else {
+          navigate('/pago');
+        }
+      } catch (error) {
+        navigate('/pago');
+      }
     
     };
 
