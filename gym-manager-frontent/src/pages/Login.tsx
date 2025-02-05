@@ -48,9 +48,9 @@ export default function Login() {
 
 
         if (membershipResponse.data.message) {
-          navigate('/');
-        } else {
           navigate('/pago');
+        } else {
+          navigate('/');
         }
       } catch (error) {
         navigate('/pago');
