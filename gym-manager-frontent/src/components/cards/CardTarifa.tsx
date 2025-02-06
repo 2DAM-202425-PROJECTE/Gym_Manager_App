@@ -1,12 +1,20 @@
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
+import { Tarifa } from "../../type/tarifas";
 
-export function CardTarifas({ plan, selectedPlan, setSelectedPlan }) {
+
+interface CardTarifasProps {
+  plan: Tarifa;
+  selectedPlan: Tarifa | null;
+  setSelectedPlan: (plan: Tarifa) => void;
+}
+
+export function CardTarifas({ plan, selectedPlan, setSelectedPlan }: CardTarifasProps) {
     return (<motion.div
         key={plan.id}
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
       >
         <div
           className={`flex flex-col justify-between h-full bg-[#1c2541] border-2 rounded-lg transition-all duration-300 ${

@@ -3,13 +3,7 @@ import { motion } from "framer-motion"
 import { Calendar, Info, ArrowRight, Zap } from "lucide-react"
 import apiClient from "../api/prefijo"
 import { MotionFeatures } from "../components/galeries/MotionFeatures"
-
-type Tarifa = {
-  id: number;
-  nombre: string;
-  precio: number;
-  meses: number;
-}
+import { Tarifa } from "../type/tarifas"
 
 const features = [
   "Acceso 24/7 a todas las instalaciones",
