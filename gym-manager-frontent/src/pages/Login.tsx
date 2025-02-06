@@ -52,6 +52,7 @@ export default function Login() {
         } else {
           navigate('/pago');
         }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         navigate('/pago');
       }
