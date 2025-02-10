@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Calendar, Check, Info, ArrowRight, Zap } from "lucide-react"
+import { Calendar, Info, ArrowRight, Zap } from "lucide-react"
 import apiClient from "../api/prefijo"
-import { useTranslation } from "react-i18next"
-
-type Tarifa = {
-  id: number;
-  nombre: string;
-  precio: number;
-  meses: number;
-}
+import { MotionFeatures } from "../components/galeries/MotionFeatures"
+import { Tarifa } from "../type/tarifas"
 
 const features = [
   "Acceso 24/7 a todas las instalaciones",
@@ -20,11 +14,9 @@ const features = [
   "Descuentos en productos de la tienda",
 ]
 
-export default function GymPricing() {
-  const [selectedPlan, setSelectedPlan] = useState<number | null>(null)
+export default function Tarifas() {
+  const [selectedPlan, setSelectedPlan] = useState<Tarifa | null>(null)
   const [showComparison, setShowComparison] = useState(false)
-
-  const { t } = useTranslation()
 
   const [plans, setPlans] = useState<Tarifa[]>([])
 
@@ -46,25 +38,25 @@ export default function GymPricing() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-extrabold sm:text-4xl lg:text-5xl">{t('pago.title')}</h2>
+          <h2 className="text-3xl font-extrabold sm:text-4xl lg:text-5xl">Elige tu compromiso fitness</h2>
           <p className="mt-4 text-lg sm:text-xl text-gray-300">
-          {t('pago.subtitul')}
+            Todas las opciones incluyen acceso completo. Tú decides cuánto tiempo quieres transformar tu vida.
           </p>
         </motion.div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {plans.map((plan, index) => (
             <motion.div
-              key={plan.meses}
+              key={plan.id}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <div
                 className={`flex flex-col justify-between h-full bg-[#1c2541] border-2 rounded-lg transition-all duration-300 ${
-                  selectedPlan === plan.meses ? "border-white scale-105" : "border-[#1c2541] hover:border-[#092756]"
+                  selectedPlan?.id === plan.id ? "border-white scale-105" : "border-[#1c2541] hover:border-[#092756]"
                 }`}
-                onClick={() => setSelectedPlan(plan.meses)}
+                onClick={() => setSelectedPlan(plan)}
               >
                 <div className={`rounded-t-lg p-4`}>
                   <h3 className="text-xl sm:text-2xl font-semibold flex justify-between items-center">
@@ -82,7 +74,7 @@ export default function GymPricing() {
                   )}
                   {plan.meses > 1 && (
                     <p className="mt-2 text-sm text-green-400">
-                      Ahorras {((59.99 - plan.precio) * plan.meses).toFixed(2)}€
+                      Ahorras {(( - plan.precio) * plan.meses).toFixed(2)}€
                     </p>
                   )}
                 </div>
@@ -97,28 +89,7 @@ export default function GymPricing() {
           ))}
         </div>
 
-        <motion.div
-          className="mt-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <h3 className="text-2xl font-bold text-center mb-8">{t('pago.plans')}</h3>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature, index) => (
-              <motion.li
-                key={index}
-                className="flex items-center space-x-3 bg-[#1c2541] p-3 rounded-lg"
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Check className="flex-shrink-0 w-5 h-5 text-green-400" />
-                <span className="text-sm sm:text-base">{feature}</span>
-              </motion.li>
-            ))}
-          </ul>
-        </motion.div>
+        <MotionFeatures features={features}></MotionFeatures>
 
         <div className="mt-12 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
           <button
@@ -130,7 +101,7 @@ export default function GymPricing() {
             }
           >
             <Info className="w-4 h-4 mr-2" />
-            {t('pago.ajudaplanbtn')}
+            ¿Por qué elegir un plan más largo?
           </button>
 
           <button
@@ -138,7 +109,7 @@ export default function GymPricing() {
             onClick={() => setShowComparison(!showComparison)}
           >
             <Zap className="w-4 h-4 mr-2" />
-            {t('pago.compararplanbtn')}
+            Comparar planes
           </button>
         </div>
 
@@ -148,14 +119,14 @@ export default function GymPricing() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h4 className="text-xl font-bold mb-4">{t('pago.complan')}</h4>
+            <h4 className="text-xl font-bold mb-4">Comparación de planes</h4>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-700">
-                    <th className="text-left py-2">{t('pago.duracio')}</th>
-                    <th className="text-right py-2">{t('pago.preu')}</th>
-                    <th className="text-right py-2">{t('pago.ahorro')}</th>
+                    <th className="text-left py-2">Duración</th>
+                    <th className="text-right py-2">Precio/mes</th>
+                    <th className="text-right py-2">Ahorro total</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -176,24 +147,6 @@ export default function GymPricing() {
           </motion.div>
         )}
 
-        <motion.div
-          className="mt-8 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-        >
-          <p className="text-lg sm:text-xl text-gray-300">
-
-            {t('pago.mesinfo')}{" "}
-            <a href="#" className="text-[#092756] hover:underline">
-            {t('pago.contacta')}
-            </a>{" "}
-            o{" "}
-            <a href="#" className="text-[#092756] hover:underline">
-            {t('pago.visita')}
-            </a>
-          </p>
-        </motion.div>
       </div>
     </div>
   )
