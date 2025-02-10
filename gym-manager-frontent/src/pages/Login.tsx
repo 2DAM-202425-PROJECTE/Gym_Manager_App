@@ -74,7 +74,9 @@ export default function Login() {
         </form>
       </div>
 
-     <SelectLanguage></SelectLanguage>
+     <SelectLanguage>
+      
+     </SelectLanguage>
     </div>
     )
 }
