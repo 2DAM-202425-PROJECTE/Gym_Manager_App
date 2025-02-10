@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import Tarifas from './pages/Tarifas';
 import { UserProvider } from './context/userContext';
 import { ToastContainer } from 'react-toastify';
+import Confirmacion from './pages/Confirmacion';
 
 import DashboardAdmin from './pages/admin/DashboardAdmin';
 import { I18nextProvider } from 'react-i18next';
@@ -30,6 +31,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path='/tarifas' element={<Tarifas />} />
               <Route path='/admin' element={<DashboardAdmin />} />
+              <Route path='/confirmacion' element={<Confirmacion />} />
           </Routes>
         </div>
         </UserProvider>

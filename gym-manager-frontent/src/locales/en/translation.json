@@ -24,7 +24,20 @@
             "password": "The password is too short"
         }
     },
-    "pago": {
+
+
+    "forgotpass" : {
+
+        "title": "Recover your password",
+        "login": "Login",
+        "registre": "Register",
+        "home": "Home"
+
+    },
+
+
+
+    "tarifas": {
     "title": "Choose your fitness commitment",
     "subtitul": "All options include full access. You decide how long you want to transform your life.",
     "plans": "All plans include:",

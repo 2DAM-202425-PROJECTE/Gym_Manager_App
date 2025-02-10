@@ -28,8 +28,20 @@
             "password": "La contrasenya és massa curta"
         }
     },
-  
-    "pago": {
+
+
+    "forgotpass" : {
+
+        "title": "Recupera la contrasenya",
+        "login": "Inicia sessió",
+        "registre": "Registra't",
+        "home": "Tornar a la Home"
+
+    },
+
+
+
+    "tarifas": {
     "title": "Tria el teu compromís fitness",
     "subtitul": "Totes les opcions inclouen accés complet. Tu decideixes quant de temps vols transformar la teva vida.",
     "plans": "Tots els plans inclouen:",
@@ -43,9 +55,8 @@
     "contacta": "Contacta'ns",
     "visita": "Visita les nostres instal·lacions",
     "f1": "Accés a totes les instal·lacions"
-}
+    }
+
+   
 
 }
-
-
-
