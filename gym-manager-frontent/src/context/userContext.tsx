@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 
 interface UserContextType {
   userContext: {
+    role: string;
     user: User | null;
   };  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }

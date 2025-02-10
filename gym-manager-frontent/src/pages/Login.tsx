@@ -39,9 +39,7 @@ export default function Login() {
     }else {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user_id = response.id as number;
-      
       axios.get("")
-
       navigate('/')
       try {
         const membershipResponse = await apiClient.get(`/users/${user_id}/membresia`);
