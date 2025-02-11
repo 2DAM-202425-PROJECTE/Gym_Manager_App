@@ -14,8 +14,12 @@ import Confirmacion from './pages/Confirmacion';
 import DashboardAdmin from './pages/admin/DashboardAdmin';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n'; 
+import { useState } from 'react';
+import { Tarifa } from './type/tarifas';
 
 function App() {
+
+  const [TarifaSel, setTarifaSel] = useState<Tarifa | null>();
 
   return (
     <>
@@ -29,9 +33,9 @@ function App() {
               <Route path="/registre" element={<Registre />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path='/tarifas' element={<Tarifas />} />
+              <Route path='/tarifas' element={<Tarifas setTarifaSel={setTarifaSel} />} />
               <Route path='/admin' element={<DashboardAdmin />} />
-              <Route path='/confirmacion' element={<Confirmacion />} />
+              <Route path='/confirmacion' element={<Confirmacion tarifa={TarifaSel}/>} />
           </Routes>
         </div>
         </UserProvider>

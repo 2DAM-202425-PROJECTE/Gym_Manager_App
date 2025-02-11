@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Calendar, Info, ArrowRight, Zap } from "lucide-react"
 import apiClient from "../api/prefijo"
 import { MotionFeatures } from "../components/galeries/MotionFeatures"
 import { Tarifa } from "../type/tarifas"
+import { useNavigate } from "react-router-dom"
 
 const features = [
   "Acceso 24/7 a todas las instalaciones",
@@ -14,11 +15,12 @@ const features = [
   "Descuentos en productos de la tienda",
 ]
 
-export default function Tarifas() {
+export default function Tarifas({ setTarifaSel }: { setTarifaSel:  Dispatch<SetStateAction<Tarifa | null | undefined>> }) {
   const [selectedPlan, setSelectedPlan] = useState<Tarifa | null>(null)
   const [showComparison, setShowComparison] = useState(false)
 
   const [plans, setPlans] = useState<Tarifa[]>([])
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +30,13 @@ export default function Tarifas() {
     };
     fetchData();
   }, [])
+
+
+  function handleClick (tarifa : Tarifa) {
+    setTarifaSel(tarifa);
+    navigate('/confirmacion');
+
+  }
   
   return (
     <div className="py-12 bg-[#0b132b] min-h-screen text-white px-4 sm:px-6 lg:px-8">
@@ -79,7 +88,7 @@ export default function Tarifas() {
                   )}
                 </div>
                 <div className="p-4">
-                  <button className="w-full bg-[#670d10] text-white py-2 px-4 rounded hover:bg-[#7d1114] transition-colors duration-300 flex items-center justify-center">
+                  <button onClick={() => handleClick(plan)} className="w-full bg-[#670d10] text-white py-2 px-4 rounded hover:bg-[#7d1114] transition-colors duration-300 flex items-center justify-center">
                     Seleccionar plan
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </button>

@@ -24,6 +24,11 @@ export default function Registre() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (contrasenya !== confirmContrasenya) {
+      toast('Les contrasenyes no coincideixen');
+      return;
+    }
     const  nom_complet = nom + " " + cognom;
     
     const response = await register({ name: nom_complet, email: correu, password: contrasenya, confirmPassword: confirmContrasenya }) as RegisterResponse;

@@ -37,7 +37,7 @@ export default function Login() {
       navigate('/admin');
       return;
     }else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+       
       const user_id = response.id as number;
       axios.get("")
       navigate('/')
@@ -48,11 +48,11 @@ export default function Login() {
         if (membershipResponse.data.message) {
           navigate('/');
         } else {
-          navigate('/pago');
+          navigate('/tarifas');
         }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        navigate('/pago');
+        navigate('/tarifas');
       }
     
     };
