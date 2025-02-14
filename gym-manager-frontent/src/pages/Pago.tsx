@@ -25,7 +25,7 @@ export default function GymPricing() {
   const [showComparison, setShowComparison] = useState(false)
 
   return (
-    <div className="py-12 bg-[#0b132b] min-h-screen text-white px-4 sm:px-6 lg:px-8">
+    <div className="py-12 bg-blau_fosc min-h-screen text-white px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <motion.div
           className="text-center"
@@ -48,8 +48,8 @@ export default function GymPricing() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <div
-                className={`flex flex-col justify-between h-full bg-[#1c2541] border-2 rounded-lg transition-all duration-300 ${
-                  selectedPlan === plan.duration ? "border-white scale-105" : "border-[#1c2541] hover:border-[#092756]"
+                className={`flex flex-col justify-between h-full bg-blau_fosc border-2 rounded-lg transition-all duration-300 ${
+                  selectedPlan === plan.duration ? "border-white scale-105" : "border-blau_fosc hover:border-blau_fosc"
                 }`}
                 onClick={() => setSelectedPlan(plan.duration)}
               >
@@ -74,7 +74,7 @@ export default function GymPricing() {
                   )}
                 </div>
                 <div className="p-4">
-                  <button className="w-full bg-[#670d10] text-white py-2 px-4 rounded hover:bg-[#7d1114] transition-colors duration-300 flex items-center justify-center">
+                  <button className="w-full bg-granate text-white py-2 px-4 rounded hover:bg-granate transition-colors duration-300 flex items-center justify-center">
                     Seleccionar plan
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </button>
@@ -95,7 +95,7 @@ export default function GymPricing() {
             {features.map((feature, index) => (
               <motion.li
                 key={index}
-                className="flex items-center space-x-3 bg-[#1c2541] p-3 rounded-lg"
+                className="flex items-center space-x-3 bg-blau_fosc p-3 rounded-lg"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -109,7 +109,7 @@ export default function GymPricing() {
 
         <div className="mt-12 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
           <button
-            className="text-white border border-white py-2 px-4 rounded hover:bg-white hover:text-[#0b132b] transition-colors duration-300 flex items-center"
+            className="text-white border border-white py-2 px-4 rounded hover:bg-white hover:text-semi_negre transition-colors duration-300 flex items-center"
             onClick={() =>
               alert(
                 "Los planes más largos ofrecen un mejor precio mensual y te ayudan a mantener tu compromiso fitness y alcanzar tus objetivos a largo plazo.",
@@ -121,7 +121,7 @@ export default function GymPricing() {
           </button>
 
           <button
-            className="text-white border border-white py-2 px-4 rounded hover:bg-white hover:text-[#0b132b] transition-colors duration-300 flex items-center"
+            className="text-white border border-white py-2 px-4 rounded hover:bg-white hover:text-semi_negre transition-colors duration-300 flex items-center"
             onClick={() => setShowComparison(!showComparison)}
           >
             <Zap className="w-4 h-4 mr-2" />
@@ -171,11 +171,11 @@ export default function GymPricing() {
         >
           <p className="text-lg sm:text-xl text-gray-300">
             ¿Necesitas más información?{" "}
-            <a href="#" className="text-[#092756] hover:underline">
+            <a href="#" className="text-blau_fosc hover:underline">
               Contáctanos
             </a>{" "}
             o{" "}
-            <a href="#" className="text-[#092756] hover:underline">
+            <a href="#" className="text-blau_fosc hover:underline">
               visita nuestras instalaciones
             </a>
           </p>

@@ -33,7 +33,7 @@ export default function Profile() {
             <TextFieldNormal value={confirmPassword} placeholder="Confirma la Nova Contrasenya" setValue={setConfirmPassword} Constrasenya={true}></TextFieldNormal>
             <button
               type="submit"
-              className="w-full text-white text-center py-3 rounded-lg bg-gradient-to-b from-[#6eb6de] to-[#4a77d4] shadow-md hover:shadow-lg transition-shadow mb-4"
+              className="w-full text-white text-center py-3 rounded-lg bg-gradient-to-b from-blau_clar to-blau_electric shadow-md hover:shadow-lg transition-shadow mb-4"
             >
               Canviar Contrasenya
             </button>
@@ -41,7 +41,7 @@ export default function Profile() {
         </div>
         <button
           onClick={() => window.location.href = "http://localhost:5173"}
-          className="w-full text-white text-center py-3 rounded-lg bg-gradient-to-b from-[#6eb6de] to-[#4a77d4] shadow-md hover:shadow-lg transition-shadow"
+          className="w-full text-white text-center py-3 rounded-lg bg-gradient-to-b from-blau_clar to-blau_electric shadow-md hover:shadow-lg transition-shadow"
         >
           Salir
         </button>
