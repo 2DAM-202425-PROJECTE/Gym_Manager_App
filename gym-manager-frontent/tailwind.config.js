@@ -14,7 +14,7 @@ export default {
         blau_fosc: '#092756',
         granate: '#670d10',
         semi_negre: '#0b132b',
-        cyan: '#5bc0be',,
+        cyan: '#5bc0be',
        
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
