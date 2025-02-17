@@ -1,0 +1,55 @@
+{
+    "login": {
+        "title": "Login",
+        "email": "Email",
+        "password": "Password",
+        "submit": "Login",
+        "forgot": "Forgot your password?",
+        "register": "Register",
+        "error": {
+            "email": "The email is not valid",
+            "password": "The password is too short"
+        }
+    },
+    "registre": {
+        "title": "Create your account",
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "submit": "Register",
+        "login": "Login",
+        "error": {
+            "name": "The name is too short",
+            "email": "The email is not valid",
+            "password": "The password is too short"
+        }
+    },
+
+
+    "forgotpass" : {
+
+        "title": "Recover your password",
+        "login": "Login",
+        "registre": "Register",
+        "home": "Home"
+
+    },
+
+
+
+    "tarifas": {
+    "title": "Choose your fitness commitment",
+    "subtitul": "All options include full access. You decide how long you want to transform your life.",
+    "plans": "All plans include:",
+    "ajudaplanbtn": "Why choose a longer plan?",
+    "compararplanbtn": "Compare plans",
+    "complan": "Plan comparison",
+    "duracio": "Duration",
+    "preu": "Price/month",
+    "ahorro": "Total savings",
+    "mesinfo": "Need more information?",
+    "contacta": "Contact us",
+    "visita": "Visit our facilities"
+}
+
+}

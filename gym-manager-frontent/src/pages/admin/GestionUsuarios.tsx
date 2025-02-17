@@ -1,52 +1,36 @@
-import type React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 interface Usuario {
-  id_usuari: number
-  nombre: string
-  correu: string
-  rol: "client" | "admin" | "entrenador"
-  contrasenya: string
-  fecha_de_registre: string
+  id: number
+  name: string
+  email: string
+  email_verified_at: string | null
+  current_team_id: number | null
+  role: "client" | "admin" | "entrenador"
 }
 
 const GestionUsuarios: React.FC = () => {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([
-    {
-      id_usuari: 1,
-      nombre: "Juan Pérez",
-      correu: "juan@example.com",
-      rol: "client",
-      contrasenya: "****",
-      fecha_de_registre: "2023-01-15",
-    },
-    {
-      id_usuari: 2,
-      nombre: "María López",
-      correu: "maria@example.com",
-      rol: "admin",
-      contrasenya: "****",
-      fecha_de_registre: "2023-02-20",
-    },
-    {
-      id_usuari: 3,
-      nombre: "Carlos Ruiz",
-      correu: "carlos@example.com",
-      rol: "entrenador",
-      contrasenya: "****",
-      fecha_de_registre: "2023-03-10",
-    },
-  ])
-  const [nuevoUsuario, setNuevoUsuario] = useState<Omit<Usuario, "id_usuari" | "fecha_de_registre">>({
-    nombre: "",
-    correu: "",
-    rol: "client",
-    contrasenya: "",
+  const [usuarios, setUsuarios] = useState<Usuario[]>([])
+  const [nuevoUsuario, setNuevoUsuario] = useState<Omit<Usuario, "id">>({
+    name: "",
+    email: "",
+    email_verified_at: null,
+    current_team_id: null,
+    role: "client",
   })
   const [editingId, setEditingId] = useState<number | null>(null)
   const [showConfirm, setShowConfirm] = useState<number | null>(null)
   const [error, setError] = useState<string>("")
-
+/*
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await apiClient.get("/usuarios")
+      const usuarios = response.data as Usuario[]
+      setUsuarios(usuarios)
+    }
+    fetchData()
+  }, [])
+*/
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setNuevoUsuario((prev) => ({ ...prev, [name]: value }))
@@ -56,19 +40,19 @@ const GestionUsuarios: React.FC = () => {
     e.preventDefault()
 
     // Validación: Verificar que todos los campos estén llenos
-    if (!nuevoUsuario.nombre || !nuevoUsuario.correu || !nuevoUsuario.contrasenya) {
+    if (!nuevoUsuario.name || !nuevoUsuario.email) {
       setError("Por favor, completa todos los campos.")
       return
     }
 
     const newUsuario: Usuario = {
-      id_usuari: Date.now(),
+      id: Date.now(),
       ...nuevoUsuario,
       fecha_de_registre: new Date().toISOString().split("T")[0],
     }
 
     setUsuarios((prev) => [...prev, newUsuario])
-    setNuevoUsuario({ nombre: "", correu: "", rol: "client", contrasenya: "" })
+    setNuevoUsuario({ name: "", email: "", role: "" })
     setError("") // Limpiar mensaje de error si la validación es exitosa
   }
 
@@ -82,19 +66,19 @@ const GestionUsuarios: React.FC = () => {
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
     const { name, value } = e.target
-    setUsuarios(usuarios.map((user) => (user.id_usuari === id ? { ...user, [name]: value } : user)))
+    setUsuarios(usuarios.map((user) => (user.id === id ? { ...user, [name]: value } : user)))
   }
 
   const handleDelete = (id: number) => {
-    setUsuarios(usuarios.filter((usuario) => usuario.id_usuari !== id))
+    setUsuarios(usuarios.filter((usuario) => usuario.id !== id))
     setShowConfirm(null)
   }
 
   const userStats = {
     total: usuarios.length,
-    clientes: usuarios.filter((u) => u.rol === "client").length,
-    admin: usuarios.filter((u) => u.rol === "admin").length,
-    entrenadores: usuarios.filter((u) => u.rol === "entrenador").length,
+    clientes: usuarios.filter((u) => u.role === "client").length,
+    admin: usuarios.filter((u) => u.role === "admin").length,
+    entrenadores: usuarios.filter((u) => u.role === "entrenador").length,
   }
 
   return (
@@ -130,7 +114,7 @@ const GestionUsuarios: React.FC = () => {
               <input
                 type="text"
                 name="nombre"
-                value={nuevoUsuario.nombre}
+                value={nuevoUsuario.name}
                 onChange={handleInputChange}
                 placeholder="Nombre"
                 className="border p-2 rounded"
@@ -138,12 +122,12 @@ const GestionUsuarios: React.FC = () => {
               <input
                 type="email"
                 name="correu"
-                value={nuevoUsuario.correu}
+                value={nuevoUsuario.email}
                 onChange={handleInputChange}
                 placeholder="Correo"
                 className="border p-2 rounded"
               />
-              <select name="rol" value={nuevoUsuario.rol} onChange={handleInputChange} className="border p-2 rounded">
+              <select name="rol" value={nuevoUsuario.role} onChange={handleInputChange} className="border p-2 rounded">
                 <option value="client">Cliente</option>
                 <option value="admin">Admin</option>
                 <option value="entrenador">Entrenador</option>
@@ -182,40 +166,40 @@ const GestionUsuarios: React.FC = () => {
               </thead>
               <tbody>
                 {usuarios.map((usuario) => (
-                  <tr key={usuario.id_usuari} className="border-b">
-                    <td className="p-2">{usuario.id_usuari}</td>
+                  <tr key={usuario.id} className="border-b">
+                    <td className="p-2">{usuario.id}</td>
                     <td className="p-2">
-                      {editingId === usuario.id_usuari ? (
+                      {editingId === usuario.id ? (
                         <input
                           type="text"
                           name="nombre"
-                          value={usuario.nombre}
-                          onChange={(e) => handleEditInputChange(e, usuario.id_usuari)}
+                          value={usuario.name}
+                          onChange={(e) => handleEditInputChange(e, usuario.id)}
                           className="border p-1 rounded w-full"
                         />
                       ) : (
-                        usuario.nombre
+                        usuario.name
                       )}
                     </td>
                     <td className="p-2">
-                      {editingId === usuario.id_usuari ? (
+                      {editingId === usuario.id ? (
                         <input
                           type="email"
                           name="correu"
-                          value={usuario.correu}
-                          onChange={(e) => handleEditInputChange(e, usuario.id_usuari)}
+                          value={usuario.email}
+                          onChange={(e) => handleEditInputChange(e, usuario.id)}
                           className="border p-1 rounded w-full"
                         />
                       ) : (
-                        usuario.correu
+                        usuario.email
                       )}
                     </td>
                     <td className="p-2">
-                      {editingId === usuario.id_usuari ? (
+                      {editingId === usuario.id ? (
                         <select
                           name="rol"
-                          value={usuario.rol}
-                          onChange={(e) => handleEditInputChange(e, usuario.id_usuari)}
+                          value={usuario.role}
+                          onChange={(e) => handleEditInputChange(e, usuario.id)}
                           className="border p-1 rounded w-full"
                         >
                           <option value="client">Cliente</option>
@@ -223,28 +207,28 @@ const GestionUsuarios: React.FC = () => {
                           <option value="entrenador">Entrenador</option>
                         </select>
                       ) : (
-                        usuario.rol
+                        usuario.role
                       )}
                     </td>
                     <td className="p-2">{usuario.fecha_de_registre}</td>
                     <td className="p-2">
-                      {editingId === usuario.id_usuari ? (
+                      {editingId === usuario.id ? (
                         <button
-                          onClick={() => handleSave(usuario.id_usuari)}
+                          onClick={() => handleSave(usuario.id)}
                           className="bg-green-500 text-white px-4 py-1 rounded mr-2 hover:bg-green-600"
                         >
                           Guardar
                         </button>
                       ) : (
                         <button
-                          onClick={() => handleEdit(usuario.id_usuari)}
+                          onClick={() => handleEdit(usuario.id)}
                           className="bg-blue-500 text-white px-4 py-1 rounded mr-2 hover:bg-blue-600"
                         >
                           Editar
                         </button>
                       )}
                       <button
-                        onClick={() => setShowConfirm(usuario.id_usuari)}
+                        onClick={() => setShowConfirm(usuario.id)}
                         className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
                       >
                         Eliminar
