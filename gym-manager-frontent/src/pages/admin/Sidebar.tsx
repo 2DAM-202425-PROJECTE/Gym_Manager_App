@@ -56,7 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
             key={item.section}
             onClick={() => setActiveSection(item.section)}
             className={`flex items-center w-full p-2 rounded-md mb-4 ${
-              activeSection === item.section ? "bg-[#092756]" : "hover:bg-[#0b132b]"
+              activeSection === item.section ? "bg-blau_fosc" : "hover:bg-blau_fosc"
             }`}
           >
             <svg

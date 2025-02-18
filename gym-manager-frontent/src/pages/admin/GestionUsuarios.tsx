@@ -100,7 +100,7 @@ const GestionUsuarios: React.FC = () => {
               <p className="text-lg">Administradores</p>
               <p className="text-3xl font-bold">{userStats.admin}</p>
             </div>
-            <div className="bg-[#5bc0be] text-white p-4 rounded-lg">
+            <div className="bg-cyan text-white p-4 rounded-lg">
               <p className="text-lg">Entrenadores</p>
               <p className="text-3xl font-bold">{userStats.entrenadores}</p>
             </div>
@@ -142,7 +142,7 @@ const GestionUsuarios: React.FC = () => {
               />
               <button
                 type="submit"
-                className="bg-[#092756] text-white px-4 py-2 rounded hover:bg-[#0b132b] col-span-2"
+                className="bg-blau_fosc text-white px-4 py-2 rounded hover:bg-blau_fosc col-span-2"
               >
                 Añadir Usuario
               </button>
@@ -151,11 +151,11 @@ const GestionUsuarios: React.FC = () => {
         </div>
 
         <div>
-          <h3 className="text-xl font-bold mb-4 text-[#092756]">Lista de Usuarios</h3>
+          <h3 className="text-xl font-bold mb-4 text-blau_fosc">Lista de Usuarios</h3>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-[#1c2541] text-white">
+                <tr className="bg-blau_fosc text-white">
                   <th className="p-2">ID</th>
                   <th className="p-2">Nombre</th>
                   <th className="p-2">Correo</th>

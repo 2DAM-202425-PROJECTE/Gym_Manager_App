@@ -7,13 +7,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        granate: '#670d10',
-        deep_blau: '#092756',
+      
 
         blau_clar: '#6eb6de',
-
-        primary: '#6eb6de',
-        secondary: '6eb6de',
+        blau_electric: '#4a77d4',
+        blau_fosc: '#092756',
+        granate: '#670d10',
+        semi_negre: '#0b132b',
+        cyan: '#5bc0be',
        
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -81,3 +82,4 @@ export default {
   },
   plugins: [],
 }
+
