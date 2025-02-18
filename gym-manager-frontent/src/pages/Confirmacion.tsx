@@ -1,9 +1,10 @@
 import type React from "react"
 import { useContext, useState } from "react"
-import { motion } from "framer-motion"
 import apiClient from "../api/prefijo"
 import { UserContext } from "../context/userContext"
 import { toast } from "react-toastify"
+import { useNavigate } from "react-router-dom"
+import SimpleButton from "../components/buttons/SImpleButton"
 
 type Tarifa = {
   id: number
@@ -16,12 +17,18 @@ export default function PaginaDePago({ tarifa } : { tarifa: Tarifa | null | unde
 
   const { userContext } = useContext(UserContext)
 
+  const navigate = useNavigate();
+  
+
   const [formData, setFormData] = useState({
     numeroTarjeta: "",
     fechaExpiracion: "",
     cvv: "",
   })
 
+  const handleReturn = () => {
+    navigate("/tarifas")
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -43,18 +50,19 @@ export default function PaginaDePago({ tarifa } : { tarifa: Tarifa | null | unde
     e.preventDefault()
 
     if (!userContext.user) {
-      alert("Debes iniciar sesión para continuar")
+      toast.error("Debes iniciar sesión para continuar")
       return
     }
+    console.log(userContext.user)
+      const user_id = userContext.user.id
 
-    const user_id = userContext.user.id
-    
       const fechaFin = new Date();
       fechaFin.setMonth(fechaFin.getMonth() + tarifa.meses);
-      apiClient.post("/membresias", { user_id: user_id, fecha_fin: fechaFin })
-      .then(response => {
-        console.log(response);
+      apiClient.post("/membresias", { user_id: user_id, fecha_fin: fechaFin, tarifa_id: tarifa.id })
+      .then(() => {
+        
         toast.success("Pago realizado con éxito");
+        navigate("/");
       })
       .catch(error => {
         console.error(error); // Para ver el error completo en la consola
@@ -128,21 +136,17 @@ export default function PaginaDePago({ tarifa } : { tarifa: Tarifa | null | unde
                 </div>
               </div>
               <div className="mt-8">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  type="submit"
-                  className={`w-full bg-blue-600 text-white py-3 px-4 rounded-md font-bold text-lg shadow-lg transition-all duration-300 ${
-                     "hover:bg-blue-700"
-                  }`}
-                >
-                  {`Pagar $${tarifa.precio.toFixed(2)}`}
-                </motion.button>
+
+                <SimpleButton>{`Pagar $${tarifa.precio.toFixed(2)}`}</SimpleButton>
               </div>
             </form>
           </div>
         </div>
+
+        <SimpleButton action={handleReturn}>{"cancelar"}</SimpleButton>
+
       </div>
+
     </div>
   )
 }

@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { DefaultButton } from '../components/buttons/ButtonDefault';
 import { SelectLanguage } from '../components/buttons/SelectLanguage';
-import { toast } from 'react-toastify';
 
 type RegisterResponse = User | { error: string };
 
@@ -25,10 +24,7 @@ export default function Registre() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (contrasenya !== confirmContrasenya) {
-      toast('Les contrasenyes no coincideixen');
-      return;
-    }
+      
     const  nom_complet = nom + " " + cognom;
     
     const response = await register({ name: nom_complet, email: correu, password: contrasenya, confirmPassword: confirmContrasenya }) as RegisterResponse;
