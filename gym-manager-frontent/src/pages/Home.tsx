@@ -75,8 +75,8 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-lg">
+    <div className="min-h-screen bg-semi_negre">
+      <nav className="bg-recuadre shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
@@ -93,16 +93,16 @@ export default function Home() {
                     src={user.profile_photo_url || "/placeholder.svg"}
                     alt={user.name}
                   />
-                  <span className="ml-2 text-gray-700">{user.name}</span>
+                  <span className="ml-2 text-white">{user.name}</span>
                   <button
                     onClick={handleLogout}
-                    className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:text-gray-900 focus:bg-gray-100"
+                    className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-white hover:text-black hover:bg-blau_fosc focus:outline-none focus:text-gray-900 focus:bg-gray-100"
                   >
                     <LogOut className="h-5 w-5" />
                   </button>
                 </div>
               ) : (
-                <button className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:text-gray-900 focus:bg-gray-100">
+                <button className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-white hover:text-white hover:bg-gray-100 focus:outline-none focus:text-gray-900 focus:bg-gray-100">
                   <LogIn className="h-5 w-5" />
                 </button>
               )}
@@ -135,14 +135,14 @@ export default function Home() {
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="ml-auto flex-shrink-0 bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="ml-auto flex-shrink-0 bg-white p-1 rounded-full text-white hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     <LogOut className="h-6 w-6" />
                   </button>
                 </div>
               ) : (
                 <div className="mt-3 px-2 space-y-1">
-                  <button className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition duration-150 ease-in-out">
+                  <button className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition duration-150 ease-in-out">
                     Iniciar sesión
                   </button>
                 </div>
@@ -154,21 +154,21 @@ export default function Home() {
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {user && membresia && (
-          <div className="bg-white overflow-hidden shadow-xl rounded-lg mb-8">
+          <div className="bg-recuadre overflow-hidden shadow-xl rounded-lg mb-8">
             <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-lg leading-6 font-medium text-gray-900">Tu membresía</h2>
+              <h2 className="text-lg leading-6 font-medium text-white">Tu membresía</h2>
               <div className="mt-3 flex items-center">
                 <div className="text-5xl font-extrabold text-indigo-600">
                   {calculateRemainingDays(membresia.fecha_fin)}
                 </div>
-                <div className="ml-3 text-xl text-gray-500">días restantes</div>
+                <div className="ml-3 text-xl text-white">días restantes</div>
               </div>
             </div>
           </div>
         )}
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="bg-white overflow-hidden shadow-lg rounded-lg">
+          <div className="bg-recuadre overflow-hidden shadow-lg rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <div className="flex items-center">
                 <CalendarDays className="h-8 w-8 text-indigo-600" />
@@ -187,7 +187,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="bg-white overflow-hidden shadow-lg rounded-lg">
+          <div className="bg-recuadre overflow-hidden shadow-lg rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <div className="flex items-center">
                 <Clock className="h-8 w-8 text-indigo-600" />
@@ -214,7 +214,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="bg-white overflow-hidden shadow-lg rounded-lg">
+          <div className="bg-recuadre overflow-hidden shadow-lg rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <div className="flex items-center">
                 <Phone className="h-8 w-8 text-indigo-600" />
@@ -239,7 +239,7 @@ export default function Home() {
         </div>
 
         {user && (
-          <div className="mt-8 bg-white overflow-hidden shadow-lg rounded-lg">
+          <div className="mt-8 bg-recuadre overflow-hidden shadow-lg rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <div className="flex items-center">
                 <CreditCard className="h-8 w-8 text-indigo-600" />

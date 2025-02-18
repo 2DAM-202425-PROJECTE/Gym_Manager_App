@@ -15,7 +15,8 @@ export default {
         granate: '#670d10',
         semi_negre: '#0b132b',
         cyan: '#5bc0be',
-       
+        recuadre: '#1c2541',
+        
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
