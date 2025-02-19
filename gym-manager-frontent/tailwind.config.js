@@ -1,32 +1,34 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
+  darkMode: ["class"],
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+    "*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       colors: {
-      
-
-        blau_clar: '#6eb6de',
-        blau_electric: '#4a77d4',
-        blau_fosc: '#092756',
-        granate: '#670d10',
-        semi_negre: '#0b132b',
-        cyan: '#5bc0be',
-       
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#0b132b",
+          DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#1c2541",
+          DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
@@ -49,13 +51,10 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        blue: {
-          DEFAULT: "#092756",
-          soft: "rgba(9, 39, 86, 0.1)",
-        },
-        garnet: {
-          DEFAULT: "#670d10",
-          soft: "rgba(103, 13, 16, 0.1)",
+        maroon: {
+          100: "#FFE0E0",
+          600: "#800000",
+          800: "#560000",
         },
       },
       borderRadius: {
@@ -77,9 +76,7 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-
     },
   },
-  plugins: [],
-}
-
+  plugins: [require("tailwindcss-animate")],
+};

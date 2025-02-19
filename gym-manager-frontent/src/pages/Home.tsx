@@ -1,6 +1,8 @@
+"use client"
 
-import { useState, useEffect } from "react"
-import { CalendarDays, Clock, Phone, CreditCard, LogIn, LogOut, User, Mail, Menu } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { CalendarDays,Clock, Phone, CreditCard, LogOut, User, Mail, Dumbbell, Zap, Trophy, TrendingUp,  Bell, Heart, Volume2,  VolumeX, MapPin, Facebook, Instagram, Twitter, Youtube,
+} from "lucide-react"
 
 type Membresia = {
   id: number
@@ -15,37 +17,50 @@ type User = {
   id: number
   name: string
   email: string
-  email_verified_at: string | null
-  current_team_id: number | null
-  profile_photo_path: string | null
-  created_at: string
-  updated_at: string
-  two_factor_confirmed_at: string | null
-  role: string
   profile_photo_url: string
+  membership_level: string
+  total_visits: number
+  joined_date: Date
+}
+
+type Workout = {
+  id: number
+  name: string
+  duration: number
+  calories: number
+  date: Date
+}
+
+type Notification = {
+  id: number
+  message: string
+  date: Date
 }
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null)
   const [membresia, setMembresia] = useState<Membresia | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [workouts, setWorkouts] = useState<Workout[]>([])
+  const [activeTab, setActiveTab] = useState("today")
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [isMuted, setIsMuted] = useState(false)
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const notificationRef = useRef<HTMLDivElement>(null)
+  const profileMenuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Simular la carga de datos del usuario y membresía
+    // Simular la carga de datos del usuario, membresía y entrenamientos
     const fetchData = async () => {
-      // Aquí deberías hacer una llamada a tu API real
       const userData: User = {
         id: 1,
         name: "Juan Pérez",
         email: "juan@example.com",
         profile_photo_url: "/placeholder.svg?height=40&width=40",
-        email_verified_at: null,
-        current_team_id: null,
-        profile_photo_path: null,
-        created_at: "",
-        updated_at: "",
-        two_factor_confirmed_at: null,
-        role: ""
+        membership_level: "Oro",
+        total_visits: 87,
+        joined_date: new Date("2022-03-15"),
       }
       const membresiaData: Membresia = {
         id: 1,
@@ -55,10 +70,37 @@ export default function Home() {
         created_at: new Date(),
         updated_at: new Date(),
       }
+      const workoutsData: Workout[] = [
+        { id: 1, name: "Cardio", duration: 45, calories: 300, date: new Date("2023-06-01") },
+        { id: 2, name: "Fuerza", duration: 60, calories: 250, date: new Date("2023-06-03") },
+        { id: 3, name: "Yoga", duration: 75, calories: 180, date: new Date("2023-06-05") },
+      ]
+      const notificationsData: Notification[] = [
+        { id: 1, message: "Nueva clase de Zumba disponible", date: new Date("2023-06-10") },
+        { id: 2, message: "Recuerda tu sesión de entrenamiento mañana", date: new Date("2023-06-11") },
+        { id: 3, message: "¡Felicidades! Has alcanzado tu meta semanal", date: new Date("2023-06-12") },
+      ]
       setUser(userData)
       setMembresia(membresiaData)
+      setWorkouts(workoutsData)
+      setNotifications(notificationsData)
     }
     fetchData()
+  }, [])
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setShowNotifications(false)
+      }
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setShowProfileMenu(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
   }, [])
 
   const handleLogout = () => {
@@ -74,189 +116,364 @@ export default function Home() {
     return diffDays
   }
 
+  const totalCalories = workouts.reduce((sum, workout) => sum + workout.calories, 0)
+
+  const toggleMute = () => {
+    setIsMuted(!isMuted)
+  }
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <img className="h-8 w-auto" src="/placeholder.svg?height=32&width=32" alt="Gym Logo" />
-                <span className="ml-2 text-xl font-bold text-gray-800">Mi Gimnasio</span>
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <aside className="w-64 bg-white shadow-md hidden md:block">
+          <div className="p-4 flex items-center space-x-2">
+            <Dumbbell className="h-8 w-8 text-maroon-600" />
+            <h1 className="text-2xl font-bold text-maroon-600">POWER GYM</h1>
+          </div>
+          <nav className="mt-8">
+            <a
+              href="#"
+              className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600 border-l-4 border-maroon-600"
+            >
+              Dashboard
+            </a>
+            <a href="/clases" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
+              Clases
+            </a>
+            <a href="/entrenadors" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
+              Entrenadores
+            </a>
+            <a href="/nutricion" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
+              Nutrición
+            </a>
+            <a href="configuracio" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
+              Configuración
+            </a>
+          </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 p-8 overflow-y-auto">
+          {/* Header */}
+          <header className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-semibold text-gray-800">Bienvenido, {user?.name}</h2>
+            {user && (
+              <div className="flex items-center space-x-4">
+                <div className="relative">
+                  <button
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors relative"
+                  >
+                    <Bell className="h-5 w-5 text-gray-600" />
+                    {notifications.length > 0 && (
+                      <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                        {notifications.length}
+                      </span>
+                    )}
+                  </button>
+                  {showNotifications && (
+                    <div
+                      ref={notificationRef}
+                      className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10"
+                    >
+                      <div className="py-2 px-4 bg-gray-100 text-gray-800 font-semibold rounded-t-md flex justify-between items-center">
+                        <span>Notificaciones</span>
+                        <button onClick={toggleMute} className="text-gray-600 hover:text-gray-800">
+                          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                        </button>
+                      </div>
+                      <div className="py-2 max-h-64 overflow-y-auto">
+                        {notifications.map((notification) => (
+                          <div key={notification.id} className="px-4 py-2 hover:bg-gray-100">
+                            <p className="text-sm text-gray-800">{notification.message}</p>
+                            <p className="text-xs text-gray-500 mt-1">{notification.date.toLocaleDateString()}</p>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="py-2 px-4 bg-gray-100 text-center rounded-b-md">
+                        <button className="text-sm text-blue-600 hover:text-blue-800">Ver todas</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="relative">
+                  <button
+                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                    className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden"
+                  >
+                    <img
+                      src={user.profile_photo_url || "/placeholder.svg"}
+                      alt={user.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                  {showProfileMenu && (
+                    <div ref={profileMenuRef} className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                      <div className="py-2 px-4 bg-gray-100 text-gray-800 font-semibold rounded-t-md">
+                        Perfil de Usuario
+                      </div>
+                      <div className="py-2">
+                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          <User className="inline-block w-4 h-4 mr-2" />
+                          Ver perfil
+                        </a>
+                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          <CreditCard className="inline-block w-4 h-4 mr-2" />
+                          Membresía: {user.membership_level}
+                        </a>
+                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          <CalendarDays className="inline-block w-4 h-4 mr-2" />
+                          Miembro desde: {user.joined_date.toLocaleDateString()}
+                        </a>
+                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          <TrendingUp className="inline-block w-4 h-4 mr-2" />
+                          Total de visitas: {user.total_visits}
+                        </a>
+                        <button
+                          onClick={handleLogout}
+                          className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                        >
+                          <LogOut className="inline-block w-4 h-4 mr-2" />
+                          Cerrar sesión
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </header>
+
+          {/* Membership Status */}
+          {user && membresia && (
+            <div className="mb-8 bg-gradient-to-r from-[#800000]  to-[#800000] rounded-xl text-white shadow-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">Estado de Membresía</h3>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-4xl font-bold">{calculateRemainingDays(membresia.fecha_fin)}</p>
+                  <p className="text-sm opacity-80">días restantes</p>
+                </div>
+                <div className="w-1/2">
+                  <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-white rounded-full"
+                      style={{ width: `${(calculateRemainingDays(membresia.fecha_fin) / 365) * 100}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-sm mt-2 text-right opacity-80">
+                    Vence: {membresia.fecha_fin.toLocaleDateString()}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="hidden sm:ml-6 sm:flex sm:items-center">
-              {user ? (
-                <div className="ml-3 relative flex items-center">
-                  <img
-                    className="h-8 w-8 rounded-full"
-                    src={user.profile_photo_url || "/placeholder.svg"}
-                    alt={user.name}
-                  />
-                  <span className="ml-2 text-gray-700">{user.name}</span>
-                  <button
-                    onClick={handleLogout}
-                    className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:text-gray-900 focus:bg-gray-100"
-                  >
-                    <LogOut className="h-5 w-5" />
-                  </button>
+          )}
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Visitas este mes</p>
+                  <p className="text-3xl font-bold text-gray-700">24</p>
                 </div>
-              ) : (
-                <button className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:text-gray-900 focus:bg-gray-100">
-                  <LogIn className="h-5 w-5" />
-                </button>
-              )}
+                <div className="bg-green-100 p-3 rounded-full">
+                  <TrendingUp className="h-6 w-6 text-green-600" />
+                </div>
+              </div>
+              <p className="text-sm text-green-600 mt-2">↑ 12% vs. mes pasado</p>
             </div>
-            <div className="-mr-2 flex items-center sm:hidden">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
-              >
-                <Menu className="h-6 w-6" />
+            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Calorías quemadas</p>
+                  <p className="text-3xl font-bold text-gray-700">{totalCalories}</p>
+                </div>
+                <div className="bg-orange-100 p-3 rounded-full">
+                  <Zap className="h-6 w-6 text-orange-600" />
+                </div>
+              </div>
+              <p className="text-sm text-orange-600 mt-2">↑ 5% vs. semana pasada</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Nivel de membresía</p>
+                  <p className="text-3xl font-bold text-gray-700">Oro</p>
+                </div>
+                <div className="bg-yellow-100 p-3 rounded-full">
+                  <Trophy className="h-6 w-6 text-yellow-600" />
+                </div>
+              </div>
+              <p className="text-sm text-yellow-600 mt-2">50 puntos para Platino</p>
+            </div>
+          </div>
+
+          {/* Workout History and Upcoming Classes */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* Workout History */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-semibold mb-4">Historial de Entrenamientos</h3>
+              <div className="space-y-4">
+                {workouts.map((workout) => (
+                  <div key={workout.id} className="flex items-center justify-between py-2 border-b last:border-b-0">
+                    <div className="flex items-center">
+                      <Dumbbell className="h-5 w-5 text-maroon-600 mr-3" />
+                      <div>
+                        <p className="font-medium">{workout.name}</p>
+                        <p className="text-sm text-gray-500">{workout.date.toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">{workout.duration} min</p>
+                      <p className="text-sm text-gray-500">{workout.calories} cal</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <button className="w-full mt-4 py-2 px-4 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
+                Ver todo el historial
+              </button>
+            </div>
+
+            {/* Upcoming Classes */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-semibold mb-4">Próximas Clases</h3>
+              <div className="flex mb-4 border-b">
+                <button
+                  onClick={() => setActiveTab("today")}
+                  className={`py-2 px-4 ${activeTab === "today" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
+                >
+                  Hoy
+                </button>
+                <button
+                  onClick={() => setActiveTab("tomorrow")}
+                  className={`py-2 px-4 ${activeTab === "tomorrow" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
+                >
+                  Mañana
+                </button>
+                <button
+                  onClick={() => setActiveTab("week")}
+                  className={`py-2 px-4 ${activeTab === "week" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
+                >
+                  Esta Semana
+                </button>
+              </div>
+              {activeTab === "today" && (
+                <div className="space-y-4">
+                  {["Yoga", "Spinning", "CrossFit"].map((clase, index) => (
+                    <div key={index} className="flex items-center justify-between py-2 border-b last:border-b-0">
+                      <div className="flex items-center">
+                        <Clock className="h-5 w-5 text-maroon-600 mr-3" />
+                        <span>{clase}</span>
+                      </div>
+                      <span className="px-2 py-1 bg-maroon-100 text-maroon-600 rounded text-sm">{`${17 + index}:00`}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {activeTab === "tomorrow" && <p className="text-gray-500">Clases para mañana...</p>}
+              {activeTab === "week" && <p className="text-gray-500">Clases para esta semana...</p>}
+              <button className="w-full mt-4 py-2 px-4 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
+                Ver todas las clases
               </button>
             </div>
           </div>
-        </div>
-        {isMenuOpen && (
-          <div className="sm:hidden">
-            <div className="pt-2 pb-3">
-              {user ? (
-                <div className="flex items-center px-4">
-                  <div className="flex-shrink-0">
-                    <img
-                      className="h-10 w-10 rounded-full"
-                      src={user.profile_photo_url || "/placeholder.svg"}
-                      alt={user.name}
-                    />
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-base font-medium text-gray-800">{user.name}</div>
-                    <div className="text-sm font-medium text-gray-500">{user.email}</div>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="ml-auto flex-shrink-0 bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    <LogOut className="h-6 w-6" />
-                  </button>
-                </div>
-              ) : (
-                <div className="mt-3 px-2 space-y-1">
-                  <button className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition duration-150 ease-in-out">
-                    Iniciar sesión
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </nav>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {user && membresia && (
-          <div className="bg-white overflow-hidden shadow-xl rounded-lg mb-8">
-            <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-lg leading-6 font-medium text-gray-900">Tu membresía</h2>
-              <div className="mt-3 flex items-center">
-                <div className="text-5xl font-extrabold text-indigo-600">
-                  {calculateRemainingDays(membresia.fecha_fin)}
-                </div>
-                <div className="ml-3 text-xl text-gray-500">días restantes</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="bg-white overflow-hidden shadow-lg rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <div className="flex items-center">
-                <CalendarDays className="h-8 w-8 text-indigo-600" />
-                <h3 className="ml-3 text-lg leading-6 font-medium text-gray-900">Horarios</h3>
-              </div>
-              <div className="mt-5 text-gray-500">
-                <p className="group flex items-center">
-                  <span className="w-20 font-medium">Lun - Vie:</span>
-                  <span>6:00 AM - 10:00 PM</span>
-                </p>
-                <p className="group flex items-center mt-2">
-                  <span className="w-20 font-medium">Sáb - Dom:</span>
-                  <span>8:00 AM - 8:00 PM</span>
-                </p>
-              </div>
-            </div>
+          {/* Call to Action */}
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg p-6 mb-8">
+            <h3 className="text-xl font-semibold mb-2">¿Listo para el siguiente nivel?</h3>
+            <p className="mb-4">Actualiza tu plan y accede a clases exclusivas y entrenamiento personalizado.</p>
+            <button className="py-2 px-4 bg-white text-blue-600 rounded hover:bg-gray-100 transition-colors">
+              Mejorar mi membresía
+            </button>
           </div>
 
-          <div className="bg-white overflow-hidden shadow-lg rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <div className="flex items-center">
-                <Clock className="h-8 w-8 text-indigo-600" />
-                <h3 className="ml-3 text-lg leading-6 font-medium text-gray-900">Clases</h3>
-              </div>
-              <div className="mt-5 space-y-2">
-                <p className="flex items-center text-sm text-gray-500">
-                  <span className="w-24 font-medium">Yoga:</span>
-                  <span>Lun, Mié 7:00 PM</span>
-                </p>
-                <p className="flex items-center text-sm text-gray-500">
-                  <span className="w-24 font-medium">Spinning:</span>
-                  <span>Mar, Jue 6:00 PM</span>
-                </p>
-                <p className="flex items-center text-sm text-gray-500">
-                  <span className="w-24 font-medium">Zumba:</span>
-                  <span>Vie 7:00 PM</span>
-                </p>
-                <p className="flex items-center text-sm text-gray-500">
-                  <span className="w-24 font-medium">CrossFit:</span>
-                  <span>Sáb 10:00 AM</span>
-                </p>
+          {/* Motivational Quote */}
+          <div className="text-center mb-8">
+            <p className="text-xl text-gray-600 italic">"El único mal entrenamiento es el que no hiciste."</p>
+            <div className="mt-2 flex justify-center items-center">
+              <Heart className="h-5 w-5 text-red-500 mr-2" />
+              <span className="text-sm text-gray-500">Frase del día</span>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-8">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h4 className="text-lg font-semibold mb-4">POWER GYM</h4>
+              <p className="text-sm">Tu camino hacia una vida más saludable y en forma comienza aquí.</p>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Enlaces rápidos</h4>
+              <ul className="space-y-2">
+                <li>
+                  <a href="#" className="text-sm hover:text-gray-300">
+                    Inicio
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm hover:text-gray-300">
+                    Clases
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm hover:text-gray-300">
+                    Entrenadores
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm hover:text-gray-300">
+                    Membresías
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Contacto</h4>
+              <ul className="space-y-2">
+                <li className="flex items-center">
+                  <MapPin className="h-4 w-4 mr-2" />
+                  <span className="text-sm">123 Calle Fitness, Ciudad</span>
+                </li>
+                <li className="flex items-center">
+                  <Phone className="h-4 w-4 mr-2" />
+                  <span className="text-sm">+1 234 567 890</span>
+                </li>
+                <li className="flex items-center">
+                  <Mail className="h-4 w-4 mr-2" />
+                  <span className="text-sm">info@powergym.com</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Síguenos</h4>
+              <div className="flex space-x-4">
+                <a href="#" className="text-white hover:text-gray-300">
+                  <Facebook className="h-6 w-6" />
+                </a>
+                <a href="#" className="text-white hover:text-gray-300">
+                  <Instagram className="h-6 w-6" />
+                </a>
+                <a href="#" className="text-white hover:text-gray-300">
+                  <Twitter className="h-6 w-6" />
+                </a>
+                <a href="#" className="text-white hover:text-gray-300">
+                  <Youtube className="h-6 w-6" />
+                </a>
               </div>
             </div>
           </div>
-
-          <div className="bg-white overflow-hidden shadow-lg rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <div className="flex items-center">
-                <Phone className="h-8 w-8 text-indigo-600" />
-                <h3 className="ml-3 text-lg leading-6 font-medium text-gray-900">Contacto</h3>
-              </div>
-              <div className="mt-5 space-y-2">
-                <p className="flex items-center text-sm text-gray-500">
-                  <Phone className="h-5 w-5 mr-2" />
-                  <span>(123) 456-7890</span>
-                </p>
-                <p className="flex items-center text-sm text-gray-500">
-                  <Mail className="h-5 w-5 mr-2" />
-                  <span>info@migimnasio.com</span>
-                </p>
-                <p className="flex items-center text-sm text-gray-500">
-                  <User className="h-5 w-5 mr-2" />
-                  <span>Calle Principal 123, Ciudad</span>
-                </p>
-              </div>
-            </div>
+          <div className="mt-8 pt-8 border-t border-gray-700 text-center">
+            <p className="text-sm">&copy; 2023 POWER GYM. Todos los derechos reservados.</p>
           </div>
         </div>
-
-        {user && (
-          <div className="mt-8 bg-white overflow-hidden shadow-lg rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <div className="flex items-center">
-                <CreditCard className="h-8 w-8 text-indigo-600" />
-                <h3 className="ml-3 text-lg leading-6 font-medium text-gray-900" >Actualizar Plan</h3>
-              </div>
-              <div className="mt-5">
-                <p className="text-sm text-gray-500 mb-4">
-                  Extiende tu membresía y disfruta de nuestras instalaciones por más tiempo.
-                </p>
-                <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  Actualizar mi plan
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </main>
+      </footer>
     </div>
   )
 }
+
