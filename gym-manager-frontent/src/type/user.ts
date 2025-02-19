@@ -1,3 +1,5 @@
+import { Membresia } from "./membresia";
+
 export type User = {
     id: number;
     name: string;
@@ -10,7 +12,8 @@ export type User = {
     two_factor_confirmed_at: string | null;
     role: string;
     profile_photo_url: string;
-    // isNew?: boolean;
+    membresia: Membresia | null;
+
   };
 
   

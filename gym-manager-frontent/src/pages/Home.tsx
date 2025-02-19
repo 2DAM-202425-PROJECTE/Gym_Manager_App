@@ -38,7 +38,7 @@ export default function Home() {
         id: 1,
         name: "Juan Pérez",
         email: "juan@example.com",
-        profile_photo_url: "/placeholder.svg?height=40&width=40",
+        profile_photo_url: "/placeholder.svg?ight=40&width=40",
         email_verified_at: null,
         current_team_id: null,
         profile_photo_path: null,

@@ -1,72 +1,49 @@
 import { useEffect, useState } from "react"
+import apiClient from "../../api/prefijo"
+import { User } from "../../type/user"
+import { toast } from "react-toastify"
+import { getUsers } from "../../api/user/getUsers"
 
-interface Usuario {
-  id: number
-  name: string
-  email: string
-  email_verified_at: string | null
-  current_team_id: number | null
-  role: "client" | "admin" | "entrenador"
-}
+
 
 const GestionUsuarios: React.FC = () => {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([])
-  const [nuevoUsuario, setNuevoUsuario] = useState<Omit<Usuario, "id">>({
-    name: "",
-    email: "",
-    email_verified_at: null,
-    current_team_id: null,
-    role: "client",
-  })
-  const [editingId, setEditingId] = useState<number | null>(null)
+  const [usuarios, setUsuarios] = useState<User[]>([])
+
+  const [nuevoUsuario, setNuevoUsuario] = useState<User>()
+  const [editingUser, setEditingUser] = useState<User | null>(null)
   const [showConfirm, setShowConfirm] = useState<number | null>(null)
-  const [error, setError] = useState<string>("")
-/*
+
   useEffect(() => {
     const fetchData = async () => {
-      const response = await apiClient.get("/usuarios")
-      const usuarios = response.data as Usuario[]
-      setUsuarios(usuarios)
-    }
+      const response = await getUsers()
+      if (response) setUsuarios(response)
+      }
     fetchData()
   }, [])
-*/
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setNuevoUsuario((prev) => ({ ...prev, [name]: value }))
+    setEditingUser((prev) => (prev ? { ...prev, [name]: value } : prev))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
-    // Validación: Verificar que todos los campos estén llenos
-    if (!nuevoUsuario.name || !nuevoUsuario.email) {
-      setError("Por favor, completa todos los campos.")
-      return
-    }
-
-    const newUsuario: Usuario = {
-      id: Date.now(),
-      ...nuevoUsuario,
-      fecha_de_registre: new Date().toISOString().split("T")[0],
-    }
-
-    setUsuarios((prev) => [...prev, newUsuario])
-    setNuevoUsuario({ name: "", email: "", role: "" })
-    setError("") // Limpiar mensaje de error si la validación es exitosa
+//    setUsuarios((prev) => [...prev, nuevoUsuario])
+    setError("")
   }
 
-  const handleEdit = (id: number) => {
-    setEditingId(id)
+  const handleEdit = (userToEdit: User) => {
+    setEditingUser(userToEdit)
   }
 
-  const handleSave = (id: number) => {
-    setEditingId(null)
+  const handleSave = () => {
+    toast("Usuario actualizado aun nope")
+    setEditingUser(null)
   }
 
-  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
+  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setUsuarios(usuarios.map((user) => (user.id === id ? { ...user, [name]: value } : user)))
+    setEditingUser((prev) => (prev ? { ...prev, [name]: value } : prev))
   }
 
   const handleDelete = (id: number) => {
@@ -78,7 +55,7 @@ const GestionUsuarios: React.FC = () => {
     total: usuarios.length,
     clientes: usuarios.filter((u) => u.role === "client").length,
     admin: usuarios.filter((u) => u.role === "admin").length,
-    entrenadores: usuarios.filter((u) => u.role === "entrenador").length,
+    entrenadores: usuarios.filter((u) => u.role === "trainer").length,
   }
 
   return (
@@ -106,10 +83,8 @@ const GestionUsuarios: React.FC = () => {
             </div>
           </div>
 
-          {/* Mostrar error si algún campo está vacío */}
-          {error && <p className="text-red-600 mb-4">{error}</p>}
 
-          <form onSubmit={handleSubmit} className="mb-6">
+        {/*  <form onSubmit={handleSubmit} className="mb-6">
             <div className="grid grid-cols-2 gap-4">
               <input
                 type="text"
@@ -147,7 +122,7 @@ const GestionUsuarios: React.FC = () => {
                 Añadir Usuario
               </button>
             </div>
-          </form>
+          </form>*/}
         </div>
 
         <div>
@@ -160,16 +135,16 @@ const GestionUsuarios: React.FC = () => {
                   <th className="p-2">Nombre</th>
                   <th className="p-2">Correo</th>
                   <th className="p-2">Rol</th>
-                  <th className="p-2">Fecha de Registro</th>
+                  <th className="p-2">Fecha de fin de matricula</th>
                   <th className="p-2">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {usuarios.map((usuario) => (
+                {usuarios.map((usuario : User) => (
                   <tr key={usuario.id} className="border-b">
                     <td className="p-2">{usuario.id}</td>
                     <td className="p-2">
-                      {editingId === usuario.id ? (
+                      {editingUser?.id === usuario.id ? (
                         <input
                           type="text"
                           name="nombre"
@@ -182,7 +157,7 @@ const GestionUsuarios: React.FC = () => {
                       )}
                     </td>
                     <td className="p-2">
-                      {editingId === usuario.id ? (
+                      {editingUser?.id === usuario.id ? (
                         <input
                           type="email"
                           name="correu"
@@ -195,7 +170,7 @@ const GestionUsuarios: React.FC = () => {
                       )}
                     </td>
                     <td className="p-2">
-                      {editingId === usuario.id ? (
+                      {editingUser?.id === usuario.id ? (
                         <select
                           name="rol"
                           value={usuario.role}
@@ -210,25 +185,25 @@ const GestionUsuarios: React.FC = () => {
                         usuario.role
                       )}
                     </td>
-                    <td className="p-2">{usuario.fecha_de_registre}</td>
+                    <td className="p-2">{usuario.membresia ? usuario.membresia.fecha_fin : "N/D"}</td>
                     <td className="p-2">
-                      {editingId === usuario.id ? (
+                      {editingUser?.id === usuario.id ? (
                         <button
-                          onClick={() => handleSave(usuario.id)}
+                          onClick={() => handleSave()}
                           className="bg-green-500 text-white px-4 py-1 rounded mr-2 hover:bg-green-600"
                         >
                           Guardar
                         </button>
                       ) : (
                         <button
-                          onClick={() => handleEdit(usuario.id)}
+                          onClick={() => handleEdit(usuario)}
                           className="bg-blue-500 text-white px-4 py-1 rounded mr-2 hover:bg-blue-600"
                         >
                           Editar
                         </button>
                       )}
                       <button
-                        onClick={() => setShowConfirm(usuario.id)}
+                        onClick={() => setShowConfirm(usuario?.id)}
                         className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
                       >
                         Eliminar
