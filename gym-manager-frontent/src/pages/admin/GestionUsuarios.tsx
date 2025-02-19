@@ -3,15 +3,19 @@ import apiClient from "../../api/prefijo"
 import { User } from "../../type/user"
 import { toast } from "react-toastify"
 import { getUsers } from "../../api/user/getUsers"
+import { GreenButtonAdmin } from "../../components/buttons/GreenButtonAdmin"
+import { BlueButtonAdmin } from "../../components/buttons/BlueButtonAdmin"
+import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin"
 
 
 
 const GestionUsuarios: React.FC = () => {
   const [usuarios, setUsuarios] = useState<User[]>([])
 
-  const [nuevoUsuario, setNuevoUsuario] = useState<User>()
+//  const [nuevoUsuario, setNuevoUsuario] = useState<User>()
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [showConfirm, setShowConfirm] = useState<number | null>(null)
+  const [userDateEdit, setUserDateEdit] = useState<Date>()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,21 +32,40 @@ const GestionUsuarios: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-//    setUsuarios((prev) => [...prev, nuevoUsuario])
     setError("")
   }
 
   const handleEdit = (userToEdit: User) => {
     setEditingUser(userToEdit)
+    setUserDateEdit(userToEdit.membresia ? new Date(userToEdit.membresia.fecha_fin) : undefined)
   }
+  
 
   const handleSave = () => {
-    toast("Usuario actualizado aun nope")
+    toast("Usuario actualizado")
+    try{
+      apiClient.put(`/users/${editingUser?.id}`, editingUser)
+     const userEdited = editingUser
+     if (userEdited && userEdited.membresia) {
+      userEdited.membresia.fecha_fin = userDateEdit?.toLocaleDateString() || ""
+     }
+
+     console.log(userEdited)
+
+    setUsuarios(usuarios.map((usuario) => (usuario.id === userEdited?.id ? userEdited : usuario)))
+     
     setEditingUser(null)
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    }catch(error){
+      toast("Error al actualizar el usuario")
+    }
   }
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
+    console.log(name, value)
+    console.log(editingUser)
     setEditingUser((prev) => (prev ? { ...prev, [name]: value } : prev))
   }
 
@@ -147,9 +170,9 @@ const GestionUsuarios: React.FC = () => {
                       {editingUser?.id === usuario.id ? (
                         <input
                           type="text"
-                          name="nombre"
-                          value={usuario.name}
-                          onChange={(e) => handleEditInputChange(e, usuario.id)}
+                          name="name"
+                          value={editingUser.name}
+                          onChange={(e) => handleEditInputChange(e)}
                           className="border p-1 rounded w-full"
                         />
                       ) : (
@@ -160,9 +183,9 @@ const GestionUsuarios: React.FC = () => {
                       {editingUser?.id === usuario.id ? (
                         <input
                           type="email"
-                          name="correu"
-                          value={usuario.email}
-                          onChange={(e) => handleEditInputChange(e, usuario.id)}
+                          name="email"
+                          value={editingUser.email}
+                          onChange={(e) => handleEditInputChange(e)}
                           className="border p-1 rounded w-full"
                         />
                       ) : (
@@ -172,9 +195,9 @@ const GestionUsuarios: React.FC = () => {
                     <td className="p-2">
                       {editingUser?.id === usuario.id ? (
                         <select
-                          name="rol"
-                          value={usuario.role}
-                          onChange={(e) => handleEditInputChange(e, usuario.id)}
+                          name="role"
+                          value={editingUser.role}
+                          onChange={(e) => handleEditInputChange(e)}
                           className="border p-1 rounded w-full"
                         >
                           <option value="client">Cliente</option>
@@ -185,29 +208,25 @@ const GestionUsuarios: React.FC = () => {
                         usuario.role
                       )}
                     </td>
-                    <td className="p-2">{usuario.membresia ? usuario.membresia.fecha_fin : "N/D"}</td>
+                    <td className="p-2 text-center">{ 
+                    editingUser?.id === usuario.id ? (
+                        <input
+                          type="date"
+                          name="membresia/fecha_fin"
+                          value={userDateEdit ? userDateEdit.toISOString().split('T')[0] : ''}
+                          onChange={(e) => setUserDateEdit(new Date(e.target.value))}
+                          className="border p-1 rounded w-full"
+                        />
+                      ) :
+                    usuario.membresia ? usuario.membresia.fecha_fin : "N/D"}</td>
                     <td className="p-2">
+
                       {editingUser?.id === usuario.id ? (
-                        <button
-                          onClick={() => handleSave()}
-                          className="bg-green-500 text-white px-4 py-1 rounded mr-2 hover:bg-green-600"
-                        >
-                          Guardar
-                        </button>
+                        <GreenButtonAdmin action={() => handleSave()} text="Guardar" />
                       ) : (
-                        <button
-                          onClick={() => handleEdit(usuario)}
-                          className="bg-blue-500 text-white px-4 py-1 rounded mr-2 hover:bg-blue-600"
-                        >
-                          Editar
-                        </button>
+                        <BlueButtonAdmin text="Editar" action={() => handleEdit(usuario)} />
                       )}
-                      <button
-                        onClick={() => setShowConfirm(usuario?.id)}
-                        className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-                      >
-                        Eliminar
-                      </button>
+                        <RedButtonAdmin text="Eliminar" action={() => setShowConfirm(usuario.id)} />
                     </td>
                   </tr>
                 ))}
