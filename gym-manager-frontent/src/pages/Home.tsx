@@ -1,8 +1,15 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useContext } from "react"
 import { CalendarDays,Clock, Phone, CreditCard, LogOut, User, Mail, Dumbbell, Zap, Trophy, TrendingUp,  Bell, Heart, Volume2,  VolumeX, MapPin, Facebook, Instagram, Twitter, Youtube,
 } from "lucide-react"
+import Sidebar from "../components/sidebar/sidebar"
+import Footer from "../components/footer/footer"
+import { collapseToast } from "react-toastify"
+import { Link } from "react-router"
+import HomeButton from "../components/buttons/HomeButton"
+import HomeStats from "../components/cards/HomeStats"
+import { UserContext } from "../context/userContext"
 
 type Membresia = {
   id: number
@@ -38,7 +45,6 @@ type Notification = {
 }
 
 export default function Home() {
-  const [user, setUser] = useState<User | null>(null)
   const [membresia, setMembresia] = useState<Membresia | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [workouts, setWorkouts] = useState<Workout[]>([])
@@ -49,19 +55,13 @@ export default function Home() {
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const notificationRef = useRef<HTMLDivElement>(null)
   const profileMenuRef = useRef<HTMLDivElement>(null)
+  const { userContext } = useContext(UserContext)
 
   useEffect(() => {
-    // Simular la carga de datos del usuario, membresía y entrenamientos
+
+
     const fetchData = async () => {
-      const userData: User = {
-        id: 1,
-        name: "Juan Pérez",
-        email: "juan@example.com",
-        profile_photo_url: "/placeholder.svg?height=40&width=40",
-        membership_level: "Oro",
-        total_visits: 87,
-        joined_date: new Date("2022-03-15"),
-      }
+  
       const membresiaData: Membresia = {
         id: 1,
         user_id: 1,
@@ -80,7 +80,7 @@ export default function Home() {
         { id: 2, message: "Recuerda tu sesión de entrenamiento mañana", date: new Date("2023-06-11") },
         { id: 3, message: "¡Felicidades! Has alcanzado tu meta semanal", date: new Date("2023-06-12") },
       ]
-      setUser(userData)
+      userContext
       setMembresia(membresiaData)
       setWorkouts(workoutsData)
       setNotifications(notificationsData)
@@ -104,7 +104,6 @@ export default function Home() {
   }, [])
 
   const handleLogout = () => {
-    setUser(null)
     setMembresia(null)
   }
 
@@ -122,43 +121,26 @@ export default function Home() {
     setIsMuted(!isMuted)
   }
 
+  if (!userContext.user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <p className="text-2xl font-bold text-center text-gray-800">Debes iniciar sesión para continuar</p>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="w-64 bg-white shadow-md hidden md:block">
-          <div className="p-4 flex items-center space-x-2">
-            <Dumbbell className="h-8 w-8 text-maroon-600" />
-            <h1 className="text-2xl font-bold text-maroon-600">POWER GYM</h1>
-          </div>
-          <nav className="mt-8">
-            <a
-              href="#"
-              className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600 border-l-4 border-maroon-600"
-            >
-              Dashboard
-            </a>
-            <a href="/clases" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
-              Clases
-            </a>
-            <a href="/entrenadors" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
-              Entrenadores
-            </a>
-            <a href="/nutricion" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
-              Nutrición
-            </a>
-            <a href="configuracio" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
-              Configuración
-            </a>
-          </nav>
-        </aside>
+        <Sidebar></Sidebar>
 
         {/* Main Content */}
         <main className="flex-1 p-8 overflow-y-auto">
           {/* Header */}
           <header className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-semibold text-gray-800">Bienvenido, {user?.name}</h2>
-            {user && (
+            <h2 className="text-3xl font-semibold text-gray-800">Bienvenido, {userContext?.user.name}</h2>
+            {userContext.user && (
               <div className="flex items-center space-x-4">
                 <div className="relative">
                   <button
@@ -203,8 +185,8 @@ export default function Home() {
                     className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden"
                   >
                     <img
-                      src={user.profile_photo_url || "/placeholder.svg"}
-                      alt={user.name}
+                      src={userContext.user.profile_photo_url || "/placeholder.svg"}
+                      alt={userContext.user.name}
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -214,29 +196,29 @@ export default function Home() {
                         Perfil de Usuario
                       </div>
                       <div className="py-2">
-                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <a href="/configuracio" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <User className="inline-block w-4 h-4 mr-2" />
                           Ver perfil
                         </a>
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <CreditCard className="inline-block w-4 h-4 mr-2" />
-                          Membresía: {user.membership_level}
+                          Membresía: {"oro"}
                         </a>
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <CalendarDays className="inline-block w-4 h-4 mr-2" />
-                          Miembro desde: {user.joined_date.toLocaleDateString()}
+                          Miembro desde: {userContext.user.created_at}
                         </a>
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <TrendingUp className="inline-block w-4 h-4 mr-2" />
-                          Total de visitas: {user.total_visits}
+                          Total de visitas: {"no se"}
                         </a>
-                        <button
-                          onClick={handleLogout}
+                        <Link
+                          to={"/login"}
                           className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                         >
                           <LogOut className="inline-block w-4 h-4 mr-2" />
                           Cerrar sesión
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   )}
@@ -246,8 +228,8 @@ export default function Home() {
           </header>
 
           {/* Membership Status */}
-          {user && membresia && (
-            <div className="mb-8 bg-gradient-to-r from-[#800000]  to-[#800000] rounded-xl text-white shadow-lg p-6">
+          { membresia && (
+            <div className="mb-8 bg-gradient-to-r from-[#800000]  to-[#560000] rounded-xl text-white shadow-lg p-6">
               <h3 className="text-xl font-semibold mb-4">Estado de Membresía</h3>
               <div className="flex items-center justify-between">
                 <div>
@@ -270,49 +252,12 @@ export default function Home() {
           )}
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Visitas este mes</p>
-                  <p className="text-3xl font-bold text-gray-700">24</p>
-                </div>
-                <div className="bg-green-100 p-3 rounded-full">
-                  <TrendingUp className="h-6 w-6 text-green-600" />
-                </div>
-              </div>
-              <p className="text-sm text-green-600 mt-2">↑ 12% vs. mes pasado</p>
-            </div>
-            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Calorías quemadas</p>
-                  <p className="text-3xl font-bold text-gray-700">{totalCalories}</p>
-                </div>
-                <div className="bg-orange-100 p-3 rounded-full">
-                  <Zap className="h-6 w-6 text-orange-600" />
-                </div>
-              </div>
-              <p className="text-sm text-orange-600 mt-2">↑ 5% vs. semana pasada</p>
-            </div>
-            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Nivel de membresía</p>
-                  <p className="text-3xl font-bold text-gray-700">Oro</p>
-                </div>
-                <div className="bg-yellow-100 p-3 rounded-full">
-                  <Trophy className="h-6 w-6 text-yellow-600" />
-                </div>
-              </div>
-              <p className="text-sm text-yellow-600 mt-2">50 puntos para Platino</p>
-            </div>
-          </div>
+          <HomeStats></HomeStats>
 
           {/* Workout History and Upcoming Classes */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Workout History */}
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-xl font-semibold mb-4">Historial de Entrenamientos</h3>
               <div className="space-y-4">
                 {workouts.map((workout) => (
@@ -331,13 +276,11 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-              <button className="w-full mt-4 py-2 px-4 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
-                Ver todo el historial
-              </button>
+              <HomeButton text="Ver todo el historial"></HomeButton>
             </div>
 
             {/* Upcoming Classes */}
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-xl font-semibold mb-4">Próximas Clases</h3>
               <div className="flex mb-4 border-b">
                 <button
@@ -374,21 +317,12 @@ export default function Home() {
               )}
               {activeTab === "tomorrow" && <p className="text-gray-500">Clases para mañana...</p>}
               {activeTab === "week" && <p className="text-gray-500">Clases para esta semana...</p>}
-              <button className="w-full mt-4 py-2 px-4 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
-                Ver todas las clases
-              </button>
+             <HomeButton text="Ver todas las clases"></HomeButton>
             </div>
           </div>
-
-          {/* Call to Action */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg p-6 mb-8">
-            <h3 className="text-xl font-semibold mb-2">¿Listo para el siguiente nivel?</h3>
-            <p className="mb-4">Actualiza tu plan y accede a clases exclusivas y entrenamiento personalizado.</p>
-            <button className="py-2 px-4 bg-white text-blue-600 rounded hover:bg-gray-100 transition-colors">
-              Mejorar mi membresía
-            </button>
-          </div>
-
+          
+          
+          
           {/* Motivational Quote */}
           <div className="text-center mb-8">
             <p className="text-xl text-gray-600 italic">"El único mal entrenamiento es el que no hiciste."</p>
@@ -397,82 +331,23 @@ export default function Home() {
               <span className="text-sm text-gray-500">Frase del día</span>
             </div>
           </div>
+
+          
+          {/* Call to Action */}
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl shadow-lg p-6 mb-8">
+            <h3 className="text-xl font-semibold mb-2">¿Listo para el siguiente nivel?</h3>
+            <p className="mb-4">Actualiza tu plan y accede a clases exclusivas y entrenamiento personalizado.</p>
+            <Link to={"/tarifas"} className="py-2 px-4 bg-white text-blue-600 rounded hover:bg-gray-100 transition-colors">
+              Mejorar mi membresía
+            </Link>
+          </div>
+
+        
         </main>
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h4 className="text-lg font-semibold mb-4">POWER GYM</h4>
-              <p className="text-sm">Tu camino hacia una vida más saludable y en forma comienza aquí.</p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Enlaces rápidos</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-sm hover:text-gray-300">
-                    Inicio
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-sm hover:text-gray-300">
-                    Clases
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-sm hover:text-gray-300">
-                    Entrenadores
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-sm hover:text-gray-300">
-                    Membresías
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Contacto</h4>
-              <ul className="space-y-2">
-                <li className="flex items-center">
-                  <MapPin className="h-4 w-4 mr-2" />
-                  <span className="text-sm">123 Calle Fitness, Ciudad</span>
-                </li>
-                <li className="flex items-center">
-                  <Phone className="h-4 w-4 mr-2" />
-                  <span className="text-sm">+1 234 567 890</span>
-                </li>
-                <li className="flex items-center">
-                  <Mail className="h-4 w-4 mr-2" />
-                  <span className="text-sm">info@powergym.com</span>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Síguenos</h4>
-              <div className="flex space-x-4">
-                <a href="#" className="text-white hover:text-gray-300">
-                  <Facebook className="h-6 w-6" />
-                </a>
-                <a href="#" className="text-white hover:text-gray-300">
-                  <Instagram className="h-6 w-6" />
-                </a>
-                <a href="#" className="text-white hover:text-gray-300">
-                  <Twitter className="h-6 w-6" />
-                </a>
-                <a href="#" className="text-white hover:text-gray-300">
-                  <Youtube className="h-6 w-6" />
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t border-gray-700 text-center">
-            <p className="text-sm">&copy; 2023 POWER GYM. Todos los derechos reservados.</p>
-          </div>
-        </div>
-      </footer>
+     <Footer></Footer>
     </div>
   )
 }
