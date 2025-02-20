@@ -1,11 +1,10 @@
 "use client"
 
 import { useState, useEffect, useRef, useContext } from "react"
-import { CalendarDays,Clock, Phone, CreditCard, LogOut, User, Mail, Dumbbell, Zap, Trophy, TrendingUp,  Bell, Heart, Volume2,  VolumeX, MapPin, Facebook, Instagram, Twitter, Youtube,
+import { CalendarDays,Clock, CreditCard, LogOut, User, Dumbbell, TrendingUp,  Bell, Heart, Volume2,  VolumeX
 } from "lucide-react"
 import Sidebar from "../components/sidebar/sidebar"
 import Footer from "../components/footer/footer"
-import { collapseToast } from "react-toastify"
 import { Link } from "react-router"
 import HomeButton from "../components/buttons/HomeButton"
 import HomeStats from "../components/cards/HomeStats"
@@ -46,7 +45,6 @@ type Notification = {
 
 export default function Home() {
   const [membresia, setMembresia] = useState<Membresia | null>(null)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [workouts, setWorkouts] = useState<Workout[]>([])
   const [activeTab, setActiveTab] = useState("today")
   const [showNotifications, setShowNotifications] = useState(false)
@@ -61,7 +59,7 @@ export default function Home() {
 
 
     const fetchData = async () => {
-  
+
       const membresiaData: Membresia = {
         id: 1,
         user_id: 1,
@@ -80,7 +78,7 @@ export default function Home() {
         { id: 2, message: "Recuerda tu sesión de entrenamiento mañana", date: new Date("2023-06-11") },
         { id: 3, message: "¡Felicidades! Has alcanzado tu meta semanal", date: new Date("2023-06-12") },
       ]
-      userContext
+  
       setMembresia(membresiaData)
       setWorkouts(workoutsData)
       setNotifications(notificationsData)
@@ -103,9 +101,6 @@ export default function Home() {
     }
   }, [])
 
-  const handleLogout = () => {
-    setMembresia(null)
-  }
 
   const calculateRemainingDays = (endDate: Date) => {
     const today = new Date()
@@ -115,7 +110,6 @@ export default function Home() {
     return diffDays
   }
 
-  const totalCalories = workouts.reduce((sum, workout) => sum + workout.calories, 0)
 
   const toggleMute = () => {
     setIsMuted(!isMuted)

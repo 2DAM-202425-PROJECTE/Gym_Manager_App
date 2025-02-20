@@ -6,6 +6,8 @@ interface DefaultButtonProps {
 }
 
 export function DefaultButton({ text, action }: DefaultButtonProps){
+
+
     return (
         <button
         type="submit"

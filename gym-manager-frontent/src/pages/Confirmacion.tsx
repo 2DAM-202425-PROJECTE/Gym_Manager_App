@@ -2,11 +2,12 @@
 
 import type React from "react"
 import { useContext, useState } from "react"
-import { motion } from "framer-motion"
 import apiClient from "../api/prefijo"
 import { UserContext } from "../context/userContext"
 import { toast } from "react-toastify"
 import { Lock, HelpCircle, CreditCard, AlertCircle } from "lucide-react"
+import { motion } from "framer-motion"
+import { useNavigate } from "react-router-dom"
 
 // Tipo para la tarifa
 type Tarifa = {
@@ -18,6 +19,7 @@ type Tarifa = {
 
 export default function PaginaDePago({ tarifa }: { tarifa: Tarifa | null | undefined }) {
   const { userContext } = useContext(UserContext)
+  const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     numeroTarjeta: "",
@@ -54,15 +56,16 @@ export default function PaginaDePago({ tarifa }: { tarifa: Tarifa | null | undef
       toast.error("Debes iniciar sesión para continuar")
       return
     }
+    console.log(userContext.user)
+      const user_id = userContext.user.id
 
-    setIsLoading(true)
-    const fechaFin = new Date()
-    fechaFin.setMonth(fechaFin.getMonth() + tarifa.meses)
-
-    apiClient
-      .post("/membresias", { user_id: userContext.user.id, fecha_fin: fechaFin })
+      const fechaFin = new Date();
+      fechaFin.setMonth(fechaFin.getMonth() + tarifa.meses);
+      apiClient.post("/membresias", { user_id: user_id, fecha_fin: fechaFin, tarifa_id: tarifa.id })
       .then(() => {
-        toast.success("Pago realizado con éxito")
+        
+        toast.success("Pago realizado con éxito");
+        navigate("/");
       })
       .catch(() => {
         toast.error("Error al realizar el pago")
@@ -184,7 +187,10 @@ export default function PaginaDePago({ tarifa }: { tarifa: Tarifa | null | undef
             </div>
           </div>
         </div>
+
+
       </div>
+
     </div>
   )
 }

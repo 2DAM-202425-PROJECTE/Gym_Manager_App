@@ -27,4 +27,3 @@ export function UserProvider({ children }: UserProviderProps) {
       );
 
 }
-
