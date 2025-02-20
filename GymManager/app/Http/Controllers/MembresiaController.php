@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Membresia;
+use App\Models\Pago;
 use BaconQrCode\Encoder\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -10,21 +11,39 @@ class MembresiaController extends Controller
 {
     public function store(Request $request)
     {
+        // Validación de los datos
         $request->validate([
             'user_id' => 'required|exists:users,id',
+            'tarifa_id' => 'required|exists:tarifas,id',
             'fecha_fin' => 'required|date',
         ]);
 
-        $uuid = Str::uuid()->toString();
+        // Intentar encontrar la membresía existente
+        $membresia = Membresia::where('user_id', $request->user_id)->first();
 
-        $membresia = Membresia::create([
-            'user_id' => $request->user_id,
-            'fecha_fin' => $request->fecha_fin,
-            'qr_data' => $uuid,
+        if ($membresia) {
+            // Si ya existe una membresía, solo actualizamos la fecha_fin
+            $membresia->fecha_fin = $request->fecha_fin;
+            $membresia->save();
+        } else {
+            // Si no existe una membresía, creamos una nueva
+            $uuid = Str::uuid()->toString();
+            $membresia = Membresia::create([
+                'user_id' => $request->user_id,
+                'fecha_fin' => $request->fecha_fin,
+                'qr_data' => $uuid,
+            ]);
+        }
+        Pago::create([
+            'membresia_id' => $membresia->id,
+            'tarifa_id' => $request->tarifa_id,
+            'fecha_pago' => now(),
+            'estado' => 'completado',
         ]);
-
+        // Devolver la respuesta
         return response()->json($membresia, 201);
     }
+
 
     public function index()
     {

@@ -17,10 +17,11 @@ class AuthController
         ]);
 
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+            $user = Auth::user()->load('membresia'); // Cargar la relación membresia
             $token = $user->createToken('YourAppName')->plainTextToken;
+
             return response()->json([
-                'message' => 'User registered successfully',
+                'message' => 'User logged in successfully',
                 'token' => $token,
                 'user' => $user,
             ], 200);
