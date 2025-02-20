@@ -8,6 +8,7 @@ export async function login({ email, password }: { email: string; password: stri
         const response = await apiClient.post("/login", { email, password });
         const user = response.data.user as User;
 
+        console.log('👤 User logged in:', user);
         toast.success('Inici de sessio correcte');
         
         return user;
