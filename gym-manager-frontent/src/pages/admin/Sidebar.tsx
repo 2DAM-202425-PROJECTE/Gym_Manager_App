@@ -1,5 +1,8 @@
+import { LogOut } from "lucide-react";
 import type React from "react"
 import { useState } from "react"
+import { Link } from "react-router-dom";
+
 
 interface SidebarProps {
   activeSection: string
@@ -39,6 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
       onMouseLeave={() => setIsExpanded(false)}
     >
       <div className="flex items-center justify-center mb-8">
+
         <svg
           className="w-8 h-8"
           fill="none"
@@ -50,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
         </svg>
         {isExpanded && <span className="ml-2 text-xl font-bold">GymManager Admin</span>}
       </div>
-      <nav>
+      <nav >
         {menuItems.map((item) => (
           <button
             key={item.section}
@@ -72,6 +76,15 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
           </button>
         ))}
       </nav>
+      <div className="mt-auto">
+      <Link
+          to={"/login"}
+          className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-blau_fosc"
+        >
+          <LogOut className="inline-block w-5 h-5 mr-2" />
+          {isExpanded && "Cerrar sesión"}
+        </Link>
+      </div>
     </div>
   )
 }

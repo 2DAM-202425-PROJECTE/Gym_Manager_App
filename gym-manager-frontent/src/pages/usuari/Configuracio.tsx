@@ -142,7 +142,7 @@ export default function SettingsPage() {
                   <p className="mb-4">
                     Próxima facturación: <span className="font-semibold">15/07/2023</span>
                   </p>
-                  <button className="px-4 py-2 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
+                  <button onClick={() => window.location.href = "/tarifas"} className="px-4 py-2 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
                     Cambiar Plan
                   </button>
                 </div>
