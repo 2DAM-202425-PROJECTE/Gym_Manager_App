@@ -117,11 +117,21 @@ export default function Home() {
 
   if (!userContext.user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <p className="text-2xl font-bold text-center text-gray-800">Debes iniciar sesión para continuar</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-6">
+        <p className="text-2xl font-bold text-center text-gray-800">
+          Debes iniciar sesión para continuar
+        </p>
+  
+        <Link
+          to="/login"
+          className="px-6 py-3 text-white text-lg font-semibold rounded-2xl shadow-md transition duration-200"
+          style={{ backgroundColor: "#800000" }}
+        >
+          Iniciar sesión
+        </Link>
       </div>
-    )
-  }
+    );
+  } 
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
