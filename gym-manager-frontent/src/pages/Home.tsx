@@ -227,7 +227,7 @@ export default function Home() {
               <h3 className="text-xl font-semibold mb-4">Estado de Membresía</h3>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-4xl font-bold">{calculateRemainingDays(membresia.fecha_fin)}</p>
+                  <p className="text-4xl font-bold">{userContext.user.membresia?.fecha_fin ? calculateRemainingDays(new Date(userContext.user.membresia.fecha_fin)) : "N/A"}</p>
                   <p className="text-sm opacity-80">días restantes</p>
                 </div>
                 <div className="w-1/2">
