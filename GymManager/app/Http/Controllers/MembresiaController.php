@@ -22,7 +22,6 @@ class MembresiaController extends Controller
         $membresia = Membresia::where('user_id', $request->user_id)->first();
 
         if ($membresia) {
-            // Si ya existe una membresía, solo actualizamos la fecha_fin
             $membresia->fecha_fin = $request->fecha_fin;
             $membresia->save();
         } else {
