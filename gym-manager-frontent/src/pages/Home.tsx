@@ -117,11 +117,21 @@ export default function Home() {
 
   if (!userContext.user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <p className="text-2xl font-bold text-center text-gray-800">Debes iniciar sesión para continuar</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-6">
+        <p className="text-2xl font-bold text-center text-gray-800">
+          Debes iniciar sesión para continuar
+        </p>
+  
+        <Link
+          to="/login"
+          className="px-6 py-3 text-white text-lg font-semibold rounded-2xl shadow-md transition duration-200"
+          style={{ backgroundColor: "#800000" }}
+        >
+          Iniciar sesión
+        </Link>
       </div>
-    )
-  }
+    );
+  } 
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -227,7 +237,7 @@ export default function Home() {
               <h3 className="text-xl font-semibold mb-4">Estado de Membresía</h3>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-4xl font-bold">{calculateRemainingDays(membresia.fecha_fin)}</p>
+                  <p className="text-4xl font-bold">{userContext.user.membresia?.fecha_fin ? calculateRemainingDays(new Date(userContext.user.membresia.fecha_fin)) : "N/A"}</p>
                   <p className="text-sm opacity-80">días restantes</p>
                 </div>
                 <div className="w-1/2">
