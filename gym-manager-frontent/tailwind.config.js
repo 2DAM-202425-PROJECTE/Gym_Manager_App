@@ -24,13 +24,8 @@ module.exports = {
         granate: '#670d10',
         semi_negre: '#0b132b',
         cyan: '#5bc0be',
-<<<<<<< HEAD
-       
-      
-=======
         recuadre: '#1c2541',
         
->>>>>>> f9430252795bc808c4fd54cc4a13c0cc09c275ee
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
