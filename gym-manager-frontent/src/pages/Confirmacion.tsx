@@ -63,6 +63,8 @@ export default function PaginaDePago({ tarifa }: { tarifa: Tarifa | null | undef
 
       const fechaFin = new Date();
       fechaFin.setMonth(fechaFin.getMonth() + tarifa.meses);
+
+      console.log(user_id)
       apiClient.post("/membresias", { user_id: user_id, fecha_fin: fechaFin, tarifa_id: tarifa.id })
       
       .then((response: AxiosResponse<Membresia>) => {

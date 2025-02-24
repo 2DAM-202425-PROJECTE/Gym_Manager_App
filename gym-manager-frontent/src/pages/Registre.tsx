@@ -7,8 +7,16 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { DefaultButton } from '../components/buttons/ButtonDefault';
 import { SelectLanguage } from '../components/buttons/SelectLanguage';
+import { toast } from 'react-toastify';
 
-type RegisterResponse = User | { error: string };
+type RegisterData = {
+  user: User;
+  message: string;
+  token: string;
+}
+
+type RegisterResponse = RegisterData | { error: string };
+
 
 export default function Registre() {
   const [nom, setName] = useState('');
@@ -24,16 +32,23 @@ export default function Registre() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (contrasenya !== confirmContrasenya) {
+      toast.error(t('registre.passwords_not_match'));
+      return;
+    }
       
     const  nom_complet = nom + " " + cognom;
     
-    const response = await register({ name: nom_complet, email: correu, password: contrasenya, confirmPassword: confirmContrasenya }) as RegisterResponse;
+    const response = await register({ name: nom_complet, email: correu, password: contrasenya, confirmPassword: confirmContrasenya }) as unknown as RegisterResponse;
 
     if ('error' in response) {
+      toast.error('Error al registrar el usuario');
       return;
     }
 
-    setUser(response);
+    console.log('👤 User registered:', response.user);
+
+    setUser(response.user);
     navigate('/');
   };
 
