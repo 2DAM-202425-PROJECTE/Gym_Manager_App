@@ -48,5 +48,6 @@ export default function HomeStats() {
       </div>
       <p className="text-sm text-yellow-600 mt-2">50 puntos para Platino</p>
     </div>
+    
   </div>)
 }
