@@ -4,7 +4,6 @@ import { Route, Routes} from 'react-router-dom';
 import Registre from './pages/Registre';
 import Login from './pages/Login';
 import Home from './pages/Home';
-import ForgotPassword from './pages/ForgotPassword';
 import Profile from './pages/Profile';
 import Tarifas from './pages/Tarifas';
 import { UserProvider } from './context/userContext';
@@ -35,7 +34,6 @@ function App() {
               <Route index element={<Home />}/>
               <Route path="/login" element={<Login />} />
               <Route path="/registre" element={<Registre />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/profile" element={<Profile />} />
               <Route path='/tarifas' element={<Tarifas setTarifaSel={setTarifaSel} />} />
               <Route path='/admin' element={<DashboardAdmin />} />

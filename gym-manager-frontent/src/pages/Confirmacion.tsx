@@ -8,6 +8,8 @@ import { toast } from "react-toastify"
 import { Lock, HelpCircle, CreditCard, AlertCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { useNavigate } from "react-router-dom"
+import { Membresia } from "../type/membresia"
+import { AxiosResponse } from "axios"
 
 // Tipo para la tarifa
 type Tarifa = {
@@ -18,7 +20,7 @@ type Tarifa = {
 }
 
 export default function PaginaDePago({ tarifa }: { tarifa: Tarifa | null | undefined }) {
-  const { userContext } = useContext(UserContext)
+  const { userContext, setUser } = useContext(UserContext)
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -62,7 +64,12 @@ export default function PaginaDePago({ tarifa }: { tarifa: Tarifa | null | undef
       const fechaFin = new Date();
       fechaFin.setMonth(fechaFin.getMonth() + tarifa.meses);
       apiClient.post("/membresias", { user_id: user_id, fecha_fin: fechaFin, tarifa_id: tarifa.id })
-      .then(() => {
+      
+      .then((response: AxiosResponse<Membresia>) => {
+        const membresia = response.data;
+        setUser((prevState) => prevState ? { ...prevState, membresia } : prevState)
+        
+
         
         toast.success("Pago realizado con éxito");
         navigate("/");
