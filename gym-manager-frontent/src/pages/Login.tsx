@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { UseUser } from "../customHooks/useUser";
 import { User } from "../type/user";
 import { useTranslation } from "react-i18next";
-import { DefaultButton } from "../components/buttons/buttonDefault";
+import { DefaultButton } from "../components/buttons/ButtonDefault";
 import { SelectLanguage } from "../components/buttons/SelectLanguage";
 import axios from "axios";
 import apiClient from "../api/prefijo";
@@ -37,23 +37,22 @@ export default function Login() {
       navigate('/admin');
       return;
     }else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+       
       const user_id = response.id as number;
-      
       axios.get("")
-
       navigate('/')
       try {
         const membershipResponse = await apiClient.get(`/users/${user_id}/membresia`);
 
 
         if (membershipResponse.data.message) {
-          navigate('/pago');
-        } else {
           navigate('/');
+        } else {
+          navigate('/tarifas');
         }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        navigate('/pago');
+        navigate('/tarifas');
       }
     
     };
@@ -61,7 +60,7 @@ export default function Login() {
   }
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-deep_blau to-granate">
+    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-blau_fosc to-granate">
       <div className="bg-transparent w-96 p-8 rounded-lg">
         <h1 className="text-white text-center text-2xl font-bold mb-6">{t('login.title')}</h1>
         <form >
@@ -75,7 +74,9 @@ export default function Login() {
         </form>
       </div>
 
-     <SelectLanguage></SelectLanguage>
+     <SelectLanguage>
+      
+     </SelectLanguage>
     </div>
     )
 }

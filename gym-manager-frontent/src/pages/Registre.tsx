@@ -5,7 +5,7 @@ import { User } from '../type/user';
 import { UseUser } from '../customHooks/useUser';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { DefaultButton } from '../components/buttons/buttonDefault';
+import { DefaultButton } from '../components/buttons/ButtonDefault';
 import { SelectLanguage } from '../components/buttons/SelectLanguage';
 import { toast } from 'react-toastify';
 
@@ -24,6 +24,11 @@ export default function Registre() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (contrasenya !== confirmContrasenya) {
+      toast('Les contrasenyes no coincideixen');
+      return;
+    }
     const  nom_complet = nom + " " + cognom;
     
     const response = await register({ name: nom_complet, email: correu, password: contrasenya, confirmPassword: confirmContrasenya }) as RegisterResponse;
@@ -37,7 +42,7 @@ export default function Registre() {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-[#092756] to-[#670d10]">
+    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-blau_fosc to-granate">
       <div className="bg-transparent w-96 p-8 rounded-lg">
         <h1 className="text-white text-center text-2xl font-bold mb-6">{t('registre.title')}</h1>
         <form>
