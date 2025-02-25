@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Clase;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,15 +11,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ClaseFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = Clase::class;
+
+    public function definition()
     {
         return [
-            //
+            'nombre' => $this->faker->word(),
+            'descripcion' => $this->faker->sentence(),
+            'id_entrenador' => User::factory(),
+            'maximo_participantes' => $this->faker->numberBetween(10, 30),
         ];
     }
 }

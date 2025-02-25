@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClaseController;
 use App\Http\Controllers\MembresiaController;
 use App\Http\Controllers\TarifaController;
 use App\Http\Controllers\UserController;
@@ -19,6 +20,7 @@ Route::apiResource('users', UserController::class);
 Route::apiResource('tarifas', TarifaController::class);
 Route::apiResource('membresias', MembresiaController::class);
 
+Route::apiResource('clases', ClaseController::class);
 
 Route::get('users/{id}/membresia', [UserController::class, 'membresia']);
 

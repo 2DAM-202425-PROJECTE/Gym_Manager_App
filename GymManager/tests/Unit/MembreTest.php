@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Membresia;
+use App\Models\Tarifa;
 use App\Models\User;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -15,6 +16,7 @@ class MembreTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
+        $this->tarifa = Tarifa::factory()->create();
     }
 
     #[Test]
@@ -22,6 +24,7 @@ class MembreTest extends TestCase
     {
         $data = [
             'user_id' => $this->user->id,
+            'tarifa_id' => $this->tarifa->id,
             'fecha_fin' => now()->addMonth()->toDateTimeString(), // Remove precision
         ];
 

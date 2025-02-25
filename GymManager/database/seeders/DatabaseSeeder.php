@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Clase;
 use App\Models\Tarifa;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,7 +18,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::truncate();
-        User::factory(10)->create();
+        User::factory(3)->create();
+
+        Clase::factory(3)->create();
 
         // Crear un usuario normal
         User::factory()->create([

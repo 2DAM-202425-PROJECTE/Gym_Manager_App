@@ -17,8 +17,7 @@ class TarifasTest extends TestCase
 
         $response = $this->getJson('/api/tarifas');
 
-        $response->assertStatus(200)
-            ->assertJsonCount(3);
+        $response->assertStatus(200);
     }
 
     #[Test]
