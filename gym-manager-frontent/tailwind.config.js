@@ -25,7 +25,7 @@ module.exports = {
         semi_negre: '#0b132b',
         cyan: '#5bc0be',
        
-      
+        balu_molt_fosc: '#092756',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

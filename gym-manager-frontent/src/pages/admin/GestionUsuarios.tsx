@@ -83,10 +83,10 @@ const GestionUsuarios: React.FC = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold mb-6 text-[#092756]">Gestión de Usuarios</h2>
+      <h2 className="text-2xl font-bold mb-6 text-balu_molt_fosc">Gestión de Usuarios</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <h3 className="text-xl font-bold mb-4 text-[#092756]">Estadísticas de Usuarios</h3>
+          <h3 className="text-xl font-bold mb-4 text-balu_molt_fosc">Estadísticas de Usuarios</h3>
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="bg-[#092756] text-white p-4 rounded-lg">
               <p className="text-lg">Total Usuarios</p>
