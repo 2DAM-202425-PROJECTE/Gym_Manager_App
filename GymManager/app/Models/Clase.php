@@ -9,4 +9,21 @@ class Clase extends Model
 {
     /** @use HasFactory<\Database\Factories\ClaseFactory> */
     use HasFactory;
+
+    public function entrenador()
+    {
+        return $this->belongsTo(User::class, 'id_entrenador');
+    }
+
+    // Relación many-to-many con los participantes (usuarios)
+    public function participantes()
+    {
+        return $this->belongsToMany(User::class, 'clase_user');
+    }
+
+    // Relación con los horarios (1 a muchos)
+    public function horarios()
+    {
+        return $this->hasMany(Horario::class);
+    }
 }

@@ -13,37 +13,41 @@ class ClaseController extends Controller
      */
     public function index()
     {
-        //
+        $clases = Clase::all();
+        return response()->json($clases);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request)
     {
-        //
-    }
+        // Crear la clase
+        $clase = Clase::create([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'id_entrenador' => $request->id_entrenador,
+            'maximo_participantes' => $request->maximo_participantes,
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreClaseRequest $request)
-    {
-        //
+        // Crear los horarios asociados a la clase
+        foreach ($request->horarios as $horario) {
+            $clase->horarios()->create([
+                'dia' => $horario['dia'],
+                'hora_inicio' => $horario['hora_inicio'],
+                'hora_fin' => $horario['hora_fin'],
+            ]);
+        }
+
+        // Asignar participantes a la clase (si es necesario)
+        if ($request->participantes) {
+            $clase->participantes()->attach($request->participantes);
+        }
+
+        return response()->json($clase, 201);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Clase $clase)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Clase $clase)
     {
         //
     }
