@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('horarios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clase_id')->constrained('clases')->onDelete('cascade'); // Relación con la tabla clases
-            $table->string('dia'); // Día de la semana (lunes, martes, etc.)
-            $table->time('hora_inicio'); // Hora de inicio
-            $table->time('hora_fin'); // Hora de fin
+            $table->foreignId('clase_id')->constrained('clases')->onDelete('cascade');
+            $table->string('dia');
+            $table->time('hora_inicio');
+            $table->time('hora_fin');
             $table->timestamps();
         });
     }

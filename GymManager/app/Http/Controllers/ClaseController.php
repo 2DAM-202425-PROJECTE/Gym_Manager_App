@@ -14,7 +14,7 @@ class ClaseController extends Controller
      */
     public function index()
     {
-        $clases = Clase::all();
+        $clases = Clase::with('horarios')->get();
         return response()->json($clases);
     }
 
@@ -73,7 +73,38 @@ class ClaseController extends Controller
      */
     public function update(UpdateClaseRequest $request, Clase $clase)
     {
-        //
+        // Validación de los datos recibidos
+        $validated = $request->validated();
+
+        // Actualizar la clase
+        $clase->update([
+            'nombre' => $validated['nombre'],
+            'descripcion' => $validated['descripcion'],
+            'id_entrenador' => $validated['id_entrenador'],
+            'maximo_participantes' => $validated['maximo_participantes'],
+        ]);
+
+        \DB::beginTransaction();
+        try {
+            // Eliminar los horarios existentes
+            $clase->horarios()->delete();
+
+            // Crear los nuevos horarios
+            foreach ($validated['horarios'] as $horario) {
+                $clase->horarios()->create([
+                    'dia' => $horario['dia'],
+                    'hora_inicio' => $horario['hora_inicio'],
+                    'hora_fin' => $horario['hora_fin'],
+                ]);
+            }
+
+            \DB::commit();
+
+            return response()->json($clase, 200);
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return response()->json(['error' => 'No se pudo actualizar la clase'], 500);
+        }
     }
 
     /**

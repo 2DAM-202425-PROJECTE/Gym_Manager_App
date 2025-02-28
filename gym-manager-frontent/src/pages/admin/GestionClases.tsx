@@ -1,51 +1,27 @@
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Bar } from "react-chartjs-2"
+import apiClient from "../../api/prefijo"
 
-interface Clase {
-  id_clase: number
-  id_entrenador: number
-  nombre_clase: string
-  descripcion: string
-  hora_inicio: string
-  hora_fin: string
-  dias: string
-  maximo_participantes: number
-}
+
 
 const GestionClases: React.FC = () => {
-  const [clases, setClases] = useState<Clase[]>([
-    {
-      id_clase: 1,
-      id_entrenador: 1,
-      nombre_clase: "Yoga",
-      descripcion: "Clase de yoga para principiantes",
-      hora_inicio: "10:00",
-      hora_fin: "11:00",
-      dias: "L,X,V",
-      maximo_participantes: 20,
-    },
-    {
-      id_clase: 2,
-      id_entrenador: 2,
-      nombre_clase: "Spinning",
-      descripcion: "Clase de spinning intensiva",
-      hora_inicio: "18:00",
-      hora_fin: "19:00",
-      dias: "M,J",
-      maximo_participantes: 15,
-    },
-    {
-      id_clase: 3,
-      id_entrenador: 3,
-      nombre_clase: "Pilates",
-      descripcion: "Clase de pilates para todos los niveles",
-      hora_inicio: "11:00",
-      hora_fin: "12:00",
-      dias: "M,J,S",
-      maximo_participantes: 12,
-    },
-  ])
+  const [clases, setClases] = useState<Clase[]>([])
+
+  useEffect(() => {
+    const obtenerClases = async () => {
+      try {
+        // Simulando una petición a la API
+        const response = await apiClient.get("/clases")
+        setClases(response.data)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        setClases([])
+      }
+    }
+    obtenerClases()
+  }, [])
+  
   const [nuevaClase, setNuevaClase] = useState<Omit<Clase, "id_clase">>({
     id_entrenador: 0,
     nombre_clase: "",

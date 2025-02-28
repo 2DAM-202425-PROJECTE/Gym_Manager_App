@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Clase;
+use App\Models\Horario;
 use App\Models\Tarifa;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,10 +18,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Clase::truncate();
         User::truncate();
         User::factory(3)->create();
 
-        Clase::factory(3)->create();
 
         // Crear un usuario normal
         User::factory()->create([
@@ -53,5 +54,16 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'admin',
         ]);
+
+        $clase = Clase::factory()->create();
+
+        $horarios = [
+            ['dia' => 'Lunes', 'hora_inicio' => '08:00', 'hora_fin' => '09:00', 'clase_id' => $clase->id],
+            ['dia' => 'Miércoles', 'hora_inicio' => '08:00', 'hora_fin' => '09:00', 'clase_id' => $clase->id],
+        ];
+
+        foreach ($horarios as $horario) {
+            Horario::create($horario);
+        }
     }
 }
