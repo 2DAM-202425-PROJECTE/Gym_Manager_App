@@ -57,6 +57,8 @@ class DatabaseSeeder extends Seeder
 
         $clase = Clase::factory()->create();
 
+        Tarifa::factory(4)->create();
+
         $horarios = [
             ['dia' => 'Lunes', 'hora_inicio' => '08:00', 'hora_fin' => '09:00', 'clase_id' => $clase->id],
             ['dia' => 'Miércoles', 'hora_inicio' => '08:00', 'hora_fin' => '09:00', 'clase_id' => $clase->id],
