@@ -9,6 +9,8 @@ use Tests\TestCase;
 class ClaseApiTest extends TestCase
 {
     use RefreshDatabase;
+
+    /** @test */
     public function it_can_update_a_clase()
     {
         $user = User::factory()->create();
@@ -51,7 +53,7 @@ class ClaseApiTest extends TestCase
             ]);
         }
     }
-
+    /** @test */
     public function it_can_create_a_clase()
     {
         $user = User::factory()->create();

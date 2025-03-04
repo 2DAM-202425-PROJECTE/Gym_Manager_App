@@ -10,6 +10,12 @@ class Clase extends Model
     /** @use HasFactory<\Database\Factories\ClaseFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'nombre',
+        'descripcion',
+        'id_entrenador',
+        'maximo_participantes',
+    ];
     public function entrenador()
     {
         return $this->belongsTo(User::class, 'id_entrenador');
