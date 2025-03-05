@@ -136,6 +136,11 @@ class ClaseController extends Controller
      */
     public function destroy(Clase $clase)
     {
-        //
+        try {
+            $clase->delete();
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

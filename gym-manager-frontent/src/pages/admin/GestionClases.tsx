@@ -2,7 +2,7 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { Bar } from "react-chartjs-2"
 import apiClient from "../../api/prefijo"
-import { Clase } from "../type/clases"
+import { Clase, HorarioToSend } from "../type/clases"
 import { toast } from "react-toastify"
 
 
@@ -22,20 +22,38 @@ const GestionClases: React.FC = () => {
       }
     }
     obtenerClases()
-  }, [])
+  }, [clases])
   
   const [nuevaClase, setNuevaClase] = useState<Clase>()
   const [editingClass, setEditingClass] = useState<Clase>()
   const [showConfirm, setShowConfirm] = useState<number | null>(null)
-
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setNuevaClase((prev) => prev ? ({ ...prev, [name]: value }) : prev)
-  }
+    const { name, value } = e.target;
+    setNuevaClase((prev) => ({
+      ...prev!,
+      [name]: value,
+    }));
+  };
+  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-  
+    const claseConHorarios = { ...nuevaClase, horarios }
+    console.log(claseConHorarios)
+
+    apiClient.post("/clases", claseConHorarios)
+      .then((response) => {
+        console.log(response)
+        setClases((prev) => [...prev, response.data])
+        setNuevaClase(undefined)
+        setHorarios([])
+        toast.success("Clase añadida correctamente")
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.error("Error al añadir la clase")
+      })
   }
 
   const handleEdit = (clase: Clase) => {
@@ -60,9 +78,8 @@ const GestionClases: React.FC = () => {
     setEditingClass((prev) => prev ? ({ ...prev, [name]: value }) : prev)
   }
 
-  const handleDelete = (id: number) => {
-   // setClases(clases.filter((clase) => clase.id_clase !== id))
-   // setShowConfirm(null)
+  const handleDelete = async (id: number) => {
+    await apiClient.delete(`/clases/${id}`)
   }
 
   const chartData = {
@@ -75,7 +92,7 @@ const GestionClases: React.FC = () => {
       },
     ],
   }
-  const [horarios, setHorarios] = useState([]);
+  const [horarios, setHorarios] = useState<HorarioToSend[]>([]);
 
   const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
@@ -84,24 +101,21 @@ const GestionClases: React.FC = () => {
     setHorarios([...horarios, { dia: "", hora_inicio: "", hora_fin: "" }]);
   };
 
-  // Eliminar horario
-  const eliminarHorario = (index) => {
+  const eliminarHorario = (index: number) => {
     setHorarios(horarios.filter((_, i) => i !== index));
   };
-
-  // Manejar cambios en los horarios
-  const handleHorarioChange = (index, field, value) => {
-    const nuevosHorarios = [...horarios];
-    nuevosHorarios[index][field] = value;
-    setHorarios(nuevosHorarios);
-  };
+  const handleHorarioChange = (index: number, field: keyof HorarioToSend, value: string) => {
+      const nuevosHorarios = [...horarios];
+      nuevosHorarios[index][field] = value;
+      setHorarios(nuevosHorarios);
+    };
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-2xl font-bold mb-6 text-[#092756]">Gestión de Clases</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-        <form onSubmit={(e) => handleSubmit(e, horarios)} className="mb-6">
+        <form onSubmit={(e) => handleSubmit(e)} className="mb-6">
       <div className="grid grid-cols-2 gap-4">
         <input
           type="number"
@@ -259,7 +273,7 @@ const GestionClases: React.FC = () => {
                   <td className="p-2 flex justify-center">
                     {editingClass?.id === clase.id ? (
                       <button
-                        onClick={() => handleSave(clase.id)}
+                        onClick={() => handleSave()}
                         className="text-green-600 hover:text-green-800"
                       >
                         Guardar
@@ -274,7 +288,7 @@ const GestionClases: React.FC = () => {
                     )}
                     {/* Eliminar clase */}
                     <button
-                      onClick={() => setShowConfirm(clase.id)}
+                      onClick={() => handleDelete(clase.id)}
                       className="text-red-600 hover:text-red-800 ml-4"
                     >
                       Eliminar

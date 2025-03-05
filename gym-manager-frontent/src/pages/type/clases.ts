@@ -1,3 +1,10 @@
+export interface HorarioToSend {
+    dia: string;
+    hora_inicio: string;
+    hora_fin: string;
+  
+}
+
 interface Horario {
     id: number;
     clase_id: number;
