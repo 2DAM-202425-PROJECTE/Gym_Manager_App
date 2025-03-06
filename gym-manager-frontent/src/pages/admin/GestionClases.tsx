@@ -2,8 +2,9 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { Bar } from "react-chartjs-2"
 import apiClient from "../../api/prefijo"
-import { Clase, HorarioToSend } from "../type/clases"
+import { Clase, Horario, HorarioToSend } from "../type/clases"
 import { toast } from "react-toastify"
+import { HandleViewHorario } from "../../components/clases/HandleViewHorario"
 
 
 
@@ -22,10 +23,11 @@ const GestionClases: React.FC = () => {
       }
     }
     obtenerClases()
-  }, [clases])
-  
+  }, [])
+  const [horariosSelected, setHorariosSelected] = useState<Horario[] | null>(null);
+
   const [nuevaClase, setNuevaClase] = useState<Clase>()
-  const [editingClass, setEditingClass] = useState<Clase>()
+  const [editingClass, setEditingClass] = useState<Clase | null>(null)
   const [showConfirm, setShowConfirm] = useState<number | null>(null)
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -58,13 +60,19 @@ const GestionClases: React.FC = () => {
 
   const handleEdit = (clase: Clase) => {
     setEditingClass(clase)
+    setHorariosSelected(clase.horarios)
+  }
+  const handelChooseHorario = (clase: Clase) => {
+    setHorariosSelected(clase.horarios)
+    setEditingClass(clase)
+
   }
 
   const handleSave = async () => {
     try{
 
       await apiClient.put(`/clases/${editingClass?.id}`, editingClass)
-      setEditingClass(undefined)
+      setEditingClass(null)
       setClases((prev) => prev.map((clase) => (clase.id === editingClass?.id ? editingClass : clase)))
       toast.success("Clase editada correctamente")
     }catch(error){
@@ -80,6 +88,7 @@ const GestionClases: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     await apiClient.delete(`/clases/${id}`)
+    setClases((prev) => prev.filter((clase) => clase.id !== id))
   }
 
   const chartData = {
@@ -252,8 +261,8 @@ const GestionClases: React.FC = () => {
                     )}
                   </td>
                   <td className="flex justify-center">
-                    <button className="bg-black rounded-xl text-white p-x3 p-2">
-                      ver
+                    <button onClick={()=> handelChooseHorario(clase)} className="bg-black rounded-xl text-white p-x3 p-2">
+                      ver horario
                     </button>
                   </td>
                   <td className="p-2 ">
@@ -323,6 +332,7 @@ const GestionClases: React.FC = () => {
           </table>
         </div>
       </div>
+      <HandleViewHorario horarios={horariosSelected} editingClass={editingClass} setEditingClass={setEditingClass}></HandleViewHorario>
     </div>
   )
 }

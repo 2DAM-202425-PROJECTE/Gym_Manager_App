@@ -5,7 +5,7 @@ export interface HorarioToSend {
   
 }
 
-interface Horario {
+export interface Horario {
     id: number;
     clase_id: number;
     dia: string;
