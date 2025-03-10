@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useContext } from "react"
-import { CalendarDays,Clock, CreditCard, LogOut, User, Dumbbell, TrendingUp,  Bell, Heart, Volume2,  VolumeX
+import { CalendarDays,Clock, CreditCard, LogOut, User, Dumbbell, TrendingUp,  Bell, Volume2,  VolumeX
 } from "lucide-react"
 import Sidebar from "../components/sidebar/sidebar"
 import Footer from "../components/footer/footer"
@@ -10,27 +10,9 @@ import HomeButton from "../components/buttons/HomeButton"
 import HomeStats from "../components/cards/HomeStats"
 import { UserContext } from "../context/userContext"
 import { Clase } from "./type/clases"
-import axios from "axios"
 import apiClient from "../api/prefijo"
-
-type Membresia = {
-  id: number
-  user_id: number
-  fecha_fin: Date
-  qr_data: string
-  created_at: Date
-  updated_at: Date
-}
-
-type User = {
-  id: number
-  name: string
-  email: string
-  profile_photo_url: string
-  membership_level: string
-  total_visits: number
-  joined_date: Date
-}
+import { toast } from "react-toastify"
+import { Membresia } from "./type/membresia"
 
 type Workout = {
   id: number
@@ -62,12 +44,19 @@ export default function Home() {
   
   useEffect(() => {
 
-
+  
     const fetchData = async () => {
 
-      const response = await apiClient.get("/clases")
-      console.log(response.data)
-      setClases(response.data)
+//      const response = await apiClient.get("/clases")
+//      setClases(response.data)
+      const user = userContext.user
+      if (user.clases){
+        setClases(user.clases)
+      } else {
+        setClases([])
+      }
+
+
 
       const membresiaData: Membresia = {
         id: 1,
@@ -119,6 +108,17 @@ export default function Home() {
     return diffDays
   }
 
+  const inscribirseClase = async (id: number) => {
+    try{
+      const response = await apiClient.post(`/clases/inscribir/${id}`, {user_id: userContext.user.id})
+      console.log(response.data)
+      toast.success("Inscrito a la clase")
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    catch(e){
+      toast.error("Error al inscribirse a la clase")
+    }
+  }
 
   const toggleMute = () => {
     setIsMuted(!isMuted)
@@ -351,7 +351,7 @@ export default function Home() {
                         </div>
                         <div className="flex items-center">
                           <span className="px-2 py-1 bg-maroon-100 text-maroon-600 rounded text-sm">{`${horario.hora_inicio} - ${horario.hora_fin}`}</span>
-                          <button className="ml-4 px-2 py-1 bg-blue-500 text-white rounded text-sm">Inscribir</button>
+                          <button onClick={() => inscribirseClase(clase.id)} className="ml-4 px-2 py-1 bg-blue-500 text-white rounded text-sm">Inscribir</button>
                         </div>
                       </div>
                     ))

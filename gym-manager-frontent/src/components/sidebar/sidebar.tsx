@@ -16,9 +16,10 @@ export default function Sidebar() {
       >
         Dashboard
       </a>
-      {/* <a href="/clases" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
+       <a href="/clases" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
         Clases
       </a>
+            {/*
       <a href="/entrenadors" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
         Entrenadores
       </a>

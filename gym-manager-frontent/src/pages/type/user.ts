@@ -1,3 +1,4 @@
+import { Clase } from "./clases";
 import { Membresia } from "./membresia";
 
 export type User = {
@@ -13,7 +14,7 @@ export type User = {
     role: string;
     profile_photo_url: string;
     membresia: Membresia | null;
-
+    clases: Clase[];
   };
 
   

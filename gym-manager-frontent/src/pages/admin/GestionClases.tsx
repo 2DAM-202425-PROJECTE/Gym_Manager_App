@@ -91,6 +91,7 @@ const GestionClases: React.FC = () => {
     setClases((prev) => prev.filter((clase) => clase.id !== id))
   }
 
+
   const chartData = {
     labels: clases.map((c) => c.nombre),
     datasets: [
