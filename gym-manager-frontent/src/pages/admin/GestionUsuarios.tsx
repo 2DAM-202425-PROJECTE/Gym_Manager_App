@@ -190,7 +190,7 @@ const GestionUsuarios: React.FC = () => {
                           onChange={(e) => handleEditInputChange(e)}
                           className="border p-1 rounded w-full"
                         >
-                          <option value="client">cliente</option>
+                          <option value="client">client</option>
                           <option value="admin">admin</option>
                           <option value="entrenador">trainer</option>
                         </select>
