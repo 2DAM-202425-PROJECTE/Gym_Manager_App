@@ -143,4 +143,29 @@ class ClaseController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function inscribir(Request $request, $id)
+    {
+        try {
+            // Validar datos recibidos
+            $validated = $request->validate([
+                'user_id' => 'required|exists:users,id',
+            ]);
+            $clase = Clase::findOrFail($id);
+
+            if ($clase->participantes()->where('user_id', $validated['user_id'])->exists()) {
+                return response()->json(['message' => 'El usuario ya está inscrito en esta clase'], 400);
+            }
+
+            if ($clase->participantes()->count() >= $clase->maximo_participantes) {
+                return response()->json(['message' => 'La clase ya está llena'], 400);
+            }
+            $clase->participantes()->attach($validated['user_id']);
+
+            return response()->json(['message' => 'Usuario inscrito correctamente'], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
