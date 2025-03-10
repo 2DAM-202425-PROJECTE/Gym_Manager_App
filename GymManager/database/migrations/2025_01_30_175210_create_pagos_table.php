@@ -12,13 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pagos', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('membresia_id');
             $table->unsignedBigInteger('tarifa_id');
             $table->date('fecha_pago');
             $table->enum('estado', ['pendiente', 'completado', 'fallido']);
             $table->timestamps();
-            $table->primary(['membresia_id', 'tarifa_id']);
-
             $table->foreign('membresia_id')->references('id')->on('membresias')->onDelete('cascade');
             $table->foreign('tarifa_id')->references('id')->on('tarifas')->onDelete('cascade');
         });
