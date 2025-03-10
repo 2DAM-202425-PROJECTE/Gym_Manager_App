@@ -9,6 +9,9 @@ import { Link } from "react-router"
 import HomeButton from "../components/buttons/HomeButton"
 import HomeStats from "../components/cards/HomeStats"
 import { UserContext } from "../context/userContext"
+import { Clase } from "./type/clases"
+import axios from "axios"
+import apiClient from "../api/prefijo"
 
 type Membresia = {
   id: number
@@ -55,10 +58,16 @@ export default function Home() {
   const profileMenuRef = useRef<HTMLDivElement>(null)
   const { userContext } = useContext(UserContext)
 
+  const [clases, setClases] = useState<Clase[]>([])
+  
   useEffect(() => {
 
 
     const fetchData = async () => {
+
+      const response = await apiClient.get("/clases")
+      console.log(response.data)
+      setClases(response.data)
 
       const membresiaData: Membresia = {
         id: 1,
@@ -285,56 +294,77 @@ export default function Home() {
 
             {/* Upcoming Classes */}
             <div className="bg-white rounded-xl shadow-md p-6">
-              <h3 className="text-xl font-semibold mb-4">Próximas Clases</h3>
-              <div className="flex mb-4 border-b">
-                <button
-                  onClick={() => setActiveTab("today")}
-                  className={`py-2 px-4 ${activeTab === "today" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
-                >
-                  Hoy
-                </button>
-                <button
-                  onClick={() => setActiveTab("tomorrow")}
-                  className={`py-2 px-4 ${activeTab === "tomorrow" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
-                >
-                  Mañana
-                </button>
-                <button
-                  onClick={() => setActiveTab("week")}
-                  className={`py-2 px-4 ${activeTab === "week" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
-                >
-                  Esta Semana
-                </button>
-              </div>
-              {activeTab === "today" && (
-                <div className="space-y-4">
-                  {["Yoga", "Spinning", "CrossFit"].map((clase, index) => (
-                    <div key={index} className="flex items-center justify-between py-2 border-b last:border-b-0">
-                      <div className="flex items-center">
-                        <Clock className="h-5 w-5 text-maroon-600 mr-3" />
-                        <span>{clase}</span>
+            <h3 className="text-xl font-semibold mb-4">Próximas Clases</h3>
+            <div className="flex flex-wrap mb-4 border-b">
+              <button
+                onClick={() => setActiveTab("Lunes")}
+                className={`py-2 px-4 ${activeTab === "Lunes" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
+              >
+                Lunes
+              </button>
+              <button
+                onClick={() => setActiveTab("Martes")}
+                className={`py-2 px-4 ${activeTab === "Martes" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
+              >
+                Martes
+              </button>
+              <button
+                onClick={() => setActiveTab("Miércoles")}
+                className={`py-2 px-4 ${activeTab === "Miércoles" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
+              >
+                Miércoles
+              </button>
+              <button
+                onClick={() => setActiveTab("Jueves")}
+                className={`py-2 px-4 ${activeTab === "Jueves" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
+              >
+                Jueves
+              </button>
+              <button
+                onClick={() => setActiveTab("Viernes")}
+                className={`py-2 px-4 ${activeTab === "Viernes" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
+              >
+                Viernes
+              </button>
+              <button
+                onClick={() => setActiveTab("Sábado")}
+                className={`py-2 px-4 ${activeTab === "Sábado" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
+              >
+                Sábado
+              </button>
+              <button
+                onClick={() => setActiveTab("Domingo")}
+                className={`py-2 px-4 ${activeTab === "Domingo" ? "border-b-2 border-maroon-600 text-maroon-600" : "text-gray-500"}`}
+              >
+                Domingo
+              </button>
+            </div>
+            {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"].map((day) => (
+              activeTab === day && (
+                <div key={day} className="space-y-4">
+                  {clases.filter(clase => clase.horarios.some(horario => horario.dia === day)).map((clase) => (
+                    clase.horarios.filter(horario => horario.dia === day).map((horario, index) => (
+                      <div key={index} className="flex items-center justify-between py-2 border-b last:border-b-0">
+                        <div className="flex items-center">
+                          <Clock className="h-5 w-5 text-maroon-600 mr-3" />
+                          <span>{clase.nombre}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className="px-2 py-1 bg-maroon-100 text-maroon-600 rounded text-sm">{`${horario.hora_inicio} - ${horario.hora_fin}`}</span>
+                          <button className="ml-4 px-2 py-1 bg-blue-500 text-white rounded text-sm">Inscribir</button>
+                        </div>
                       </div>
-                      <span className="px-2 py-1 bg-maroon-100 text-maroon-600 rounded text-sm">{`${17 + index}:00`}</span>
-                    </div>
+                    ))
                   ))}
                 </div>
-              )}
-              {activeTab === "tomorrow" && <p className="text-gray-500">Clases para mañana...</p>}
-              {activeTab === "week" && <p className="text-gray-500">Clases para esta semana...</p>}
-             <HomeButton text="Ver todas las clases"></HomeButton>
-            </div>
+              )
+            ))}
+            <HomeButton text="Ver todas las clases"></HomeButton>
+          </div>
           </div>
           
           
-          
-          {/* Motivational Quote */}
-          <div className="text-center mb-8">
-            <p className="text-xl text-gray-600 italic">"El único mal entrenamiento es el que no hiciste."</p>
-            <div className="mt-2 flex justify-center items-center">
-              <Heart className="h-5 w-5 text-red-500 mr-2" />
-              <span className="text-sm text-gray-500">Frase del día</span>
-            </div>
-          </div>
+        
 
           
           {/* Call to Action */}
