@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import apiClient from "../../api/prefijo"
-import { User } from "../../type/user"
 import { toast } from "react-toastify"
 import { getUsers } from "../../api/user/getUsers"
 import { GreenButtonAdmin } from "../../components/buttons/GreenButtonAdmin"
 import { BlueButtonAdmin } from "../../components/buttons/BlueButtonAdmin"
 import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin"
+import { User } from "../type/user"
 
 
 
@@ -24,16 +24,6 @@ const GestionUsuarios: React.FC = () => {
       }
     fetchData()
   }, [])
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setEditingUser((prev) => (prev ? { ...prev, [name]: value } : prev))
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-  }
 
   const handleEdit = (userToEdit: User) => {
     setEditingUser(userToEdit)
@@ -200,9 +190,9 @@ const GestionUsuarios: React.FC = () => {
                           onChange={(e) => handleEditInputChange(e)}
                           className="border p-1 rounded w-full"
                         >
-                          <option value="client">Cliente</option>
-                          <option value="admin">Admin</option>
-                          <option value="entrenador">Entrenador</option>
+                          <option value="client">cliente</option>
+                          <option value="admin">admin</option>
+                          <option value="entrenador">trainer</option>
                         </select>
                       ) : (
                         usuario.role

@@ -3,14 +3,14 @@ import { Clase, Horario } from "../../pages/type/clases";
 import { BlueButtonAdmin } from "../buttons/BlueButtonAdmin";
 import { GreenButtonAdmin } from "../buttons/GreenButtonAdmin";
 
-export function HandleViewHorario({horarios, editingClass, setEditingClass} : {horarios : Horario[] | null; editingClass : Clase | null; setEditingClass: React.Dispatch<React.SetStateAction<Clase | null>>}) {
+export function HandleViewHorario({horarios} : {horarios : Horario[] | null; editingClass : Clase | null; setEditingClass: React.Dispatch<React.SetStateAction<Clase | null>>}) {
     const [horarioToModify , setHorarioToModify] = useState<Horario | null>(null) 
 
     const handleModifyHorario = (horario : Horario) => {
         setHorarioToModify(horario)
     }
 
-    const handleSaveHorario = (horario : Horario) => {
+    const handleSaveHorario = () => {
         setHorarioToModify(null)
     }
 

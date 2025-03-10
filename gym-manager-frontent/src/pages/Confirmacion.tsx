@@ -8,8 +8,8 @@ import { toast } from "react-toastify"
 import { Lock, HelpCircle, CreditCard, AlertCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { useNavigate } from "react-router-dom"
-import { Membresia } from "../type/membresia"
 import { AxiosResponse } from "axios"
+import { Membresia } from "./type/membresia"
 
 // Tipo para la tarifa
 type Tarifa = {
@@ -69,7 +69,8 @@ export default function PaginaDePago({ tarifa }: { tarifa: Tarifa | null | undef
       
       .then((response: AxiosResponse<Membresia>) => {
         const membresia = response.data;
-        setUser((prevState) => prevState ? { ...prevState, membresia } : prevState)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setUser((prevState: any) => prevState ? { ...prevState, membresia } : prevState)
         
 
         
