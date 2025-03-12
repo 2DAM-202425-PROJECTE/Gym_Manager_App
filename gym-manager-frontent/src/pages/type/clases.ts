@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface HorarioToSend {
     dia: string;
     hora_inicio: string;
@@ -23,6 +25,7 @@ export interface Clase {
     id_entrenador: number;
     maximo_participantes: number;
     created_at: string;
+    entrenador: User;
     updated_at: string;
     horarios: Horario[];
   }
