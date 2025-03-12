@@ -5,6 +5,7 @@ import apiClient from "../../api/prefijo"
 import { Clase, Horario, HorarioToSend } from "../type/clases"
 import { toast } from "react-toastify"
 import { HandleViewHorario } from "../../components/clases/HandleViewHorario"
+import { User } from "../type/user"
 
 
 
@@ -14,9 +15,10 @@ const GestionClases: React.FC = () => {
   useEffect(() => {
     const obtenerClases = async () => {
       try {
-        // Simulando una petición a la API
         const response = await apiClient.get("/clases")
         setClases(response.data)
+        const responseUsers = await apiClient.get("/users")
+        setUsers(responseUsers.data)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setClases([])
@@ -29,8 +31,11 @@ const GestionClases: React.FC = () => {
   const [nuevaClase, setNuevaClase] = useState<Clase>()
   const [editingClass, setEditingClass] = useState<Clase | null>(null)
   const [showConfirm, setShowConfirm] = useState<number | null>(null)
-  
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const [users, setUsers ] = useState<User[]>([])
+
+
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setNuevaClase((prev) => ({
       ...prev!,
@@ -120,6 +125,8 @@ const GestionClases: React.FC = () => {
       setHorarios(nuevosHorarios);
     };
 
+  
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-2xl font-bold mb-6 text-[#092756]">Gestión de Clases</h2>
@@ -127,14 +134,22 @@ const GestionClases: React.FC = () => {
         <div>
         <form onSubmit={(e) => handleSubmit(e)} className="mb-6">
       <div className="grid grid-cols-2 gap-4">
-        <input
-          type="number"
-          name="id_entrenador"
-          value={nuevaClase?.id_entrenador || ""}
-          onChange={handleInputChange}
-          placeholder="ID Entrenador"
-          className="border p-2 rounded"
-        />
+      <select
+        name="id_entrenador"
+        value={nuevaClase?.id_entrenador || ""}
+        onChange={(e) => handleInputChange(e)}
+        className="border p-2 rounded"
+      >
+        <option value="">Selecciona un entrenador</option>
+        {users
+          .filter((user) => user.role === "trainer") // Filtra solo los entrenadores
+          .map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.name}
+            </option>
+          ))}
+      </select>
+
         <input
           type="text"
           name="nombre"

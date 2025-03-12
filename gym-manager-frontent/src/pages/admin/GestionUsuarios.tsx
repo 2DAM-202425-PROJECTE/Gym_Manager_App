@@ -54,7 +54,6 @@ const GestionUsuarios: React.FC = () => {
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    console.log(name, value)
     console.log(editingUser)
     setEditingUser((prev) => (prev ? { ...prev, [name]: value } : prev))
   }
@@ -192,7 +191,7 @@ const GestionUsuarios: React.FC = () => {
                         >
                           <option value="client">client</option>
                           <option value="admin">admin</option>
-                          <option value="entrenador">trainer</option>
+                          <option value="trainer">trainer</option>
                         </select>
                       ) : (
                         usuario.role
