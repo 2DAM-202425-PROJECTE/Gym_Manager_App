@@ -18,7 +18,6 @@ export interface Horario {
   }
   
 export interface Clase {
-    entrenador: any;
     id: number;
     nombre: string;
     descripcion: string;

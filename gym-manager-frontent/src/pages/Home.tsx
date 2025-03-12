@@ -31,7 +31,7 @@ type Notification = {
 export default function Home() {
   const [membresia, setMembresia] = useState<Membresia | null>(null)
   const [workouts, setWorkouts] = useState<Workout[]>([])
-  const [activeTab, setActiveTab] = useState("Lunes")
+  const [activeTab, setActiveTab] = useState("today")
   const [showNotifications, setShowNotifications] = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isMuted, setIsMuted] = useState(false)
@@ -47,10 +47,9 @@ export default function Home() {
   
     const fetchData = async () => {
 
-//      const response = await apiClient.get("/clases")
-//      setClases(response.data)
       const user = userContext.user
       if (user.clases){
+        console.log(user.clases)
         setClases(user.clases)
       } else {
         setClases([])
@@ -82,7 +81,7 @@ export default function Home() {
       setNotifications(notificationsData)
     }
     fetchData()
-  }, [])
+  }, [userContext.user])
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -106,18 +105,6 @@ export default function Home() {
     const diffTime = Math.abs(end.getTime() - today.getTime())
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     return diffDays
-  }
-
-  const inscribirseClase = async (id: number) => {
-    try{
-      const response = await apiClient.post(`/clases/inscribir/${id}`, {user_id: userContext.user.id})
-      console.log(response.data)
-      toast.success("Inscrito a la clase")
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    catch(e){
-      toast.error("Error al inscribirse a la clase")
-    }
   }
 
   const toggleMute = () => {
@@ -351,7 +338,6 @@ export default function Home() {
                         </div>
                         <div className="flex items-center">
                           <span className="px-2 py-1 bg-maroon-100 text-maroon-600 rounded text-sm">{`${horario.hora_inicio} - ${horario.hora_fin}`}</span>
-                          <button onClick={() => inscribirseClase(clase.id)} className="ml-4 px-2 py-1 bg-blue-500 text-white rounded text-sm">Inscribir</button>
                         </div>
                       </div>
                     ))
