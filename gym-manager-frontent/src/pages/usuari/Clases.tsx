@@ -1,23 +1,24 @@
-import { useState, useEffect } from "react"
-import { Calendar, Clock, User, MapPin, Dumbbell, Bell, LogOut } from 'lucide-react'
-import { Link, useLocation } from 'react-router-dom'
+import { useState, useEffect, useContext } from "react"
+import { Calendar, User } from 'lucide-react'
 import Sidebar from "../../components/sidebar/sidebar"
 import Footer from "../../components/footer/footer"
 import apiClient from "../../api/prefijo"
 import { Clase } from "../type/clases"
+import { UserContext } from "../../context/userContext"
+import { toast } from "react-toastify"
 
 
 export default function ClassesPage() {
+
+
+  const { userContext } = useContext(UserContext)
+  const user_id = userContext.user?.id
   const [classes, setClasses] = useState<Clase[]>([])
-  const [showNotifications, setShowNotifications] = useState(false)
-  const [showProfileMenu, setShowProfileMenu] = useState(false)
-  const location = useLocation()
 
   useEffect(() => {
     const fetchClasses = async () => {
       try {
         const response = await apiClient.get("/clases")
-        console.log(response.data)
         setClasses(response.data)
       } catch (error) {
         console.error("Error fetching classes:", error)
@@ -25,6 +26,17 @@ export default function ClassesPage() {
     }
     fetchClasses()
   }, [])
+
+  const handleInscribirse = async (id: number) => {
+    try {
+      console.log(`Inscribiendose a la clase, ${user_id}`)
+      await apiClient.post(`clases/inscribir/${id}`, {user_id: user_id})
+      toast("Inscripción exitosa")
+    } catch (error) {
+      console.error("Error inscribiendose a la clase:", error)
+      toast.error("Error inscribiendose a la clase")
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -85,7 +97,7 @@ export default function ClassesPage() {
                       <span style={{ textAlign: "justify" }}>{classItem.descripcion}</span>
                     </div>
                   </div>
-                        <button className=" w-full mt-4 py-2 px-4 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
+                  <button onClick={() => handleInscribirse(classItem.id)} className=" w-full mt-4 py-2 px-4 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
                     Reservar Clase
                   </button>
 
