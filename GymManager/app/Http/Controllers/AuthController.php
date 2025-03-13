@@ -26,7 +26,6 @@ class AuthController
                 'user' => $user,
             ], 200);
         }
-
         return response()->json(['message' => 'Unauthorized'], 401);
     }
 
