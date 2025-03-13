@@ -27,10 +27,13 @@ export default function Sidebar() {
         >
           Clases
         </a>
-        {/*
-        <a href="/entrenadors" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
+        <a href="/entrenadors" className={`block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600 ${
+            location.pathname === "/entrenadors" ? "border-l-4 border-maroon-600 text-maroon-600" : ""
+          }`}
+        >
           Entrenadores
         </a>
+        {/*
         <a href="/nutricion" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
           Nutrición
         </a>

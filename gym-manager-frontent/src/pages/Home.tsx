@@ -31,7 +31,7 @@ type Notification = {
 export default function Home() {
   const [membresia, setMembresia] = useState<Membresia | null>(null)
   const [workouts, setWorkouts] = useState<Workout[]>([])
-  const [activeTab, setActiveTab] = useState("Lunes")
+  const [activeTab, setActiveTab] = useState("today")
   const [showNotifications, setShowNotifications] = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isMuted, setIsMuted] = useState(false)
