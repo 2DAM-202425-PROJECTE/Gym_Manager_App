@@ -19,6 +19,7 @@ import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n'; 
 import { useState } from 'react';
 import { Tarifa } from './type/tarifas';
+import Espacios from './pages/usuari/Espacios';
 
 function App() {
 
@@ -42,6 +43,9 @@ function App() {
               <Route path='/entrenadors' element={<Entrenadors />} />
               <Route path='/configuracio' element={<Configuracio />} />
               <Route path='/nutricion' element={<Nutricion />} />
+
+              <Route path='/espacios' element={<Espacios/>} />
+              
 
           </Routes>
         </div>

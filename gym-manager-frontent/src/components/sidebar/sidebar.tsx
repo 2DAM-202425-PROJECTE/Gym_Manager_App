@@ -33,6 +33,12 @@ export default function Sidebar() {
         >
           Entrenadores
         </a>
+        <a href="/espacios" className={`block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600 ${
+            location.pathname === "/espacios" ? "border-l-4 border-maroon-600 text-maroon-600" : ""
+          }`}
+        >
+          Espacios
+        </a>
         {/*
         <a href="/nutricion" className="block py-2 px-4 text-gray-700 hover:bg-maroon-100 hover:text-maroon-600">
           Nutrición
