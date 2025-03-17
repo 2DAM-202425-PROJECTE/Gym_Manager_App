@@ -20,6 +20,8 @@ import i18n from './i18n';
 import { useState } from 'react';
 import { Tarifa } from './type/tarifas';
 import Espacios from './pages/usuari/Espacios';
+import DashboardEntrenador from './pages/entrenador/Dashboardentrenador';
+
 
 function App() {
 
@@ -45,6 +47,7 @@ function App() {
               <Route path='/nutricion' element={<Nutricion />} />
 
               <Route path='/espacios' element={<Espacios/>} />
+              <Route path='/dashboardentrenador' element={<DashboardEntrenador />} />
               
 
           </Routes>
