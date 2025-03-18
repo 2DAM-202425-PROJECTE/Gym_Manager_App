@@ -23,10 +23,7 @@ export default function ClasesEnt({ clases, diasSemana, getClasesPorDia }: Clase
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold">Mis Clases</h3>
-          <button className="bg-maroon-600 text-white py-2 px-4 rounded hover:bg-maroon-700 transition-colors flex items-center">
-            <Plus className="h-4 w-4 mr-2" />
-            Nueva Clase
-          </button>
+         
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">

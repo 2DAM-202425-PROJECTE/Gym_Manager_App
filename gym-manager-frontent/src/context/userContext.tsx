@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 
 interface UserContextType {
   userContext: {
+    entrenador: any;
     user: User | null;
   };
   setUser: React.Dispatch<React.SetStateAction<User | null>>;

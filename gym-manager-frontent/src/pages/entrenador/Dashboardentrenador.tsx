@@ -47,7 +47,6 @@ export default function VistaEntrenador() {
   const [showNotifications, setShowNotifications] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
-  const [filtroMensajes, setFiltroMensajes] = useState("todos")
   
   // Referencias para cerrar menús al hacer clic fuera
   const notificationRef = useRef<HTMLDivElement>(null)
@@ -59,38 +58,18 @@ export default function VistaEntrenador() {
   
   // Datos de la aplicación
   const [clases, setClases] = useState<Clase[]>([])
-  const [mensajes, setMensajes] = useState<Mensaje[]>([])
   const [resenas, setResenas] = useState<Resena[]>([])
-  const [mensajesNoLeidos, setMensajesNoLeidos] = useState(0)
   
   useEffect(() => {
     // Datos simplificados
     const clasesData: Clase[] = [
-      { id: 1, nombre: "Spinning", dia: "Lunes", hora: "09:00", duracion: 45, capacidad: 20, inscritos: 15, sala: "Sala 1" },
-      { id: 2, nombre: "Yoga", dia: "Lunes", hora: "17:00", duracion: 60, capacidad: 15, inscritos: 12, sala: "Sala 2" },
+      { id: 1, nombre: "Spinning", dia: "Lunes", hora: "10:00", duracion: 45, capacidad: 20, inscritos: 15, sala: "Sala 1" },
+      { id: 2, nombre: "Yoga", dia: "Miércoles", hora: "17:00", duracion: 60, capacidad: 15, inscritos: 12, sala: "Sala 2" },
       { id: 3, nombre: "CrossFit", dia: "Martes", hora: "10:00", duracion: 45, capacidad: 12, inscritos: 10, sala: "Sala 3" },
-      { id: 4, nombre: "Pilates", dia: "Martes", hora: "18:00", duracion: 60, capacidad: 15, inscritos: 8, sala: "Sala 2" },
-      { id: 5, nombre: "Zumba", dia: "Miércoles", hora: "19:00", duracion: 45, capacidad: 25, inscritos: 22, sala: "Sala 1" },
+      { id: 4, nombre: "Pilates", dia: "Sábado", hora: "18:00", duracion: 60, capacidad: 15, inscritos: 8, sala: "Sala 2" },
+      { id: 5, nombre: "Zumba", dia: "Jueves", hora: "19:00", duracion: 45, capacidad: 25, inscritos: 22, sala: "Sala 1" },
     ]
     
-    const mensajesData: Mensaje[] = [
-      { 
-        id: 1, 
-        remitente: "Ana García", 
-        contenido: "Hola, ¿podrías recomendarme ejercicios para mejorar mi resistencia?", 
-        fecha: new Date("2023-06-10T10:30:00"), 
-        leido: false,
-        avatar: "/placeholder.svg?height=40&width=40"
-      },
-      { 
-        id: 2, 
-        remitente: "Carlos Pérez", 
-        contenido: "No podré asistir a la clase de mañana, ¿hay posibilidad de recuperarla otro día?", 
-        fecha: new Date("2023-06-09T15:45:00"), 
-        leido: false,
-        avatar: "/placeholder.svg?height=40&width=40"
-      },
-    ]
     
     const resenasData: Resena[] = [
       { 
@@ -112,9 +91,7 @@ export default function VistaEntrenador() {
     ]
     
     setClases(clasesData)
-    setMensajes(mensajesData)
     setResenas(resenasData)
-    setMensajesNoLeidos(mensajesData.filter(m => !m.leido).length)
   }, [])
   
   // Efecto para cerrar menús al hacer clic fuera
@@ -138,10 +115,7 @@ export default function VistaEntrenador() {
   const handleNextWeek = () => setCurrentWeek(prev => prev + 1)
   const handleLogout = () => console.log("Cerrar sesión")
   
-  const marcarLeido = (id: number) => {
-    setMensajes(prev => prev.map(m => m.id === id ? { ...m, leido: true } : m))
-    setMensajesNoLeidos(prev => prev - 1)
-  }
+  
   
   const getClasesPorDia = (dia: string) => clases.filter(clase => clase.dia === dia)
   const getTotalInscritos = () => clases.reduce((total, clase) => total + clase.inscritos, 0)
@@ -158,11 +132,7 @@ export default function VistaEntrenador() {
       .slice(0, 3)
   }
   
-  const getMensajesFiltrados = () => {
-    return filtroMensajes === "no-leidos" 
-      ? mensajes.filter(m => !m.leido) 
-      : mensajes
-  }
+ 
   
   const renderStars = (puntuacion: number) => {
     return Array(5).fill(0).map((_, i) => (
@@ -177,7 +147,7 @@ export default function VistaEntrenador() {
     <div className="min-h-screen bg-gray-100 flex">
       {/* Sidebar */}
       
-      <SidebarEntrenador activeTab={activeTab} setActiveTab={setActiveTab} mensajesNoLeidos={mensajesNoLeidos} />
+      <SidebarEntrenador activeTab={activeTab} setActiveTab={setActiveTab} mensajesNoLeidos={0}  />
 
 
       {/* Main Content */}
@@ -188,7 +158,6 @@ export default function VistaEntrenador() {
             {activeTab === "dashboard" && "Dashboard"}
             {activeTab === "horario" && "Mi Horario"}
             {activeTab === "clases" && "Mis Clases"}
-            {activeTab === "mensajes" && "Mensajes"}
             {activeTab === "resenas" && "Reseñas"}
             {activeTab === "ajustes" && "Ajustes"}
           </h2>
@@ -199,11 +168,8 @@ export default function VistaEntrenador() {
                 className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors relative"
               >
                 <Bell className="h-5 w-5 text-gray-600" />
-                {mensajesNoLeidos > 0 && (
-                  <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                    {mensajesNoLeidos}
-                  </span>
-                )}
+              
+    
               </button>
               {showNotifications && (
                 <div ref={notificationRef} className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10">
@@ -211,16 +177,10 @@ export default function VistaEntrenador() {
                     Notificaciones
                   </div>
                   <div className="py-2 max-h-64 overflow-y-auto">
-                    {mensajes.filter(m => !m.leido).length > 0 ? (
-                      mensajes.filter(m => !m.leido).map((mensaje) => (
-                        <div key={mensaje.id} className="px-4 py-2 hover:bg-gray-100">
-                          <p className="text-sm text-gray-800">Mensaje de {mensaje.remitente}</p>
-                          <p className="text-xs text-gray-500 mt-1">{mensaje.fecha.toLocaleDateString()}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="px-4 py-2 text-sm text-gray-500">No hay notificaciones nuevas</p>
-                    )}
+                   
+                       
+                      
+                    
                   </div>
                   <div className="py-2 px-4 bg-gray-100 text-center rounded-b-md">
                     <button 

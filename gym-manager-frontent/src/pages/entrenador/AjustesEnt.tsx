@@ -2,27 +2,31 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { User, Bell, Lock } from "lucide-react"
+import { useContext, useState } from "react"
+import { Bell, Lock, User } from "lucide-react"
+import { UserContext } from "../../context/userContext"
+
+type User = {
+  name: string;
+  apellidos: string;
+  email: string;
+  telefono: string;
+  especialidad: string;
+  biografia: string;
+}
 
 export default function AjustesEntrenador() {
-    const [trainers, setTrainers] = useState<User[]>([])
+
+  const { userContext } = useContext(UserContext)
+
+    const [user, setUser] = useState<User[]>([])
   
   // Estados para los toggles
   const [emailNotifications, setEmailNotifications] = useState(true)
   const [pushNotifications, setPushNotifications] = useState(true)
   const [classReminders, setClassReminders] = useState(true)
 
-  // Estados para el formulario de perfil
-  const [profileForm, setProfileForm] = useState({
-    nombre: "David Torres",
-    apellidos: "Martínez",
-    email: "david.torres@powergym.com",
-    telefono: "+34 612 345 678",
-    especialidad: "Entrenamiento funcional, Yoga, Spinning",
-    biografia:
-      "Entrenador certificado con más de 8 años de experiencia en fitness y entrenamiento funcional. Especializado en yoga y spinning.",
-  })
+  
 
   // Estados para el formulario de contraseña
   const [passwordForm, setPasswordForm] = useState({
@@ -34,7 +38,7 @@ export default function AjustesEntrenador() {
   // Manejadores de cambios en formularios
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setProfileForm((prev) => ({
+    setProfileForm((prev: any) => ({
       ...prev,
       [name]: value,
     }))
@@ -108,7 +112,7 @@ export default function AjustesEntrenador() {
                     type="text"
                     name="nombre"
                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-maroon-500 focus:border-maroon-500"
-                    value={profileForm.nombre}
+                    value={User.name}
                     onChange={handleProfileChange}
                   />
                 </div>
@@ -118,7 +122,7 @@ export default function AjustesEntrenador() {
                     type="text"
                     name="apellidos"
                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-maroon-500 focus:border-maroon-500"
-                    value={profileForm.apellidos}
+                    value={User.name}
                     onChange={handleProfileChange}
                   />
                 </div>
@@ -128,7 +132,7 @@ export default function AjustesEntrenador() {
                     type="email"
                     name="email"
                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-maroon-500 focus:border-maroon-500"
-                    value={profileForm.email}
+                    value={User.name}
                     onChange={handleProfileChange}
                   />
                 </div>
@@ -138,7 +142,7 @@ export default function AjustesEntrenador() {
                     type="tel"
                     name="telefono"
                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-maroon-500 focus:border-maroon-500"
-                    value={profileForm.telefono}
+                    value={User.name}
                     onChange={handleProfileChange}
                   />
                 </div>
@@ -148,7 +152,7 @@ export default function AjustesEntrenador() {
                     type="text"
                     name="especialidad"
                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-maroon-500 focus:border-maroon-500"
-                    value={profileForm.especialidad}
+                    value={User.name}
                     onChange={handleProfileChange}
                   />
                 </div>
@@ -158,7 +162,7 @@ export default function AjustesEntrenador() {
                     name="biografia"
                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-maroon-500 focus:border-maroon-500"
                     rows={4}
-                    value={profileForm.biografia}
+                    value={User.name}
                     onChange={handleProfileChange}
                   />
                 </div>
@@ -286,5 +290,9 @@ export default function AjustesEntrenador() {
       </div>
     </div>
   )
+}
+
+function setProfileForm(arg0: (prev: any) => any) {
+  throw new Error("Function not implemented.")
 }
 
