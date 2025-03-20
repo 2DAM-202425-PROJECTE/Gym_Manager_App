@@ -9,6 +9,7 @@ import HorarioEnt from "./HorariEnt"
 import ResenasEnt from "./ResenaEnt"
 import StatsEntrenador from "../../components/cards/StatsEntrenador"
 import AjustesEntrenador from "./AjustesEnt"
+import Login from "../Login"
 
 // Tipos simplificados
 type Clase = {
@@ -218,13 +219,13 @@ export default function VistaEntrenador() {
                       <Settings className="inline-block w-4 h-4 mr-2" />
                       Configuración
                     </a>
-                    <button
-                      onClick={handleLogout}
+                    <a
+                      href="/login"
                       className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                     >
                       <LogOut className="inline-block w-4 h-4 mr-2" />
                       Cerrar sesión
-                    </button>
+                    </a>
                   </div>
                 </div>
               )}
