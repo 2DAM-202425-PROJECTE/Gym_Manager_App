@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Clase;
-use App\Models\Horario;
+use App\Models\Entrenador;
 use App\Models\Tarifa;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -18,10 +17,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Clase::truncate();
         User::truncate();
-        User::factory(3)->create();
-
+        User::factory(10)->create();
 
         // Crear un usuario normal
         User::factory()->create([
@@ -55,17 +52,18 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        $clase = Clase::factory()->create();
-
-        Tarifa::factory(4)->create();
-
-        $horarios = [
-            ['dia' => 'Lunes', 'hora_inicio' => '08:00', 'hora_fin' => '09:00', 'clase_id' => $clase->id],
-            ['dia' => 'Miércoles', 'hora_inicio' => '08:00', 'hora_fin' => '09:00', 'clase_id' => $clase->id],
-        ];
-
-        foreach ($horarios as $horario) {
-            Horario::create($horario);
+        // Insertar entrenadores existentes en la tabla entrenadores
+        $trainers = User::where('role', 'trainer')->get();
+        foreach ($trainers as $trainer) {
+            Entrenador::create([
+                'entrenador_id' => $trainer->id,
+                'especialidad' => 'default_specialty', // Reemplazar con datos reales
+                'experiencia' => 'default_experience', // Reemplazar con datos reales
+                'disponibilidad' => 'default_availability', // Reemplazar con datos reales
+                'phone_number' => '1234567890', // Reemplazar con datos reales
+                'certificaciones' => 'default_certifications', // Reemplazar con datos reales
+                'descripcion' => 'default_descripcio.', // Reemplazar con datos reales
+            ]);
         }
     }
 }
