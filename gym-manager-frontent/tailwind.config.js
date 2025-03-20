@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       colors: {
-      
-
+        
+        Violeta: '#53s64d',
         blau_clar: '#6eb6de',
         blau_electric: '#4a77d4',
         blau_fosc: '#092756',
