@@ -10,8 +10,6 @@ import HomeButton from "../components/buttons/HomeButton"
 import HomeStats from "../components/cards/HomeStats"
 import { UserContext } from "../context/userContext"
 import { Clase } from "./type/clases"
-import apiClient from "../api/prefijo"
-import { toast } from "react-toastify"
 import { Membresia } from "./type/membresia"
 
 type Workout = {
@@ -110,7 +108,8 @@ export default function Home() {
   const toggleMute = () => {
     setIsMuted(!isMuted)
   }
-
+  
+  console.log(userContext.user)
   if (!userContext.user) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-6">

@@ -24,4 +24,6 @@ Route::apiResource('clases', ClaseController::class);
 
 Route::get('users/{id}/membresia', [UserController::class, 'membresia']);
 
+Route::post('membresia/admin/{id}', [MembresiaController::class, 'from_admin']);
+
 Route::post('clases/inscribir/{id}', [ClaseController::class, 'inscribir']);

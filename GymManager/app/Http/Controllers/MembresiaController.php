@@ -3,12 +3,51 @@ namespace App\Http\Controllers;
 
 use App\Models\Membresia;
 use App\Models\Pago;
-use BaconQrCode\Encoder\QrCode;
+use App\Models\PagoAdministrador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class MembresiaController extends Controller
 {
+    public function from_admin(Request $request, $id)
+    {
+        try {
+            $data = $request->validate([
+                'fecha_fin' => 'required|date',
+                'importe' => 'required|numeric',
+            ]);
+
+            $membresia = Membresia::where('user_id', $id)->first();
+
+            if ($membresia) {
+                $membresia->fecha_fin = $data['fecha_fin'];
+                $membresia->save();
+            } else {
+                $uuid = Str::uuid()->toString();
+                $membresia = Membresia::create([
+                    'user_id' => $id,
+                    'fecha_fin' => $data['fecha_fin'],
+                    'qr_data' => $uuid,
+                ]);
+            }
+
+            PagoAdministrador::create([
+                'membresia_id' => $membresia->id,
+                'importe' => $data['importe'],
+                'fecha_pago' => now(),
+            ]);
+
+            return response()->json(['message' => 'Fecha actualizada correctamente'], 200);
+
+        } catch (\Exception $e) {
+            print $e->getMessage();
+            return response()->json([
+                'error' => 'Error interno del servidor',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         // Validación de los datos

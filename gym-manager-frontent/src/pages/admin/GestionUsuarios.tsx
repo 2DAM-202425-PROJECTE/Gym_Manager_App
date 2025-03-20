@@ -6,17 +6,30 @@ import { GreenButtonAdmin } from "../../components/buttons/GreenButtonAdmin"
 import { BlueButtonAdmin } from "../../components/buttons/BlueButtonAdmin"
 import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin"
 import { User } from "../type/user"
+import { ModalEditarFecha } from "../../components/modals/ModalEditarFecha"
 
-
+type newUser = {
+  name: string
+  email: string
+  role: string
+  password: string
+}
 
 const GestionUsuarios: React.FC = () => {
   const [usuarios, setUsuarios] = useState<User[]>([])
 
-//  const [nuevoUsuario, setNuevoUsuario] = useState<User>()
+  const [nuevoUsuario, setNuevoUsuario] = useState<newUser>({
+    name: "",
+    email: "",
+    role: "client",
+    password: "",
+  })
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [showConfirm, setShowConfirm] = useState<number | null>(null)
   const [userDateEdit, setUserDateEdit] = useState<Date>()
+  const [showModal, setShowModal] = useState<boolean>(false)
 
+  
   useEffect(() => {
     const fetchData = async () => {
       const response = await getUsers()
@@ -30,10 +43,23 @@ const GestionUsuarios: React.FC = () => {
     setUserDateEdit(userToEdit.membresia ? new Date(userToEdit.membresia.fecha_fin) : undefined)
   }
   
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    try {
+      console.log(nuevoUsuario)
+      const response = await apiClient.post("/users", nuevoUsuario)
+      setUsuarios([...usuarios, response.data])
+      toast("Usuario añadido")
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("Error al añadir el usuario")
+    }
+  }
 
   const handleSave = () => {
     toast("Usuario actualizado")
     try{
+      console.log(editingUser)
       apiClient.put(`/users/${editingUser?.id}`, editingUser)
      const userEdited = editingUser
      if (userEdited && userEdited.membresia) {
@@ -54,13 +80,32 @@ const GestionUsuarios: React.FC = () => {
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    console.log(editingUser)
     setEditingUser((prev) => (prev ? { ...prev, [name]: value } : prev))
+  }
+
+  const handleSaveInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    console.log(name, value)
+    console.log(nuevoUsuario)
+    setNuevoUsuario((prev) => (prev ? { ...prev, [name]: value } : prev))
   }
 
   const handleDelete = (id: number) => {
     setUsuarios(usuarios.filter((usuario) => usuario.id !== id))
     setShowConfirm(null)
+  }
+
+  const handleOpenModal = (user: User) => {
+    setEditingUser(user)
+    setShowModal(true)
+  }
+  
+  const handleCloseModal = () => {
+    
+    
+    setShowModal(false)
+      
+    setEditingUser(null)
   }
 
   const userStats = {
@@ -94,36 +139,33 @@ const GestionUsuarios: React.FC = () => {
               <p className="text-3xl font-bold">{userStats.entrenadores}</p>
             </div>
           </div>
-
-
-        {/*  <form onSubmit={handleSubmit} className="mb-6">
+          <form onSubmit={handleSubmit} className="mb-6">
             <div className="grid grid-cols-2 gap-4">
               <input
                 type="text"
-                name="nombre"
-                value={nuevoUsuario.name}
-                onChange={handleInputChange}
+                name="name"
+                value={nuevoUsuario?.name}
+                onChange={handleSaveInputChange}
                 placeholder="Nombre"
                 className="border p-2 rounded"
               />
               <input
                 type="email"
-                name="correu"
-                value={nuevoUsuario.email}
-                onChange={handleInputChange}
+                name="email"
+                value={nuevoUsuario?.email}
+                onChange={handleSaveInputChange}
                 placeholder="Correo"
                 className="border p-2 rounded"
               />
-              <select name="rol" value={nuevoUsuario.role} onChange={handleInputChange} className="border p-2 rounded">
+              <select name="role" value={nuevoUsuario?.role} onChange={(e) => handleSaveInputChange(e)} className="border p-2 rounded">
                 <option value="client">Cliente</option>
                 <option value="admin">Admin</option>
-                <option value="entrenador">Entrenador</option>
+                <option value="trainer">Entrenador</option>
               </select>
               <input
                 type="password"
-                name="contrasenya"
-                value={nuevoUsuario.contrasenya}
-                onChange={handleInputChange}
+                name="password"
+                onChange={handleSaveInputChange}
                 placeholder="Contraseña"
                 className="border p-2 rounded"
               />
@@ -134,7 +176,7 @@ const GestionUsuarios: React.FC = () => {
                 Añadir Usuario
               </button>
             </div>
-          </form>*/}
+          </form>
         </div>
 
         <div>
@@ -197,18 +239,22 @@ const GestionUsuarios: React.FC = () => {
                         usuario.role
                       )}
                     </td>
-                    <td className="p-2 text-center">{ 
-                    editingUser?.id === usuario.id ? (
-                        <input
-                          type="date"
-                          name="membresia/fecha_fin"
-                          value={userDateEdit ? userDateEdit.toISOString().split('T')[0] : ''}
-                          onChange={(e) => setUserDateEdit(new Date(e.target.value))}
-                          className="border p-1 rounded w-full"
-                        />
-                      ) :
-                    usuario.membresia ? usuario.membresia.fecha_fin : "N/D"}</td>
-                    <td className="p-2">
+                    <td className="p-2 text-center">
+                      {usuario.membresia ? (
+                        <button
+                          className="bg-blue-400 font-medium rounded-xl py-1 px-2"
+                          onClick={() => handleOpenModal(usuario)}
+                        >
+                          {usuario.membresia.fecha_fin}
+                        </button>
+                      ) : (
+                        <button onClick={() => handleOpenModal(usuario)}
+                        className="bg-blue-400 font-medium rounded-xl p-2 py-1 px-2">
+                          "N/D"
+                        </button>
+                      )}
+                    </td>
+                    <td className="flex gap-2 p-2">
 
                       {editingUser?.id === usuario.id ? (
                         <GreenButtonAdmin action={() => handleSave()} text="Guardar" />
@@ -246,6 +292,10 @@ const GestionUsuarios: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {showModal && editingUser && (
+        <ModalEditarFecha user={editingUser} onClose={handleCloseModal} />
       )}
     </div>
   )
