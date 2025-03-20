@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Membresia;
 use App\Models\Pago;
+use App\Models\Tarifa;
 use BaconQrCode\Encoder\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -18,14 +19,12 @@ class MembresiaController extends Controller
             'fecha_fin' => 'required|date',
         ]);
 
-        // Intentar encontrar la membresía existente
         $membresia = Membresia::where('user_id', $request->user_id)->first();
 
         if ($membresia) {
             $membresia->fecha_fin = $request->fecha_fin;
             $membresia->save();
         } else {
-            // Si no existe una membresía, creamos una nueva
             $uuid = Str::uuid()->toString();
             $membresia = Membresia::create([
                 'user_id' => $request->user_id,
@@ -78,5 +77,41 @@ class MembresiaController extends Controller
         $membresia->delete();
 
         return response()->json(null, 204);
+    }
+    public function create_admin_membresia(Request $request, $id)
+    {
+        $request->validate([
+            'id_membresia' => 'nullable|exists:membresias,id',
+            'amount' => 'required|numeric',
+            'fecha_fin' => 'required|date',
+        ]);
+
+
+
+        $membresia = Membresia::findOrFail($id);
+
+        if (!$membresia){
+
+            $newMembresia = Membresia::factory([
+                'user_id' => $request->user_id,
+                'fecha_fin' => $request->fecha_fin,
+                'qr_data' => $request->qr_data,
+            ]);
+
+            Pago::create([
+                'membresia_id' => $newMembresia->id,
+                'fecha_pago' => now(),
+                'estado' => 'completado',
+            ]);
+        }else{
+            $membresia->fecha_fin = $request->fecha_fin;
+            Pago::create([
+                'membresia_id' => $membresia->id,
+                'fecha_pago' => now(),
+                'estado' => 'completado',
+            ]);
+            $membresia->save();
+        }
+
     }
 }

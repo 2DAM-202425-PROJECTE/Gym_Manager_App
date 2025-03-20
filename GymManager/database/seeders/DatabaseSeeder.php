@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
     {
         User::truncate();
         User::factory(10)->create();
+        Entrenador::truncate();
 
         // Crear un usuario normal
         User::factory()->create([
@@ -52,18 +53,6 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        // Insertar entrenadores existentes en la tabla entrenadores
-        $trainers = User::where('role', 'trainer')->get();
-        foreach ($trainers as $trainer) {
-            Entrenador::create([
-                'entrenador_id' => $trainer->id,
-                'especialidad' => 'default_specialty', // Reemplazar con datos reales
-                'experiencia' => 'default_experience', // Reemplazar con datos reales
-                'disponibilidad' => 'default_availability', // Reemplazar con datos reales
-                'phone_number' => '1234567890', // Reemplazar con datos reales
-                'certificaciones' => 'default_certifications', // Reemplazar con datos reales
-                'descripcion' => 'default_descripcio.', // Reemplazar con datos reales
-            ]);
-        }
+        Entrenador::factory(5)->create();
     }
 }

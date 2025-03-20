@@ -25,3 +25,6 @@ Route::apiResource('clases', ClaseController::class);
 Route::get('users/{id}/membresia', [UserController::class, 'membresia']);
 
 Route::post('clases/inscribir/{id}', [ClaseController::class, 'inscribir']);
+Route::post('clases/desinscribir/{id}', [ClaseController::class, 'desinscribir']);
+
+Route::post('membresia/admin/{id}', [MembresiaController::class, 'create_admin_membresia']);
