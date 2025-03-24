@@ -3,27 +3,18 @@ import apiClient from "../../api/prefijo";
 import { TextFieldAdmin } from "../../components/textFields/TextFieldAdmin";
 import { toast } from "react-toastify";
 import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin";
-import { GreenButtonAdmin } from "../../components/buttons/GreenButtonAdmin";
+import { espaiProps } from "../type/espai";
 
-interface Espacio {
-  id: number;
-  usuario: string;
-  espacio: string;
-  fechaInicio: string;
-  fechaFin: string;
-  hora: string;
-  estado: string;
-  imagen?: string;
-}
+
 
 const GestionEspacios = () => {
-  const [espacios, setEspacios] = useState<Espacio[]>([]);
+  const [espacios, setEspacios] = useState<espaiProps[]>([]);
   const [usuarios, setUsuarios] = useState<string[]>([]);
   const [filtroFecha, setFiltroFecha] = useState("");
   const [filtroUsuario, setFiltroUsuario] = useState("");
   const [filtroEspacio, setFiltroEspacio] = useState("");
-  const [nuevoEspacio, setNuevoEspacio] = useState<Espacio>({ id: 0, usuario: "", espacio: "", fechaInicio: "", fechaFin: "", hora: "", estado: "", imagen: "" });
-  const [editingEspacio, setEditingEspacio] = useState<Espacio | null>(null);
+  const [nuevoEspacio, setNuevoEspacio] = useState<espaiProps>({name: "", fechaInicio: "", fechaFin: "", hora: "", estado: "", imagen: "" });
+  const [editingEspacio, setEditingEspacio] = useState<espaiProps | null>(null);
 
   useEffect(() => {
     const obtenerEspacios = async () => {
