@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pagos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('membresia_id');
-            $table->unsignedBigInteger('tarifa_id');
+            $table->unsignedBigInteger('tarifa_id')->nullable();
             $table->date('fecha_pago');
             $table->enum('estado', ['pendiente', 'completado', 'fallido']);
             $table->timestamps();
