@@ -3,8 +3,6 @@ import apiClient from "../../api/prefijo";
 import { TextFieldAdmin } from "../../components/textFields/TextFieldAdmin";
 import { toast } from "react-toastify";
 import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin";
-import { GreenButtonAdmin } from "../../components/buttons/GreenButtonAdmin";
-
 interface Espacio {
   id: number;
   usuario: string;

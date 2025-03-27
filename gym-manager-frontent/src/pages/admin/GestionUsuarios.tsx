@@ -85,8 +85,6 @@ const GestionUsuarios: React.FC = () => {
 
   const handleSaveInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    console.log(name, value)
-    console.log(nuevoUsuario)
     setNuevoUsuario((prev) => (prev ? { ...prev, [name]: value } : prev))
   }
 
@@ -112,7 +110,6 @@ const GestionUsuarios: React.FC = () => {
     total: usuarios.length,
     clientes: usuarios.filter((u) => u.role === "client").length,
     admin: usuarios.filter((u) => u.role === "admin").length,
-    entrenadores: usuarios.filter((u) => u.role === "trainer").length,
   }
 
   return (
@@ -133,10 +130,6 @@ const GestionUsuarios: React.FC = () => {
             <div className="bg-[#3a506b] text-white p-4 rounded-lg">
               <p className="text-lg">Administradores</p>
               <p className="text-3xl font-bold">{userStats.admin}</p>
-            </div>
-            <div className="bg-cyan text-white p-4 rounded-lg">
-              <p className="text-lg">Entrenadores</p>
-              <p className="text-3xl font-bold">{userStats.entrenadores}</p>
             </div>
           </div>
           <form onSubmit={handleSubmit} className="mb-6">
@@ -160,7 +153,6 @@ const GestionUsuarios: React.FC = () => {
               <select name="role" value={nuevoUsuario?.role} onChange={(e) => handleSaveInputChange(e)} className="border p-2 rounded">
                 <option value="client">Cliente</option>
                 <option value="admin">Admin</option>
-                <option value="trainer">Entrenador</option>
               </select>
               <input
                 type="password"
@@ -233,7 +225,6 @@ const GestionUsuarios: React.FC = () => {
                         >
                           <option value="client">client</option>
                           <option value="admin">admin</option>
-                          <option value="trainer">trainer</option>
                         </select>
                       ) : (
                         usuario.role

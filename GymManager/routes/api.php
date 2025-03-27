@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClaseController;
+use App\Http\Controllers\EntrenadorController;
 use App\Http\Controllers\MembresiaController;
 use App\Http\Controllers\TarifaController;
 use App\Http\Controllers\UserController;
@@ -19,6 +20,8 @@ Route::post('register', [AuthController::class, 'register']);
 Route::apiResource('users', UserController::class);
 Route::apiResource('tarifas', TarifaController::class);
 Route::apiResource('membresias', MembresiaController::class);
+Route::apiResource('entrenadors', EntrenadorController::class);
+
 
 Route::apiResource('clases', ClaseController::class);
 
@@ -30,3 +33,4 @@ Route::post('clases/inscribir/{id}', [ClaseController::class, 'inscribir']);
 Route::post('clases/desinscribir/{id}', [ClaseController::class, 'desinscribir']);
 
 Route::post('membresia/admin/{id}', [MembresiaController::class, 'create_admin_membresia']);
+

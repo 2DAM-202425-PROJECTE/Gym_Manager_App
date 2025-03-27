@@ -18,4 +18,8 @@ class Entrenador extends Model
         'certificaciones',
         'descripcion',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'entrenador_id');
+    }
 }
