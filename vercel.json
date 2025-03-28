@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "backend/package.json",
-      "use": "@vercel/node"
+      "src": "GymManager/api/index.php",
+      "use": "@vercel/php"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "backend/$1"
+      "dest": "GymManager/api/index.php"
     }
   ]
 }
