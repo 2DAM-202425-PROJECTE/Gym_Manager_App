@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class TarifaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Mostra una llista del recurs.
      */
     public function index()
     {
@@ -17,7 +17,7 @@ class TarifaController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Emmagatzema un recurs creat recentment a l'emmagatzematge.
      */
     public function store(Request $request)
     {
@@ -32,7 +32,7 @@ class TarifaController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Mostra el recurs especificat.
      */
     public function show(Tarifa $tarifa)
     {
@@ -40,7 +40,7 @@ class TarifaController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualitza el recurs especificat a l'emmagatzematge.
      */
     public function update(Request $request, Tarifa $tarifa)
     {
@@ -55,7 +55,7 @@ class TarifaController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina el recurs especificat de l'emmagatzematge.
      */
     public function destroy(Tarifa $tarifa)
     {

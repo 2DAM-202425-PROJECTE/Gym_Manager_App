@@ -13,7 +13,7 @@ use Laravel\Jetstream\Jetstream;
 class CreateTeam implements CreatesTeams
 {
     /**
-     * Validate and create a new team for the given user.
+     * Valideu i creeu un equip nou per a l'usuari donat.
      *
      * @param  array<string, string>  $input
      */

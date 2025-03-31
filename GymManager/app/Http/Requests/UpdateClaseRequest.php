@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateClaseRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Determinar si l'usuari està autoritzat per fer aquesta sol·licitud.
      */
     public function authorize(): bool
     {
@@ -15,7 +15,7 @@ class UpdateClaseRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Obteniu les regles de validació que s'apliquen a la sol·licitud.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */

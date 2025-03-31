@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class ClaseController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Mostra una llista del recurs.
      */
     public function index()
     {
@@ -58,7 +58,7 @@ class ClaseController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Mostra el recurs especificat.
      */
     public function show(Clase $clase)
     {
@@ -66,7 +66,7 @@ class ClaseController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualitzeu el recurs especificat a l'emmagatzematge.
      */
     public function update(Request $request, $id)
     {
@@ -133,7 +133,7 @@ class ClaseController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina el recurs especificat de l'emmagatzematge.
      */
     public function destroy(Clase $clase)
     {

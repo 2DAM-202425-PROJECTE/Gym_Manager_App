@@ -7,7 +7,7 @@ use Illuminate\Validation\Rules\Password;
 trait PasswordValidationRules
 {
     /**
-     * Get the validation rules used to validate passwords.
+     * Obteniu les regles de validació utilitzades per validar les contrasenyes.
      *
      * @return array<int, \Illuminate\Contracts\Validation\Rule|array<mixed>|string>
      */

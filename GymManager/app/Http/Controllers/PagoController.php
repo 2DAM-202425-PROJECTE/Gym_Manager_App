@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class PagoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Mostra una llista del recurs.
      */
     public function index()
     {
@@ -17,7 +17,7 @@ class PagoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Emmagatzema un recurs creat recentment a l'emmagatzematge.
      */
     public function store(Request $request)
     {
@@ -33,15 +33,7 @@ class PagoController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Pago $pago)
-    {
-        return response()->json($pago);
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Actualitzeu el recurs especificat a l'emmagatzematge.
      */
     public function update(Request $request, Pago $pago)
     {
@@ -57,8 +49,8 @@ class PagoController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     */
+     * Elimina el recurs especificat de l'emmagatzematge.
+ */
     public function destroy(Pago $pago)
     {
         $pago->delete();

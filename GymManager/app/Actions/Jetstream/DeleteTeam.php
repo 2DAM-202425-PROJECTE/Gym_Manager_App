@@ -8,7 +8,7 @@ use Laravel\Jetstream\Contracts\DeletesTeams;
 class DeleteTeam implements DeletesTeams
 {
     /**
-     * Delete the given team.
+     * Suprimeix l'equip donat.
      */
     public function delete(Team $team): void
     {

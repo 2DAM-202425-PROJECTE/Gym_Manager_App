@@ -15,7 +15,7 @@ class CreateNewUser implements CreatesNewUsers
     use PasswordValidationRules;
 
     /**
-     * Create a newly registered user.
+     * Creeu un nou usuari registrat.
      *
      * @param  array<string, string>  $input
      */
@@ -40,7 +40,7 @@ class CreateNewUser implements CreatesNewUsers
     }
 
     /**
-     * Create a personal team for the user.
+     * Crear un equip personal per a l'usuari.
      */
     protected function createTeam(User $user): void
     {

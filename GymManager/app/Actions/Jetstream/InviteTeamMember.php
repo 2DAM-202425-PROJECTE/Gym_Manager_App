@@ -19,7 +19,7 @@ use Laravel\Jetstream\Rules\Role;
 class InviteTeamMember implements InvitesTeamMembers
 {
     /**
-     * Invite a new team member to the given team.
+     * Convida un nou membre de l'equip a l'equip donat.
      */
     public function invite(User $user, Team $team, string $email, ?string $role = null): void
     {
@@ -38,7 +38,7 @@ class InviteTeamMember implements InvitesTeamMembers
     }
 
     /**
-     * Validate the invite member operation.
+     * Valideu l'operació d'invitació de membres.
      */
     protected function validate(Team $team, string $email, ?string $role): void
     {
@@ -52,8 +52,8 @@ class InviteTeamMember implements InvitesTeamMembers
         )->validateWithBag('addTeamMember');
     }
 
-    /**
-     * Get the validation rules for inviting a team member.
+    /** 
+     * Obteniu les regles de validació per convidar un membre de l'equip.
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
      */

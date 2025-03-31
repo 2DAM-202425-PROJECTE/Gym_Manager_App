@@ -16,7 +16,7 @@ use Laravel\Jetstream\Rules\Role;
 class AddTeamMember implements AddsTeamMembers
 {
     /**
-     * Add a new team member to the given team.
+     * Afegiu un nou membre de l'equip a l'equip donat.
      */
     public function add(User $user, Team $team, string $email, ?string $role = null): void
     {
