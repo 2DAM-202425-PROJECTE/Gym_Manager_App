@@ -17,6 +17,8 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
+import GestionEspacios from "./GestionEspacios";
+import GestionEntrenadores from "./GestionEntrenadores";
 
 ChartJS.register(
   CategoryScale,
@@ -138,6 +140,12 @@ const Dashboard: React.FC = () => {
         return <GestionUsuarios />;
       case "clases":
         return <GestionClases />;
+      case "entrenadors":
+        return <GestionEntrenadores/>;
+
+        
+      case "espacios":
+        return <GestionEspacios />;
       default:
         return renderDashboard();
     }

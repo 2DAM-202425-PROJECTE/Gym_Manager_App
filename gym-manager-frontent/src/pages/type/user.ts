@@ -1,4 +1,7 @@
-export type User = {
+import { Clase } from "./clases";
+import { Membresia } from "./membresia";
+
+export interface User{
     id: number;
     name: string;
     email: string;
@@ -10,7 +13,8 @@ export type User = {
     two_factor_confirmed_at: string | null;
     role: string;
     profile_photo_url: string;
-    // isNew?: boolean;
+    membresia: Membresia | null;
+    clases: Clase[];
   };
 
   

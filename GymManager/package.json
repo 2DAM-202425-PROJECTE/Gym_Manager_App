@@ -3,7 +3,9 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "post-install-cmd": "php artisan key:generate && php artisan migrate --force && php artisan config:cache && php artisan route:cache"
+
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.7",

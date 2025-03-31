@@ -191,7 +191,7 @@ const GestionTarifas: React.FC = () => {
         </div>
 
         {/* Gráfico de distribución de tarifas */}
-        <div className="md:w-[300px] lg:w-[350px] mx-auto mt-6 md:mt-0">
+        <div className="md:w-[300px] lg:w-[500px] mx-auto mt-6 md:mt-0">
           <h3 className="text-xl font-bold mb-4 text-[#092756]">Distribución de Tarifas</h3>
           <Doughnut data={chartData} />
         </div>

@@ -41,6 +41,12 @@ class User extends Authenticatable
         'role',
     ];
 
+    public function clases()
+    {
+        return $this->belongsToMany(Clase::class, 'clase_user');
+    }
+
+
     public function isRole(Role $role): bool
     {
         return $this->role === $role->value;

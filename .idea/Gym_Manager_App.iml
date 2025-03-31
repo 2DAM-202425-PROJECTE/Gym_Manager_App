@@ -5,6 +5,10 @@
       <sourceFolder url="file://$MODULE_DIR$/GymManager/app" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/GymManager/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/GymManager/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
+<<<<<<< HEAD
+      <sourceFolder url="file://$MODULE_DIR$/GymManager/tests" isTestSource="true" />
+=======
+>>>>>>> main
       <sourceFolder url="file://$MODULE_DIR$/GymManager/tests" isTestSource="true" packagePrefix="Tests\" />
       <excludeFolder url="file://$MODULE_DIR$/GymManager/vendor/bacon/bacon-qr-code" />
       <excludeFolder url="file://$MODULE_DIR$/GymManager/vendor/brick/math" />

@@ -7,8 +7,7 @@ import { User } from "../type/user";
 import { useTranslation } from "react-i18next";
 import { DefaultButton } from "../components/buttons/ButtonDefault";
 import { SelectLanguage } from "../components/buttons/SelectLanguage";
-import axios from "axios";
-import apiClient from "../api/prefijo";
+import { toast } from "react-toastify";
 
 type LoginResponse = User | { error: string };
 
@@ -29,7 +28,10 @@ export default function Login() {
     e.preventDefault();
     const response = await login({ email: name, password: password }) as LoginResponse;
 
-    if ("error" in response) return;
+    if ("error" in response) {
+      toast.error("error");
+      return
+    }
 
     setUser(response);
 
@@ -38,22 +40,16 @@ export default function Login() {
       return;
     }else {
        
-      const user_id = response.id as number;
-      axios.get("")
-      navigate('/')
-      try {
-        const membershipResponse = await apiClient.get(`/users/${user_id}/membresia`);
 
 
-        if (membershipResponse.data.message) {
-          navigate('/');
+        if (response.membresia?.fecha_fin) {
+          const fechaFin = new Date(response.membresia.fecha_fin);
+          const fechaActual = new Date(); 
+          if (fechaFin > fechaActual) navigate('/');
+          else navigate('/tarifas');
         } else {
           navigate('/tarifas');
         }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        navigate('/tarifas');
-      }
     
     };
 

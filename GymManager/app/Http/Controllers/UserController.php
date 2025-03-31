@@ -10,9 +10,9 @@ class UserController extends Controller
 {
     public function index()
     {
-        return User::all();
+        $users = User::with(['membresia', 'clases'])->get();
+        return response()->json($users);
     }
-
     public function membresia($id){
         $user = User::findOrFail($id);
         $memb = $user->membresia;
@@ -48,7 +48,10 @@ class UserController extends Controller
             'name' => 'string',
             'email' => 'email|unique:users,email,' . $id,
             'password' => 'string|min:8',
+            'role' => 'nullable|string|in:client,admin,trainer',
+            'fin_matricula' => 'date',
         ]);
+
 
         $user = User::findOrFail($id);
         $user->update($validated);

@@ -17,15 +17,15 @@ class AuthController
         ]);
 
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+            $user = Auth::user()->load('membresia', 'clases.horarios', 'clases.entrenador');
             $token = $user->createToken('YourAppName')->plainTextToken;
+
             return response()->json([
-                'message' => 'User registered successfully',
+                'message' => 'User logged in successfully',
                 'token' => $token,
                 'user' => $user,
             ], 200);
         }
-
         return response()->json(['message' => 'Unauthorized'], 401);
     }
 

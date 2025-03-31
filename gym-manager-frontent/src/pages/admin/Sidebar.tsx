@@ -1,5 +1,8 @@
+import { LogOut } from "lucide-react";
 import type React from "react"
 import { useState } from "react"
+import { Link } from "react-router-dom";
+
 
 interface SidebarProps {
   activeSection: string
@@ -30,6 +33,16 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
       icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01",
       section: "clases",
     },
+    {
+      name: "Entrenadors",
+      icon: "M12 2a10 10 0 1 0 10 10A10.01 10.01 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm0-13a3 3 0 0 1 3 3 3 3 0 0 1-1 2.24V13a1 1 0 0 1-2 0v-2.76A3 3 0 0 1 12 7zm-1 9h2v2h-2z",
+      section: "entrenadors",
+    },
+    {/*
+      name: "Espacios",
+      icon: "M4 6v12h16V6H4zm0-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm8 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6z",
+      section: "espacios",
+    */},
   ]
 
   return (
@@ -39,6 +52,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
       onMouseLeave={() => setIsExpanded(false)}
     >
       <div className="flex items-center justify-center mb-8">
+
         <svg
           className="w-8 h-8"
           fill="none"
@@ -50,7 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
         </svg>
         {isExpanded && <span className="ml-2 text-xl font-bold">GymManager Admin</span>}
       </div>
-      <nav>
+      <nav >
         {menuItems.map((item) => (
           <button
             key={item.section}
@@ -72,6 +86,15 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
           </button>
         ))}
       </nav>
+      <div className="mt-auto">
+      <Link
+          to={"/login"}
+          className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-blau_fosc"
+        >
+          <LogOut className="inline-block w-5 h-5 mr-2" />
+          {isExpanded && "Cerrar sesión"}
+        </Link>
+      </div>
     </div>
   )
 }

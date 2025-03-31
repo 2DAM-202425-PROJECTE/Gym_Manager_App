@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('membresias', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
             $table->date('fecha_fin');
             $table->string('qr_data');
             $table->timestamps();

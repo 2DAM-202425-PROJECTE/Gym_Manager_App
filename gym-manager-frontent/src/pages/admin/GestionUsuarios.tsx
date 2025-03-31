@@ -1,72 +1,91 @@
 import { useEffect, useState } from "react"
+import apiClient from "../../api/prefijo"
+import { toast } from "react-toastify"
+import { getUsers } from "../../api/user/getUsers"
+import { GreenButtonAdmin } from "../../components/buttons/GreenButtonAdmin"
+import { BlueButtonAdmin } from "../../components/buttons/BlueButtonAdmin"
+import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin"
+import { User } from "../type/user"
+import { ModalEditarFecha } from "../../components/modals/ModalEditarFecha"
 
-interface Usuario {
-  id: number
+type newUser = {
   name: string
   email: string
-  email_verified_at: string | null
-  current_team_id: number | null
-  role: "client" | "admin" | "entrenador"
+  role: string
+  password: string
 }
 
 const GestionUsuarios: React.FC = () => {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([])
-  const [nuevoUsuario, setNuevoUsuario] = useState<Omit<Usuario, "id">>({
+  const [usuarios, setUsuarios] = useState<User[]>([])
+
+  const [nuevoUsuario, setNuevoUsuario] = useState<newUser>({
     name: "",
     email: "",
-    email_verified_at: null,
-    current_team_id: null,
     role: "client",
+    password: "",
   })
-  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editingUser, setEditingUser] = useState<User | null>(null)
   const [showConfirm, setShowConfirm] = useState<number | null>(null)
-  const [error, setError] = useState<string>("")
-/*
+  const [userDateEdit, setUserDateEdit] = useState<Date>()
+  const [showModal, setShowModal] = useState<boolean>(false)
+
+  
   useEffect(() => {
     const fetchData = async () => {
-      const response = await apiClient.get("/usuarios")
-      const usuarios = response.data as Usuario[]
-      setUsuarios(usuarios)
-    }
+      const response = await getUsers()
+      if (response) setUsuarios(response)
+      }
     fetchData()
   }, [])
-*/
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setNuevoUsuario((prev) => ({ ...prev, [name]: value }))
-  }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleEdit = (userToEdit: User) => {
+    setEditingUser(userToEdit)
+    setUserDateEdit(userToEdit.membresia ? new Date(userToEdit.membresia.fecha_fin) : undefined)
+  }
+  
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
-    // Validación: Verificar que todos los campos estén llenos
-    if (!nuevoUsuario.name || !nuevoUsuario.email) {
-      setError("Por favor, completa todos los campos.")
-      return
+    try {
+      console.log(nuevoUsuario)
+      const response = await apiClient.post("/users", nuevoUsuario)
+      setUsuarios([...usuarios, response.data])
+      toast("Usuario añadido")
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("Error al añadir el usuario")
     }
+  }
 
-    const newUsuario: Usuario = {
-      id: Date.now(),
-      ...nuevoUsuario,
-      fecha_de_registre: new Date().toISOString().split("T")[0],
+  const handleSave = () => {
+    toast("Usuario actualizado")
+    try{
+      console.log(editingUser)
+      apiClient.put(`/users/${editingUser?.id}`, editingUser)
+     const userEdited = editingUser
+     if (userEdited && userEdited.membresia) {
+      userEdited.membresia.fecha_fin = userDateEdit?.toLocaleDateString() || ""
+     }
+
+     console.log(userEdited)
+
+    setUsuarios(usuarios.map((usuario) => (usuario.id === userEdited?.id ? userEdited : usuario)))
+     
+    setEditingUser(null)
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    }catch(error){
+      toast("Error al actualizar el usuario")
     }
-
-    setUsuarios((prev) => [...prev, newUsuario])
-    setNuevoUsuario({ name: "", email: "", role: "" })
-    setError("") // Limpiar mensaje de error si la validación es exitosa
   }
 
-  const handleEdit = (id: number) => {
-    setEditingId(id)
-  }
-
-  const handleSave = (id: number) => {
-    setEditingId(null)
-  }
-
-  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
+  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setUsuarios(usuarios.map((user) => (user.id === id ? { ...user, [name]: value } : user)))
+    setEditingUser((prev) => (prev ? { ...prev, [name]: value } : prev))
+  }
+
+  const handleSaveInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setNuevoUsuario((prev) => (prev ? { ...prev, [name]: value } : prev))
   }
 
   const handleDelete = (id: number) => {
@@ -74,11 +93,23 @@ const GestionUsuarios: React.FC = () => {
     setShowConfirm(null)
   }
 
+  const handleOpenModal = (user: User) => {
+    setEditingUser(user)
+    setShowModal(true)
+  }
+  
+  const handleCloseModal = () => {
+    
+    
+    setShowModal(false)
+      
+    setEditingUser(null)
+  }
+
   const userStats = {
     total: usuarios.length,
     clientes: usuarios.filter((u) => u.role === "client").length,
     admin: usuarios.filter((u) => u.role === "admin").length,
-    entrenadores: usuarios.filter((u) => u.role === "entrenador").length,
   }
 
   return (
@@ -100,43 +131,33 @@ const GestionUsuarios: React.FC = () => {
               <p className="text-lg">Administradores</p>
               <p className="text-3xl font-bold">{userStats.admin}</p>
             </div>
-            <div className="bg-cyan text-white p-4 rounded-lg">
-              <p className="text-lg">Entrenadores</p>
-              <p className="text-3xl font-bold">{userStats.entrenadores}</p>
-            </div>
           </div>
-
-          {/* Mostrar error si algún campo está vacío */}
-          {error && <p className="text-red-600 mb-4">{error}</p>}
-
           <form onSubmit={handleSubmit} className="mb-6">
             <div className="grid grid-cols-2 gap-4">
               <input
                 type="text"
-                name="nombre"
-                value={nuevoUsuario.name}
-                onChange={handleInputChange}
+                name="name"
+                value={nuevoUsuario?.name}
+                onChange={handleSaveInputChange}
                 placeholder="Nombre"
                 className="border p-2 rounded"
               />
               <input
                 type="email"
-                name="correu"
-                value={nuevoUsuario.email}
-                onChange={handleInputChange}
+                name="email"
+                value={nuevoUsuario?.email}
+                onChange={handleSaveInputChange}
                 placeholder="Correo"
                 className="border p-2 rounded"
               />
-              <select name="rol" value={nuevoUsuario.role} onChange={handleInputChange} className="border p-2 rounded">
+              <select name="role" value={nuevoUsuario?.role} onChange={(e) => handleSaveInputChange(e)} className="border p-2 rounded">
                 <option value="client">Cliente</option>
                 <option value="admin">Admin</option>
-                <option value="entrenador">Entrenador</option>
               </select>
               <input
                 type="password"
-                name="contrasenya"
-                value={nuevoUsuario.contrasenya}
-                onChange={handleInputChange}
+                name="password"
+                onChange={handleSaveInputChange}
                 placeholder="Contraseña"
                 className="border p-2 rounded"
               />
@@ -160,21 +181,21 @@ const GestionUsuarios: React.FC = () => {
                   <th className="p-2">Nombre</th>
                   <th className="p-2">Correo</th>
                   <th className="p-2">Rol</th>
-                  <th className="p-2">Fecha de Registro</th>
+                  <th className="p-2">Fecha de fin de matricula</th>
                   <th className="p-2">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {usuarios.map((usuario) => (
+                {usuarios.map((usuario : User) => (
                   <tr key={usuario.id} className="border-b">
                     <td className="p-2">{usuario.id}</td>
                     <td className="p-2">
-                      {editingId === usuario.id ? (
+                      {editingUser?.id === usuario.id ? (
                         <input
                           type="text"
-                          name="nombre"
-                          value={usuario.name}
-                          onChange={(e) => handleEditInputChange(e, usuario.id)}
+                          name="name"
+                          value={editingUser.name}
+                          onChange={(e) => handleEditInputChange(e)}
                           className="border p-1 rounded w-full"
                         />
                       ) : (
@@ -182,12 +203,12 @@ const GestionUsuarios: React.FC = () => {
                       )}
                     </td>
                     <td className="p-2">
-                      {editingId === usuario.id ? (
+                      {editingUser?.id === usuario.id ? (
                         <input
                           type="email"
-                          name="correu"
-                          value={usuario.email}
-                          onChange={(e) => handleEditInputChange(e, usuario.id)}
+                          name="email"
+                          value={editingUser.email}
+                          onChange={(e) => handleEditInputChange(e)}
                           className="border p-1 rounded w-full"
                         />
                       ) : (
@@ -195,44 +216,43 @@ const GestionUsuarios: React.FC = () => {
                       )}
                     </td>
                     <td className="p-2">
-                      {editingId === usuario.id ? (
+                      {editingUser?.id === usuario.id ? (
                         <select
-                          name="rol"
-                          value={usuario.role}
-                          onChange={(e) => handleEditInputChange(e, usuario.id)}
+                          name="role"
+                          value={editingUser.role}
+                          onChange={(e) => handleEditInputChange(e)}
                           className="border p-1 rounded w-full"
                         >
-                          <option value="client">Cliente</option>
-                          <option value="admin">Admin</option>
-                          <option value="entrenador">Entrenador</option>
+                          <option value="client">client</option>
+                          <option value="admin">admin</option>
                         </select>
                       ) : (
                         usuario.role
                       )}
                     </td>
-                    <td className="p-2">{usuario.fecha_de_registre}</td>
-                    <td className="p-2">
-                      {editingId === usuario.id ? (
+                    <td className="p-2 text-center">
+                      {usuario.membresia ? (
                         <button
-                          onClick={() => handleSave(usuario.id)}
-                          className="bg-green-500 text-white px-4 py-1 rounded mr-2 hover:bg-green-600"
+                          className="bg-blue-400 font-medium rounded-xl py-1 px-2"
+                          onClick={() => handleOpenModal(usuario)}
                         >
-                          Guardar
+                          {usuario.membresia.fecha_fin}
                         </button>
                       ) : (
-                        <button
-                          onClick={() => handleEdit(usuario.id)}
-                          className="bg-blue-500 text-white px-4 py-1 rounded mr-2 hover:bg-blue-600"
-                        >
-                          Editar
+                        <button onClick={() => handleOpenModal(usuario)}
+                        className="bg-blue-400 font-medium rounded-xl p-2 py-1 px-2">
+                          "N/D"
                         </button>
                       )}
-                      <button
-                        onClick={() => setShowConfirm(usuario.id)}
-                        className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-                      >
-                        Eliminar
-                      </button>
+                    </td>
+                    <td className="flex gap-2 p-2">
+
+                      {editingUser?.id === usuario.id ? (
+                        <GreenButtonAdmin action={() => handleSave()} text="Guardar" />
+                      ) : (
+                        <BlueButtonAdmin text="Editar" action={() => handleEdit(usuario)} />
+                      )}
+                        <RedButtonAdmin text="Eliminar" action={() => setShowConfirm(usuario.id)} />
                     </td>
                   </tr>
                 ))}
@@ -263,6 +283,10 @@ const GestionUsuarios: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {showModal && editingUser && (
+        <ModalEditarFecha user={editingUser} onClose={handleCloseModal} />
       )}
     </div>
   )

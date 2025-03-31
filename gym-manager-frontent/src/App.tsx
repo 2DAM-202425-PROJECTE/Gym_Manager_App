@@ -4,18 +4,22 @@ import { Route, Routes} from 'react-router-dom';
 import Registre from './pages/Registre';
 import Login from './pages/Login';
 import Home from './pages/Home';
-import ForgotPassword from './pages/ForgotPassword';
 import Profile from './pages/Profile';
 import Tarifas from './pages/Tarifas';
 import { UserProvider } from './context/userContext';
 import { ToastContainer } from 'react-toastify';
 import Confirmacion from './pages/Confirmacion';
+import Clases  from './pages/usuari/Clases';
+import Entrenadors from './pages/usuari/Entrenadors';
+import Configuracio from './pages/usuari/Configuracio';
+import Nutricion from './pages/usuari/Nutricion';
 
 import DashboardAdmin from './pages/admin/DashboardAdmin';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n'; 
 import { useState } from 'react';
 import { Tarifa } from './type/tarifas';
+import Espacios from './pages/usuari/Espacios';
 
 function App() {
 
@@ -31,11 +35,18 @@ function App() {
               <Route index element={<Home />}/>
               <Route path="/login" element={<Login />} />
               <Route path="/registre" element={<Registre />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/profile" element={<Profile />} />
               <Route path='/tarifas' element={<Tarifas setTarifaSel={setTarifaSel} />} />
               <Route path='/admin' element={<DashboardAdmin />} />
               <Route path='/confirmacion' element={<Confirmacion tarifa={TarifaSel}/>} />
+              <Route path='/clases' element={<Clases />} />
+              <Route path='/entrenadors' element={<Entrenadors />} />
+              <Route path='/configuracio' element={<Configuracio />} />
+              <Route path='/nutricion' element={<Nutricion />} />
+
+              <Route path='/espacios' element={<Espacios/>} />
+              
+
           </Routes>
         </div>
         </UserProvider>
