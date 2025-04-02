@@ -54,16 +54,16 @@ export default function Footer() {
             <div>
               <h4 className="text-lg font-semibold mb-4">Síguenos</h4>
               <div className="flex space-x-4">
-                <a href="#" className="text-white hover:text-gray-300">
+                <a href="https://www.facebook.com/Gymmanager005" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300">
                   <Facebook className="h-6 w-6" />
                 </a>
-                <a href="#" className="text-white hover:text-gray-300">
+                <a href="https://www.instagram.com/gym.manager/?hl=es" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300">
                   <Instagram className="h-6 w-6" />
                 </a>
-                <a href="#" className="text-white hover:text-gray-300">
+                <a href="https://x.com/gymmanagergame" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300">
                   <Twitter className="h-6 w-6" />
                 </a>
-                <a href="#" className="text-white hover:text-gray-300">
+                <a href="https://www.youtube.com/playlist?list=PLqIHINYeiud5tn4J_vYaCFFK6aFmaqQax" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300">
                   <Youtube className="h-6 w-6" />
                 </a>
               </div>

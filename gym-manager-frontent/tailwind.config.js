@@ -19,7 +19,6 @@ module.exports = {
     extend: {
       colors: {
 
-        
 
         Violeta: '#53s64d',
         blau_clar: '#6eb6de',
