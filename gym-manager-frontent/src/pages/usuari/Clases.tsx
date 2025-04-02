@@ -6,6 +6,7 @@ import apiClient from "../../api/prefijo"
 import { Clase } from "../type/clases"
 import { UserContext } from "../../context/userContext"
 import { toast } from "react-toastify"
+import ClassActionButton from "../../components/buttons/Inscribirse"
 
 
 export default function ClassesPage() {
@@ -20,6 +21,7 @@ export default function ClassesPage() {
       try {
         const response = await apiClient.get("/clases")
         setClasses(response.data)
+        console.log(response.data)
       } catch (error) {
         console.error("Error fetching classes:", error)
       }
@@ -72,59 +74,58 @@ export default function ClassesPage() {
           {/* Classes Content */}
           <div className="p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {classes.map((classItem) => {
-                const isEnrolled = userContext.user?.clases.some((userClass: Clase) => userClass.id === classItem.id);
-                return (
-                  <div key={classItem.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-xl font-semibold text-maroon-600">{classItem.nombre}</h3>
-                      <div className="bg-maroon-100 text-maroon-600 px-3 py-1 rounded-full text-sm">
-                        { classItem.participantes.length}/{classItem.maximo_participantes}
-                      </div>
+              
+            {classes.map((classItem) => {
+              const isEnrolled = userContext.user?.clases.some((userClass: Clase) => userClass.id === classItem.id)
+              return (
+                <div key={classItem.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-semibold text-maroon-600">{classItem.nombre}</h3>
+                    <div className="bg-maroon-100 text-maroon-600 px-3 py-1 rounded-full text-sm">
+                      {classItem.participantes.length}/{classItem.maximo_participantes}
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center text-gray-600">
-                        <User className="h-5 w-5 mr-2" />
-                        <span>{classItem.entrenador.name}</span>
-                      </div>
-                      {/* Creative schedule display */}
-                      <div className="mt-3 mb-2">
-                        <div className="flex items-start text-gray-600">
-                          <Calendar className="h-5 w-5 mr-2 mt-1" />
-                          <div className="flex flex-wrap gap-2">
-                            {classItem.horarios.map((session, index) => (
-                              <div
-                                key={index}
-                                className="bg-gray-100 border border-gray-300 rounded-xl px-3 py-1.5 text-sm"
-                              >
-                                <span className="font-medium text-maroon-700">{session.dia}</span>
-                                <div className="flex items-center mt-1">
-                                  <div className="h-2 w-2 bg-maroon-500 rounded-full mr-1.5"></div>
-                                  <span className="text-maroon-600 text-xs">
-                                    {session.hora_inicio} - {session.hora_fin}
-                                  </span>
-                                </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center text-gray-600">
+                      <User className="h-5 w-5 mr-2" />
+                      <span>{classItem.entrenador.name}</span>
+                    </div>
+                    <div className="mt-3 mb-2">
+                      <div className="flex items-start text-gray-600">
+                        <Calendar className="h-5 w-5 mr-2 mt-1" />
+                        <div className="flex flex-wrap gap-2">
+                          {classItem.horarios.map((session, index) => (
+                            <div
+                              key={index}
+                              className="bg-gray-100 border border-gray-300 rounded-xl px-3 py-1.5 text-sm"
+                            >
+                              <span className="font-medium text-maroon-700">{session.dia}</span>
+                              <div className="flex items-center mt-1">
+                                <div className="h-2 w-2 bg-maroon-500 rounded-full mr-1.5"></div>
+                                <span className="text-maroon-600 text-xs">
+                                  {session.hora_inicio} - {session.hora_fin}
+                                </span>
                               </div>
-                            ))}
-                          </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                      <div className="flex items-center text-gray-600">
-                        <span style={{ textAlign: "justify" }}>{classItem.descripcion}</span>
-                      </div>
                     </div>
-                    {isEnrolled ? (
-                      <button onClick={() => handleDesinscribirse(classItem.id)} className="w-full mt-4 py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
-                        Desinscribirse
-                      </button>
-                    ) : (
-                      <button onClick={() => handleInscribirse(classItem.id)} className="w-full mt-4 py-2 px-4 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
-                        Reservar Clase
-                      </button>
-                    )}
+                    <div className="flex items-center text-gray-600">
+                      <span style={{ textAlign: "justify" }}>{classItem.descripcion}</span>
+                    </div>
                   </div>
-                );
-              })}
+                  <ClassActionButton
+                    isEnrolled={isEnrolled}
+                    onClick={() =>
+                      isEnrolled
+                        ? handleDesinscribirse(classItem.id)
+                        : handleInscribirse(classItem.id)
+                    }
+                  />
+                </div>
+              )
+            })}
             </div>
           </div>
         </main>
