@@ -44,6 +44,9 @@ class AuthController
             'password' => Hash::make($data['password']),
         ]);
 
+        // Asignar el rol de cliente
+        $user->assignRole('regular');
+
         $token = $user->createToken('YourAppName')->plainTextToken;
 
         return response()->json([
