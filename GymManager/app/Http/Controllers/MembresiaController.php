@@ -5,6 +5,7 @@ use App\Models\Membresia;
 use App\Models\Pago;
 use App\Models\PagoAdministrador;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class MembresiaController extends Controller
@@ -52,13 +53,14 @@ class MembresiaController extends Controller
     {
         // Validación de los datos
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'tarifa_id' => 'required|exists:tarifas,id',
             'fecha_fin' => 'required|date',
         ]);
 
+        $userId = Auth::id();
+
         // Intentar encontrar la membresía existente
-        $membresia = Membresia::where('user_id', $request->user_id)->first();
+        $membresia = Membresia::where('user_id', $userId)->first();
 
         if ($membresia) {
             $membresia->fecha_fin = $request->fecha_fin;
@@ -67,7 +69,7 @@ class MembresiaController extends Controller
             // Si no existe una membresía, creamos una nueva
             $uuid = Str::uuid()->toString();
             $membresia = Membresia::create([
-                'user_id' => $request->user_id,
+                'user_id' => $userId,
                 'fecha_fin' => $request->fecha_fin,
                 'qr_data' => $uuid,
             ]);

@@ -46,10 +46,12 @@ export default function Registre() {
       return;
     }
 
-    console.log('👤 User registered:', response.user);
+    localStorage.setItem('token', response.token);
+
+    console.log('👤 User registered:', response);
 
     setUser(response.user);
-    navigate('/');
+    navigate('/tarifas');
   };
 
   return (

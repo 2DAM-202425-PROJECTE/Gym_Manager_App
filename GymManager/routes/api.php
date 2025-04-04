@@ -19,7 +19,8 @@ Route::post('register', [AuthController::class, 'register']);
 Route::apiResource('users', UserController::class);
 
 Route::apiResource('tarifas', TarifaController::class);
-Route::apiResource('membresias', MembresiaController::class);
+
+Route::middleware('auth:sanctum')->apiResource('membresias', MembresiaController::class);
 
 Route::apiResource('clases', ClaseController::class);
 

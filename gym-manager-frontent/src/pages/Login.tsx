@@ -35,6 +35,9 @@ export default function Login() {
 
     setUser(response);
 
+    localStorage.setItem('token', response.token);
+
+
     if(response.role === 'admin') {
       navigate('/admin');
       return;
