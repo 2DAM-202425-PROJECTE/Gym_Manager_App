@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\helpers\RolesPermission;
 use App\Models\Entrenador;
 use App\Models\Membresia;
+use App\Models\Tarifa;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
         User::truncate();
         membresia::truncate();
         Entrenador::truncate();
+        Tarifa::truncate();
 
         // Enable foreign key constraints
         DB::statement('PRAGMA foreign_keys = ON;');
@@ -70,5 +72,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Entrenador::factory(5)->create();
+
+        Tarifa::factory()->create();
     }
 }

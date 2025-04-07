@@ -19,6 +19,7 @@ Route::post('register', [AuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
+    Route::get('my_info', [UserController::class, 'my_info']);
 });
 Route::apiResource('tarifas', TarifaController::class);
 

@@ -11,6 +11,7 @@ import HomeStats from "../components/cards/HomeStats"
 import { UserContext } from "../context/userContext"
 import { Clase } from "./type/clases"
 import { Membresia } from "./type/membresia"
+import apiClient from "../api/prefijo"
 
 type Workout = {
   id: number
@@ -34,6 +35,8 @@ export default function Home() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isMuted, setIsMuted] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [ user, setUser ] = useState<User>(null)
+
   const notificationRef = useRef<HTMLDivElement>(null)
   const profileMenuRef = useRef<HTMLDivElement>(null)
   const { userContext } = useContext(UserContext)
@@ -45,9 +48,14 @@ export default function Home() {
   
     const fetchData = async () => {
 
-      const user = userContext.user
+      apiClient.get("/my_info").then((response) => {
+        console.log(response.data)
+        setUser(response.data.user)
+      }).catch((error) => {
+        console.log(error)
+      })
+
       if (user.clases){
-        console.log(user.clases)
         setClases(user.clases)
       } else {
         setClases([])
