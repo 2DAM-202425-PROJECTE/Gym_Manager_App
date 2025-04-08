@@ -7,8 +7,14 @@ export async function login({ email, password }: { email: string; password: stri
     try {
         const response = await apiClient.post("/login", { email, password });
         const user = response.data.user as User;
-        
-        console.log('👤 User logged in:', user);
+        const token = response.data.token;
+
+        if (token) {
+          localStorage.setItem("token", token);
+          console.log("🔐 Token guardado en localStorage:", token);
+        } else {
+          console.warn("⚠️ No se recibió ningún token en la respuesta.");
+        }
         toast.success('Inici de sessio correcte');
         
         return user;

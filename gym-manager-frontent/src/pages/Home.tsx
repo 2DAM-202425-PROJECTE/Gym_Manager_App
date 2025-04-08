@@ -11,6 +11,7 @@ import HomeStats from "../components/cards/HomeStats"
 import { UserContext } from "../context/userContext"
 import { Clase } from "./type/clases"
 import { Membresia } from "./type/membresia"
+import { User as UserType } from "./type/user"
 import apiClient from "../api/prefijo"
 
 type Workout = {
@@ -35,7 +36,7 @@ export default function Home() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isMuted, setIsMuted] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
-  const [ user, setUser ] = useState<User>(null)
+  const [ user, setUser ] = useState<UserType | null>(null)
 
   const notificationRef = useRef<HTMLDivElement>(null)
   const profileMenuRef = useRef<HTMLDivElement>(null)
@@ -49,27 +50,16 @@ export default function Home() {
     const fetchData = async () => {
 
       apiClient.get("/my_info").then((response) => {
-        console.log(response.data)
-        setUser(response.data.user)
+        setUser(response.data)
+
       }).catch((error) => {
         console.log(error)
       })
 
-      if (user.clases){
+      if (user?.clases){
         setClases(user.clases)
       } else {
         setClases([])
-      }
-
-
-
-      const membresiaData: Membresia = {
-        id: 1,
-        user_id: 1,
-        fecha_fin: new Date("2023-12-31"),
-        qr_data: "qr-data",
-        created_at: new Date(),
-        updated_at: new Date(),
       }
       const workoutsData: Workout[] = [
         { id: 1, name: "Cardio", duration: 45, calories: 300, date: new Date("2023-06-01") },
@@ -81,13 +71,12 @@ export default function Home() {
         { id: 2, message: "Recuerda tu sesión de entrenamiento mañana", date: new Date("2023-06-11") },
         { id: 3, message: "¡Felicidades! Has alcanzado tu meta semanal", date: new Date("2023-06-12") },
       ]
-  
-      setMembresia(membresiaData)
+      setMembresia(user?.membresia || null)
       setWorkouts(workoutsData)
       setNotifications(notificationsData)
     }
     fetchData()
-  }, [userContext.user])
+  }, [user])
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -116,9 +105,7 @@ export default function Home() {
   const toggleMute = () => {
     setIsMuted(!isMuted)
   }
-  
-  console.log(userContext.user)
-  if (!userContext.user) {
+    if (!userContext.user) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-6">
         <p className="text-2xl font-bold text-center text-gray-800">
@@ -176,7 +163,6 @@ export default function Home() {
                         {notifications.map((notification) => (
                           <div key={notification.id} className="px-4 py-2 hover:bg-gray-100">
                             <p className="text-sm text-gray-800">{notification.message}</p>
-                            <p className="text-xs text-gray-500 mt-1">{notification.date.toLocaleDateString()}</p>
                           </div>
                         ))}
                       </div>
@@ -247,11 +233,10 @@ export default function Home() {
                   <div className="h-2 bg-white/20 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-white rounded-full"
-                      style={{ width: `${(calculateRemainingDays(membresia.fecha_fin) / 365) * 100}%` }}
+                      style={{ width: `${(user?.membresia?.fecha_fin ? calculateRemainingDays(new Date(user.membresia.fecha_fin)) / 365 : 0) * 100}%` }}
                     ></div>
                   </div>
                   <p className="text-sm mt-2 text-right opacity-80">
-                    Vence: {membresia.fecha_fin.toLocaleDateString()}
                   </p>
                 </div>
               </div>

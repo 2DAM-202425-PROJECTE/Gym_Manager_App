@@ -19,7 +19,6 @@ export default function Login() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { setUser } = UseUser()
 
   const { t } = useTranslation();
 
@@ -32,11 +31,6 @@ export default function Login() {
       toast.error("error");
       return
     }
-
-    setUser(response);
-
-    localStorage.setItem('token', response.token);
-
 
     if(response.role === 'admin') {
       navigate('/admin');
