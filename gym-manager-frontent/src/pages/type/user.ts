@@ -1,7 +1,7 @@
 import { Clase } from "./clases";
 import { Membresia } from "./membresia";
 
-export type User = {
+export interface User{
     id: number;
     name: string;
     email: string;

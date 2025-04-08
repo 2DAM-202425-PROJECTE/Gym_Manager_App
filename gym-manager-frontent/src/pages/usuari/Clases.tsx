@@ -6,20 +6,22 @@ import apiClient from "../../api/prefijo"
 import { Clase } from "../type/clases"
 import { UserContext } from "../../context/userContext"
 import { toast } from "react-toastify"
+import ClassActionButton from "../../components/buttons/Inscribirse"
 
 
 export default function ClassesPage() {
 
 
-  const { userContext } = useContext(UserContext)
+  const { userContext, setUser } = useContext(UserContext)
   const user_id = userContext.user?.id
   const [classes, setClasses] = useState<Clase[]>([])
-
+  
   useEffect(() => {
     const fetchClasses = async () => {
       try {
         const response = await apiClient.get("/clases")
         setClasses(response.data)
+        console.log(response.data)
       } catch (error) {
         console.error("Error fetching classes:", error)
       }
@@ -30,11 +32,29 @@ export default function ClassesPage() {
   const handleInscribirse = async (id: number) => {
     try {
       console.log(`Inscribiendose a la clase, ${user_id}`)
-      await apiClient.post(`clases/inscribir/${id}`, {user_id: user_id})
+      const response = await apiClient.post(`clases/inscribir/${id}`, {user_id: user_id})
+//      window.location.reload()
+      console.log(response)
+      setUser(response.data?.user)
       toast("Inscripción exitosa")
     } catch (error) {
       console.error("Error inscribiendose a la clase:", error)
       toast.error("Error inscribiendose a la clase")
+    }
+  }
+
+  const handleDesinscribirse = async (id: number) => {
+    try {
+      console.log(`Desinscribiendose de la clase, ${user_id}`)
+      const response = await apiClient.post(`clases/desinscribir/${id}`, {user_id: user_id})
+      //window.location.reload()
+      console.log(response)
+      setUser(response.data?.user)
+      console.log(userContext.user)
+      toast("Desinscripción exitosa")
+    } catch (error) {
+      console.error("Error desinscribiendose de la clase:", error)
+      toast.error("Error desinscribiendose de la clase")
     }
   }
 
@@ -54,15 +74,15 @@ export default function ClassesPage() {
           {/* Classes Content */}
           <div className="p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {classes.map((classItem) => (
+              
+            {classes.map((classItem) => {
+              const isEnrolled = userContext.user?.clases.some((userClass: Clase) => userClass.id === classItem.id)
+              return (
                 <div key={classItem.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-semibold text-maroon-600">{classItem.nombre}</h3>
                     <div className="bg-maroon-100 text-maroon-600 px-3 py-1 rounded-full text-sm">
-                      {classItem.maximo_participantes}
-
-                      {/* {classItem.enrolled}/ */}
-
+                      {classItem.participantes.length}/{classItem.maximo_participantes}
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -70,8 +90,6 @@ export default function ClassesPage() {
                       <User className="h-5 w-5 mr-2" />
                       <span>{classItem.entrenador.name}</span>
                     </div>
-                   
-                     {/* Creative schedule display */}
                     <div className="mt-3 mb-2">
                       <div className="flex items-start text-gray-600">
                         <Calendar className="h-5 w-5 mr-2 mt-1" />
@@ -97,12 +115,17 @@ export default function ClassesPage() {
                       <span style={{ textAlign: "justify" }}>{classItem.descripcion}</span>
                     </div>
                   </div>
-                  <button onClick={() => handleInscribirse(classItem.id)} className=" w-full mt-4 py-2 px-4 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
-                    Reservar Clase
-                  </button>
-
+                  <ClassActionButton
+                    isEnrolled={isEnrolled}
+                    onClick={() =>
+                      isEnrolled
+                        ? handleDesinscribirse(classItem.id)
+                        : handleInscribirse(classItem.id)
+                    }
+                  />
                 </div>
-              ))}
+              )
+            })}
             </div>
           </div>
         </main>

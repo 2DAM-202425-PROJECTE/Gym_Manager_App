@@ -3,13 +3,51 @@ namespace App\Http\Controllers;
 
 use App\Models\Membresia;
 use App\Models\Pago;
-use App\Models\Tarifa;
-use BaconQrCode\Encoder\QrCode;
+use App\Models\PagoAdministrador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class MembresiaController extends Controller
 {
+    public function from_admin(Request $request, $id)
+    {
+        try {
+            $data = $request->validate([
+                'fecha_fin' => 'required|date',
+                'importe' => 'required|numeric',
+            ]);
+
+            $membresia = Membresia::where('user_id', $id)->first();
+
+            if ($membresia) {
+                $membresia->fecha_fin = $data['fecha_fin'];
+                $membresia->save();
+            } else {
+                $uuid = Str::uuid()->toString();
+                $membresia = Membresia::create([
+                    'user_id' => $id,
+                    'fecha_fin' => $data['fecha_fin'],
+                    'qr_data' => $uuid,
+                ]);
+            }
+
+            PagoAdministrador::create([
+                'membresia_id' => $membresia->id,
+                'importe' => $data['importe'],
+                'fecha_pago' => now(),
+            ]);
+
+            return response()->json(['message' => 'Fecha actualizada correctamente'], 200);
+
+        } catch (\Exception $e) {
+            print $e->getMessage();
+            return response()->json([
+                'error' => 'Error interno del servidor',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         // Validación de los datos
@@ -19,12 +57,14 @@ class MembresiaController extends Controller
             'fecha_fin' => 'required|date',
         ]);
 
+        // Intentar encontrar la membresía existente
         $membresia = Membresia::where('user_id', $request->user_id)->first();
 
         if ($membresia) {
             $membresia->fecha_fin = $request->fecha_fin;
             $membresia->save();
         } else {
+            // Si no existe una membresía, creamos una nueva
             $uuid = Str::uuid()->toString();
             $membresia = Membresia::create([
                 'user_id' => $request->user_id,
@@ -77,41 +117,5 @@ class MembresiaController extends Controller
         $membresia->delete();
 
         return response()->json(null, 204);
-    }
-    public function create_admin_membresia(Request $request, $id)
-    {
-        $request->validate([
-            'id_membresia' => 'nullable|exists:membresias,id',
-            'amount' => 'required|numeric',
-            'fecha_fin' => 'required|date',
-        ]);
-
-
-
-        $membresia = Membresia::findOrFail($id);
-
-        if (!$membresia){
-
-            $newMembresia = Membresia::factory([
-                'user_id' => $request->user_id,
-                'fecha_fin' => $request->fecha_fin,
-                'qr_data' => $request->qr_data,
-            ]);
-
-            Pago::create([
-                'membresia_id' => $newMembresia->id,
-                'fecha_pago' => now(),
-                'estado' => 'completado',
-            ]);
-        }else{
-            $membresia->fecha_fin = $request->fecha_fin;
-            Pago::create([
-                'membresia_id' => $membresia->id,
-                'fecha_pago' => now(),
-                'estado' => 'completado',
-            ]);
-            $membresia->save();
-        }
-
     }
 }

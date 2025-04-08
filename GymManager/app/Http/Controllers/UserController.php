@@ -13,7 +13,6 @@ class UserController extends Controller
         $users = User::with(['membresia', 'clases'])->get();
         return response()->json($users);
     }
-
     public function membresia($id){
         $user = User::findOrFail($id);
         $memb = $user->membresia;

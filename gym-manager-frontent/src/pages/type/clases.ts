@@ -27,5 +27,6 @@ export interface Clase {
     entrenador: User;
     updated_at: string;
     horarios: Horario[];
+    participantes: User[];
   }
   
