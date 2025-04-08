@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { TextFieldNormal } from "../components/textFields/TextFieldNormal";
 import { login } from "../api/user/auth";
 import { useNavigate } from "react-router-dom";
-import { UseUser } from "../customHooks/useUser";
 import { User } from "../type/user";
 import { useTranslation } from "react-i18next";
 import { DefaultButton } from "../components/buttons/ButtonDefault";

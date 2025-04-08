@@ -64,12 +64,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Create an administrator
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Administrador',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
         ]);
+
+        $user->givePermissionTo('admin');
 
         Entrenador::factory(5)->create();
 

@@ -75,3 +75,16 @@ export async function register({ name, email, password, confirmPassword }: { nam
     }
 }
 
+export async function logout({navigate}) {
+    try {
+        await apiClient.post("/logout");
+        localStorage.removeItem("token");
+        toast.success('Tancat sessio');
+        navigate('/login');
+    } catch (error) {
+        console.error("Error logging out:", error);
+        toast.error("Error al tancar sessio");
+    }
+
+}
+

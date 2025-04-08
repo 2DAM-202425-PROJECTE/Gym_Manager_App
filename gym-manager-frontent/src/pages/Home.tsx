@@ -13,6 +13,8 @@ import { Clase } from "./type/clases"
 import { Membresia } from "./type/membresia"
 import { User as UserType } from "./type/user"
 import apiClient from "../api/prefijo"
+import { logout } from "../api/user/auth"
+import { useNavigate } from "react-router-dom";
 
 type Workout = {
   id: number
@@ -44,6 +46,7 @@ export default function Home() {
 
   const [clases, setClases] = useState<Clase[]>([])
   
+  const navigate = useNavigate();
   useEffect(() => {
 
   
@@ -51,16 +54,13 @@ export default function Home() {
 
       apiClient.get("/my_info").then((response) => {
         setUser(response.data)
+        setMembresia(response.data.membresia || null)
+        setClases(response.data.clases)
 
       }).catch((error) => {
         console.log(error)
       })
 
-      if (user?.clases){
-        setClases(user.clases)
-      } else {
-        setClases([])
-      }
       const workoutsData: Workout[] = [
         { id: 1, name: "Cardio", duration: 45, calories: 300, date: new Date("2023-06-01") },
         { id: 2, name: "Fuerza", duration: 60, calories: 250, date: new Date("2023-06-03") },
@@ -71,12 +71,13 @@ export default function Home() {
         { id: 2, message: "Recuerda tu sesión de entrenamiento mañana", date: new Date("2023-06-11") },
         { id: 3, message: "¡Felicidades! Has alcanzado tu meta semanal", date: new Date("2023-06-12") },
       ]
-      setMembresia(user?.membresia || null)
       setWorkouts(workoutsData)
       setNotifications(notificationsData)
     }
+
     fetchData()
-  }, [user])
+  
+  }, [])
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -205,13 +206,13 @@ export default function Home() {
                           <TrendingUp className="inline-block w-4 h-4 mr-2" />
                           Total de visitas: {"no se"}
                         </a>
-                        <Link
-                          to={"/login"}
+                        <button
+                          onClick={() => {logout({navigate})}}
                           className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                         >
                           <LogOut className="inline-block w-4 h-4 mr-2" />
                           Cerrar sesión
-                        </Link>
+                        </button>
                       </div>
                     </div>
                   )}

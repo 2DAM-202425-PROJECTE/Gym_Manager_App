@@ -15,13 +15,24 @@ Route::get('/user', function (Request $request) {
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
-
+Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::get('my_info', [UserController::class, 'my_info']);
 });
+
 Route::apiResource('tarifas', TarifaController::class);
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::middleware(['auth', 'can:admin'])->group(function () {
+        Route::apiResource('tarifas', TarifaController::class);
+    });
+});
 
 Route::middleware('auth:sanctum')->apiResource('membresias', MembresiaController::class);
 
