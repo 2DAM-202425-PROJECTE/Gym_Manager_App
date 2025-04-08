@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useContext } from "react"
+import { useState, useEffect, useRef } from "react"
 import { CalendarDays,Clock, CreditCard, LogOut, User, Dumbbell, TrendingUp,  Bell, Volume2,  VolumeX
 } from "lucide-react"
 import Sidebar from "../components/sidebar/sidebar"
@@ -8,7 +8,6 @@ import Footer from "../components/footer/footer"
 import { Link } from "react-router"
 import HomeButton from "../components/buttons/HomeButton"
 import HomeStats from "../components/cards/HomeStats"
-import { UserContext } from "../context/userContext"
 import { Clase } from "./type/clases"
 import { Membresia } from "./type/membresia"
 import { User as UserType } from "./type/user"
@@ -42,7 +41,6 @@ export default function Home() {
 
   const notificationRef = useRef<HTMLDivElement>(null)
   const profileMenuRef = useRef<HTMLDivElement>(null)
-  const { userContext } = useContext(UserContext)
 
   const [clases, setClases] = useState<Clase[]>([])
   
@@ -106,7 +104,7 @@ export default function Home() {
   const toggleMute = () => {
     setIsMuted(!isMuted)
   }
-    if (!userContext.user) {
+    if (!user) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-6">
         <p className="text-2xl font-bold text-center text-gray-800">
@@ -134,8 +132,8 @@ export default function Home() {
         <main className="flex-1 p-8 overflow-y-auto">
           {/* Header */}
           <header className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-semibold text-gray-800">Bienvenido, {userContext?.user.name}</h2>
-            {userContext.user && (
+            <h2 className="text-3xl font-semibold text-gray-800">Bienvenido, {user?.name}</h2>
+            {user && (
               <div className="flex items-center space-x-4">
                 <div className="relative">
                   <button
@@ -179,8 +177,8 @@ export default function Home() {
                     className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden"
                   >
                     <img
-                      src={userContext.user.profile_photo_url || "/placeholder.svg"}
-                      alt={userContext.user.name}
+                      src={user.profile_photo_url || "/placeholder.svg"}
+                      alt={user.name}
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -200,7 +198,7 @@ export default function Home() {
                         </a>
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <CalendarDays className="inline-block w-4 h-4 mr-2" />
-                          Miembro desde: {userContext.user.created_at}
+                          Miembro desde: {user.created_at}
                         </a>
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <TrendingUp className="inline-block w-4 h-4 mr-2" />
@@ -227,7 +225,7 @@ export default function Home() {
               <h3 className="text-xl font-semibold mb-4">Estado de Membresía</h3>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-4xl font-bold">{userContext.user.membresia?.fecha_fin ? calculateRemainingDays(new Date(userContext.user.membresia.fecha_fin)) : "N/A"}</p>
+                  <p className="text-4xl font-bold">{user.membresia?.fecha_fin ? calculateRemainingDays(new Date(user.membresia.fecha_fin)) : "N/A"}</p>
                   <p className="text-sm opacity-80">días restantes</p>
                 </div>
                 <div className="w-1/2">

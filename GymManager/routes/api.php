@@ -18,7 +18,6 @@ Route::post('register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('users', UserController::class);
     Route::get('my_info', [UserController::class, 'my_info']);
 });
 
@@ -30,6 +29,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::middleware(['auth', 'can:admin'])->group(function () {
+        Route::apiResource('users', UserController::class);
         Route::apiResource('tarifas', TarifaController::class);
     });
 });
