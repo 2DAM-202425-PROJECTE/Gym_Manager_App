@@ -75,6 +75,6 @@ class DatabaseSeeder extends Seeder
 
         Entrenador::factory(5)->create();
 
-        Tarifa::factory()->create();
+        Tarifa::factory(2)->create();
     }
 }

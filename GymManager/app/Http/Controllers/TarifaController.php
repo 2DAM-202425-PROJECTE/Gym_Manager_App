@@ -10,6 +10,12 @@ class TarifaController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function all_tarifas()
+    {
+        $tarifas = Tarifa::all();
+        return response()->json($tarifas);
+    }
     public function index()
     {
         $tarifas = Tarifa::all();

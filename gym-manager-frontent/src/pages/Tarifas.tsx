@@ -24,7 +24,7 @@ export default function Tarifas({ setTarifaSel }: { setTarifaSel:  Dispatch<SetS
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await apiClient.get("/tarifas",);
+      const response = await apiClient.get("/alltarifas",);
       const tarifas = response.data as Tarifa[];
       setPlans(tarifas);
     };

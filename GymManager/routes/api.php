@@ -20,8 +20,7 @@ Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logou
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('my_info', [UserController::class, 'my_info']);
 });
-
-Route::apiResource('tarifas', TarifaController::class);
+Route::middleware('auth:sanctum')->get('alltarifas', [TarifaController::class, 'all_tarifas']);
 
 Route::middleware([
     'auth:sanctum',
