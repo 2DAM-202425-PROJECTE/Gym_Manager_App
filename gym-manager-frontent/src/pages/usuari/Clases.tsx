@@ -12,13 +12,13 @@ export default function ClassesPage() {
 
 
   const { userContext, setUser } = useContext(UserContext)
-  const user_id = userContext.user?.id
   const [classes, setClasses] = useState<Clase[]>([])
   
   useEffect(() => {
     const fetchClasses = async () => {
       try {
         const response = await apiClient.get("/clases")
+        console.log(response.data)
         setClasses(response.data)
       } catch (error) {
         console.error("Error fetching classes:", error)
@@ -29,11 +29,14 @@ export default function ClassesPage() {
 
   const handleInscribirse = async (id: number) => {
     try {
-      console.log(`Inscribiendose a la clase, ${user_id}`)
-      const response = await apiClient.post(`clases/inscribir/${id}`, {user_id: user_id})
-//      window.location.reload()
+      const response = await apiClient.post(`clases/inscribir/${id}`)
       console.log(response)
       setUser(response.data?.user)
+      setClasses((prevClasses) =>
+        prevClasses.map((classItem) =>
+          classItem.id === id ? { ...classItem, presente: true } : classItem
+        )
+      )
       toast("Inscripción exitosa")
     } catch (error) {
       console.error("Error inscribiendose a la clase:", error)
@@ -43,12 +46,14 @@ export default function ClassesPage() {
 
   const handleDesinscribirse = async (id: number) => {
     try {
-      console.log(`Desinscribiendose de la clase, ${user_id}`)
-      const response = await apiClient.post(`clases/desinscribir/${id}`, {user_id: user_id})
+      const response = await apiClient.post(`clases/desinscribir/${id}`)
       //window.location.reload()
-      console.log(response)
       setUser(response.data?.user)
-      console.log(userContext.user)
+      setClasses((prevClasses) =>
+        prevClasses.map((classItem) =>
+          classItem.id === id ? { ...classItem, presente: false } : classItem
+        )
+      );
       toast("Desinscripción exitosa")
     } catch (error) {
       console.error("Error desinscribiendose de la clase:", error)
@@ -73,7 +78,6 @@ export default function ClassesPage() {
           <div className="p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {classes.map((classItem) => {
-                const isEnrolled = userContext.user?.clases.some((userClass: Clase) => userClass.id === classItem.id);
                 return (
                   <div key={classItem.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow p-6">
                     <div className="flex items-center justify-between mb-4">
@@ -113,7 +117,7 @@ export default function ClassesPage() {
                         <span style={{ textAlign: "justify" }}>{classItem.descripcion}</span>
                       </div>
                     </div>
-                    {isEnrolled ? (
+                    {classItem.presente ? (
                       <button onClick={() => handleDesinscribirse(classItem.id)} className="w-full mt-4 py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
                         Desinscribirse
                       </button>

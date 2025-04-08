@@ -25,13 +25,16 @@ Route::apiResource('tarifas', TarifaController::class);
 
 Route::middleware('auth:sanctum')->apiResource('membresias', MembresiaController::class);
 
-Route::apiResource('clases', ClaseController::class);
+Route::middleware('auth:sanctum')->apiResource('clases', ClaseController::class);
 
 Route::get('users/{id}/membresia', [UserController::class, 'membresia']);
 
 Route::post('membresia/admin/{id}', [MembresiaController::class, 'from_admin']);
 
-Route::post('clases/inscribir/{id}', [ClaseController::class, 'inscribir']);
-Route::post('clases/desinscribir/{id}', [ClaseController::class, 'desinscribir']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('clases/inscribir/{id}', [ClaseController::class, 'inscribir']);
+    Route::post('clases/desinscribir/{id}', [ClaseController::class, 'desinscribir']);
+});
 
 Route::post('membresia/admin/{id}', [MembresiaController::class, 'create_admin_membresia']);

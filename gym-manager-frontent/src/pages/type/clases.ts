@@ -28,5 +28,6 @@ export interface Clase {
     updated_at: string;
     horarios: Horario[];
     participantes: User[];
+    presente?: boolean;
   }
   
