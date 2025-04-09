@@ -10,7 +10,7 @@ export async function login({ email, password }: { email: string; password: stri
         const token = response.data.token;
 
         if (token) {
-          localStorage.setItem("token", token);
+          await localStorage.setItem("token", token);
           console.log("🔐 Token guardado en localStorage:", token);
         } else {
           console.warn("⚠️ No se recibió ningún token en la respuesta.");

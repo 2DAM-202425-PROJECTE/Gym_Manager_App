@@ -46,51 +46,43 @@ export default function Home() {
   
   const navigate = useNavigate();
   useEffect(() => {
-
-  
     const fetchData = async () => {
-
-      apiClient.get("/my_info").then((response) => {
-        setUser(response.data)
-        setMembresia(response.data.membresia || null)
-        setClases(response.data.clases)
-
-      }).catch((error) => {
-        console.log(error)
-      })
-
-      const workoutsData: Workout[] = [
-        { id: 1, name: "Cardio", duration: 45, calories: 300, date: new Date("2023-06-01") },
-        { id: 2, name: "Fuerza", duration: 60, calories: 250, date: new Date("2023-06-03") },
-        { id: 3, name: "Yoga", duration: 75, calories: 180, date: new Date("2023-06-05") },
-      ]
-      const notificationsData: Notification[] = [
-        { id: 1, message: "Nueva clase de Zumba disponible", date: new Date("2023-06-10") },
-        { id: 2, message: "Recuerda tu sesión de entrenamiento mañana", date: new Date("2023-06-11") },
-        { id: 3, message: "¡Felicidades! Has alcanzado tu meta semanal", date: new Date("2023-06-12") },
-      ]
-      setWorkouts(workoutsData)
-      setNotifications(notificationsData)
-    }
-
-    fetchData()
-  
-  }, [])
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-        setShowNotifications(false)
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate('/login'); // Redirigir al login si no hay token
+        return;
       }
-      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
-        setShowProfileMenu(false)
+
+      try {
+        const response = await apiClient.get("/my_info");
+        console.log("cargado");
+        setUser(response.data);
+        setMembresia(response.data.membresia || null);
+        setClases(response.data.clases);
+      } catch (error) {
+        console.log(error);
+        navigate('/login'); // Redirigir al login si hay un error
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
+    };
+
+    fetchData();
+  }, []);
+
+    useEffect(() => {
+      function handleClickOutside(event: MouseEvent) {
+        if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+          setShowNotifications(false)
+        }
+        if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+          setShowProfileMenu(false)
+        }
+      }
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside)
+      }
+    }, []
+  )
 
 
   const calculateRemainingDays = (endDate: Date) => {

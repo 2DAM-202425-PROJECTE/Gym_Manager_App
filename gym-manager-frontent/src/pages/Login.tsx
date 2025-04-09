@@ -41,10 +41,16 @@ export default function Login() {
         if (response.membresia?.fecha_fin) {
           const fechaFin = new Date(response.membresia.fecha_fin);
           const fechaActual = new Date(); 
-          if (fechaFin > fechaActual) navigate('/');
-          else navigate('/tarifas');
+
+          console.log(localStorage.getItem("token"));
+
+          if (fechaFin > fechaActual) {
+            setTimeout(() => navigate('/'), 100);
+          } else {
+            setTimeout(() => navigate('/tarifas'), 100);
+          }
         } else {
-          navigate('/tarifas');
+          setTimeout(() => navigate('/tarifas'), 100);
         }
     
     };
