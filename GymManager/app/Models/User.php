@@ -75,4 +75,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+    public function entrenador()
+    {
+        return $this->hasOne(Entrenador::class, 'entrenador_id', 'id');
+    }
 }
