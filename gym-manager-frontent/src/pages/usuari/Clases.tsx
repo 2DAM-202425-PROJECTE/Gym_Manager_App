@@ -17,7 +17,7 @@ export default function ClassesPage() {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await apiClient.get("/clases")
+        const response = await apiClient.get("/allclases")
         console.log(response.data)
         setClasses(response.data)
       } catch (error) {

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClaseController;
+use App\Http\Controllers\EntrenadorController;
 use App\Http\Controllers\MembresiaController;
 use App\Http\Controllers\TarifaController;
 use App\Http\Controllers\UserController;
@@ -22,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::middleware('auth:sanctum')->get('alltarifas', [TarifaController::class, 'all_tarifas']);
 
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -30,12 +32,14 @@ Route::middleware([
     Route::middleware(['auth', 'can:admin'])->group(function () {
         Route::apiResource('users', UserController::class);
         Route::apiResource('tarifas', TarifaController::class);
+        Route::apiResource('entrenadors', EntrenadorController::class);
+        Route::apiResource('clases', ClaseController::class);
     });
 });
 
 Route::middleware('auth:sanctum')->apiResource('membresias', MembresiaController::class);
 
-Route::middleware('auth:sanctum')->apiResource('clases', ClaseController::class);
+Route::middleware('auth:sanctum')->get('allclases', [ClaseController::class, 'index']);
 
 Route::get('users/{id}/membresia', [UserController::class, 'membresia']);
 
