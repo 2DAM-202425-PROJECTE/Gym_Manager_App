@@ -15,9 +15,8 @@ export default function TrainersPage() {
   useEffect(() => {
     const fetchTrainers = async () => {
       try {
-        const response = await apiClient.get("/users")
+        const response = await apiClient.get("/entrenadors")
         console.log(response.data)
-        setTrainers(response.data.filter((user: User) => user.role == "trainer"))
       } catch (error) {
         console.error("Error fetching trainers:", error)
       }

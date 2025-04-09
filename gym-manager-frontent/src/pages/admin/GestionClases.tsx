@@ -6,6 +6,7 @@ import { Clase, Horario, HorarioToSend } from "../type/clases"
 import { toast } from "react-toastify"
 import { HandleViewHorario } from "../../components/clases/HandleViewHorario"
 import { User } from "../type/user"
+import { TextFieldAdmin } from "../../components/textFields/TextFieldAdmin"
 
 
 
@@ -150,14 +151,8 @@ const GestionClases: React.FC = () => {
           ))}
       </select>
 
-        <input
-          type="text"
-          name="nombre"
-          value={nuevaClase?.nombre || ""}
-          onChange={handleInputChange}
-          placeholder="Nombre de la clase"
-          className="border p-2 rounded"
-        />
+
+        <TextFieldAdmin string={true} name={"nombre"} placeholder={"Nombre de la clase"} value={nuevaClase?.nombre || ""} handleChange={handleInputChange} ></TextFieldAdmin>
         <textarea
           name="descripcion"
           value={nuevaClase?.descripcion || ""}
@@ -165,15 +160,15 @@ const GestionClases: React.FC = () => {
           placeholder="Descripción"
           className="border p-2 rounded col-span-2"
         />
-        <input
-          type="number"
-          name="maximo_participantes"
-          value={nuevaClase?.maximo_participantes || ""}
-          onChange={handleInputChange}
-          placeholder="Máximo participantes"
-          className="border p-2 rounded"
-        />
-      </div>
+          <input
+            type="number"
+            name="maximo_participantes"
+            value={nuevaClase?.maximo_participantes || ""}
+            onChange={handleInputChange}
+            placeholder="Máximo participantes"
+            className="border p-2 rounded"
+          />
+        </div>
 
       {/* Horarios */}
       <div className="mt-4">
