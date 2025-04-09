@@ -2,14 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Clase;
-use App\Models\Horario;
+use App\helpers\RolesPermission;
+use App\Models\Entrenador;
+use App\Models\Membresia;
 use App\Models\Tarifa;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,12 +21,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Clase::truncate();
+        // Disable foreign key constraints
+        DB::statement('PRAGMA foreign_keys = OFF;');
+
+        // Truncate tables
+        Permission::query()->delete();
+        Role::query()->delete();
         User::truncate();
-        User::factory(3)->create();
+        membresia::truncate();
+        Entrenador::truncate();
+        Tarifa::truncate();
 
+        // Enable foreign key constraints
+        DB::statement('PRAGMA foreign_keys = ON;');
 
-        // Crear un usuario normal
+        // Seed data
+        User::factory(10)->create();
+
+        RolesPermission::registerPolicies();
+
+        // Create a regular user
         User::factory()->create([
             'name' => 'Miquel Agudo',
             'email' => 'nomembresia@gmail.com',
@@ -31,7 +48,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'client',
         ]);
 
-        // Crear un usuario con membresía
+        // Create a user with membership
         $userWithMembresia = User::factory()->create([
             'name' => 'Oscar Fumador',
             'email' => 'membresia@gmail.com',
@@ -39,33 +56,25 @@ class DatabaseSeeder extends Seeder
             'role' => 'client',
         ]);
 
-        // Asignar membresía al usuario
+        // Assign membership to the user
         $userWithMembresia->membresia()->create([
             'user_id' => $userWithMembresia->id,
             'fecha_fin' => now()->addYear(),
-            'qr_data' =>  Str::uuid()->toString(),
+            'qr_data' => Str::uuid()->toString(),
         ]);
 
-
-        // Crear un administrador
-        User::factory()->create([
+        // Create an administrator
+        $user = User::factory()->create([
             'name' => 'Administrador',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
         ]);
 
-        $clase = Clase::factory()->create();
+        $user->givePermissionTo('admin');
 
-        Tarifa::factory(4)->create();
+        Entrenador::factory(5)->create();
 
-        $horarios = [
-            ['dia' => 'Lunes', 'hora_inicio' => '08:00', 'hora_fin' => '09:00', 'clase_id' => $clase->id],
-            ['dia' => 'Miércoles', 'hora_inicio' => '08:00', 'hora_fin' => '09:00', 'clase_id' => $clase->id],
-        ];
-
-        foreach ($horarios as $horario) {
-            Horario::create($horario);
-        }
+        Tarifa::factory(2)->create();
     }
 }

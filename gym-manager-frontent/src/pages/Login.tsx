@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { TextFieldNormal } from "../components/textFields/TextFieldNormal";
 import { login } from "../api/user/auth";
 import { useNavigate } from "react-router-dom";
-import { UseUser } from "../customHooks/useUser";
 import { User } from "../type/user";
 import { useTranslation } from "react-i18next";
 import { DefaultButton } from "../components/buttons/ButtonDefault";
@@ -19,7 +18,6 @@ export default function Login() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { setUser } = UseUser()
 
   const { t } = useTranslation();
 
@@ -33,8 +31,6 @@ export default function Login() {
       return
     }
 
-    setUser(response);
-
     if(response.role === 'admin') {
       navigate('/admin');
       return;
@@ -45,10 +41,16 @@ export default function Login() {
         if (response.membresia?.fecha_fin) {
           const fechaFin = new Date(response.membresia.fecha_fin);
           const fechaActual = new Date(); 
-          if (fechaFin > fechaActual) navigate('/');
-          else navigate('/tarifas');
+
+          console.log(localStorage.getItem("token"));
+
+          if (fechaFin > fechaActual) {
+            setTimeout(() => navigate('/'), 100);
+          } else {
+            setTimeout(() => navigate('/tarifas'), 100);
+          }
         } else {
-          navigate('/tarifas');
+          setTimeout(() => navigate('/tarifas'), 100);
         }
     
     };

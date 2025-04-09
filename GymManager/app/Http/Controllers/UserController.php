@@ -8,12 +8,18 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+
+    public function my_info()
+    {
+        $user = Auth::user()->load('membresia', 'clases.horarios', 'clases.entrenador');
+        return response()->json($user);
+    }
+
     public function index()
     {
         $users = User::with(['membresia', 'clases'])->get();
         return response()->json($users);
     }
-
     public function membresia($id){
         $user = User::findOrFail($id);
         $memb = $user->membresia;

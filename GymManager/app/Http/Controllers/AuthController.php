@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -44,6 +45,9 @@ class AuthController
             'password' => Hash::make($data['password']),
         ]);
 
+        // Asignar el rol de cliente
+        $user->assignRole('regular');
+
         $token = $user->createToken('YourAppName')->plainTextToken;
 
         return response()->json([
@@ -51,5 +55,14 @@ class AuthController
             'token' => $token,
             'user' => $user,
         ], 201);
+    }
+
+    final public function logout(): JsonResponse
+    {
+        auth()->user()->tokens()->delete();
+
+        return response()->json([
+            'message' => 'Logged out'
+        ]);
     }
 }

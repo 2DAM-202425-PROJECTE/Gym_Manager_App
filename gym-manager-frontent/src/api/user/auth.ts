@@ -7,8 +7,14 @@ export async function login({ email, password }: { email: string; password: stri
     try {
         const response = await apiClient.post("/login", { email, password });
         const user = response.data.user as User;
-        
-        console.log('👤 User logged in:', user);
+        const token = response.data.token;
+
+        if (token) {
+          await localStorage.setItem("token", token);
+          console.log("🔐 Token guardado en localStorage:", token);
+        } else {
+          console.warn("⚠️ No se recibió ningún token en la respuesta.");
+        }
         toast.success('Inici de sessio correcte');
         
         return user;
@@ -67,5 +73,18 @@ export async function register({ name, email, password, confirmPassword }: { nam
             toast.error("Error desconocido. Intenta de nuevo.");
         }
     }
+}
+
+export async function logout({navigate}) {
+    try {
+        await apiClient.post("/logout");
+        localStorage.removeItem("token");
+        toast.success('Tancat sessio');
+        navigate('/login');
+    } catch (error) {
+        console.error("Error logging out:", error);
+        toast.error("Error al tancar sessio");
+    }
+
 }
 

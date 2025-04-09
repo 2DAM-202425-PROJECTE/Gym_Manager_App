@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useContext } from "react"
+import { useState, useEffect, useRef } from "react"
 import { CalendarDays,Clock, CreditCard, LogOut, User, Dumbbell, TrendingUp,  Bell, Volume2,  VolumeX
 } from "lucide-react"
 import Sidebar from "../components/sidebar/sidebar"
@@ -8,11 +8,12 @@ import Footer from "../components/footer/footer"
 import { Link } from "react-router"
 import HomeButton from "../components/buttons/HomeButton"
 import HomeStats from "../components/cards/HomeStats"
-import { UserContext } from "../context/userContext"
 import { Clase } from "./type/clases"
-import apiClient from "../api/prefijo"
-import { toast } from "react-toastify"
 import { Membresia } from "./type/membresia"
+import { User as UserType } from "./type/user"
+import apiClient from "../api/prefijo"
+import { logout } from "../api/user/auth"
+import { useNavigate } from "react-router-dom";
 
 type Workout = {
   id: number
@@ -36,67 +37,52 @@ export default function Home() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isMuted, setIsMuted] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [ user, setUser ] = useState<UserType | null>(null)
+
   const notificationRef = useRef<HTMLDivElement>(null)
   const profileMenuRef = useRef<HTMLDivElement>(null)
-  const { userContext } = useContext(UserContext)
 
   const [clases, setClases] = useState<Clase[]>([])
   
+  const navigate = useNavigate();
   useEffect(() => {
-
-  
     const fetchData = async () => {
-
-      const user = userContext.user
-      if (user.clases){
-        console.log(user.clases)
-        setClases(user.clases)
-      } else {
-        setClases([])
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate('/login'); // Redirigir al login si no hay token
+        return;
       }
 
-
-
-      const membresiaData: Membresia = {
-        id: 1,
-        user_id: 1,
-        fecha_fin: new Date("2023-12-31"),
-        qr_data: "qr-data",
-        created_at: new Date(),
-        updated_at: new Date(),
+      try {
+        const response = await apiClient.get("/my_info");
+        console.log("cargado");
+        setUser(response.data);
+        setMembresia(response.data.membresia || null);
+        setClases(response.data.clases);
+      } catch (error) {
+        console.log(error);
+        navigate('/login'); // Redirigir al login si hay un error
       }
-      const workoutsData: Workout[] = [
-        { id: 1, name: "Cardio", duration: 45, calories: 300, date: new Date("2023-06-01") },
-        { id: 2, name: "Fuerza", duration: 60, calories: 250, date: new Date("2023-06-03") },
-        { id: 3, name: "Yoga", duration: 75, calories: 180, date: new Date("2023-06-05") },
-      ]
-      const notificationsData: Notification[] = [
-        { id: 1, message: "Nueva clase de Zumba disponible", date: new Date("2023-06-10") },
-        { id: 2, message: "Recuerda tu sesión de entrenamiento mañana", date: new Date("2023-06-11") },
-        { id: 3, message: "¡Felicidades! Has alcanzado tu meta semanal", date: new Date("2023-06-12") },
-      ]
-  
-      setMembresia(membresiaData)
-      setWorkouts(workoutsData)
-      setNotifications(notificationsData)
-    }
-    fetchData()
-  }, [userContext.user])
+    };
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-        setShowNotifications(false)
+    fetchData();
+  }, []);
+
+    useEffect(() => {
+      function handleClickOutside(event: MouseEvent) {
+        if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+          setShowNotifications(false)
+        }
+        if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+          setShowProfileMenu(false)
+        }
       }
-      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
-        setShowProfileMenu(false)
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside)
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
+    }, []
+  )
 
 
   const calculateRemainingDays = (endDate: Date) => {
@@ -110,8 +96,7 @@ export default function Home() {
   const toggleMute = () => {
     setIsMuted(!isMuted)
   }
-
-  if (!userContext.user) {
+    if (!user) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-6">
         <p className="text-2xl font-bold text-center text-gray-800">
@@ -139,8 +124,8 @@ export default function Home() {
         <main className="flex-1 p-8 overflow-y-auto">
           {/* Header */}
           <header className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-semibold text-gray-800">Bienvenido, {userContext?.user.name}</h2>
-            {userContext.user && (
+            <h2 className="text-3xl font-semibold text-gray-800">Bienvenido, {user?.name}</h2>
+            {user && (
               <div className="flex items-center space-x-4">
                 <div className="relative">
                   <button
@@ -169,7 +154,6 @@ export default function Home() {
                         {notifications.map((notification) => (
                           <div key={notification.id} className="px-4 py-2 hover:bg-gray-100">
                             <p className="text-sm text-gray-800">{notification.message}</p>
-                            <p className="text-xs text-gray-500 mt-1">{notification.date.toLocaleDateString()}</p>
                           </div>
                         ))}
                       </div>
@@ -185,8 +169,8 @@ export default function Home() {
                     className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden"
                   >
                     <img
-                      src={userContext.user.profile_photo_url || "/placeholder.svg"}
-                      alt={userContext.user.name}
+                      src={user.profile_photo_url || "/placeholder.svg"}
+                      alt={user.name}
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -206,19 +190,19 @@ export default function Home() {
                         </a>
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <CalendarDays className="inline-block w-4 h-4 mr-2" />
-                          Miembro desde: {userContext.user.created_at}
+                          Miembro desde: {user.created_at}
                         </a>
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <TrendingUp className="inline-block w-4 h-4 mr-2" />
                           Total de visitas: {"no se"}
                         </a>
-                        <Link
-                          to={"/login"}
+                        <button
+                          onClick={() => {logout({navigate})}}
                           className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                         >
                           <LogOut className="inline-block w-4 h-4 mr-2" />
                           Cerrar sesión
-                        </Link>
+                        </button>
                       </div>
                     </div>
                   )}
@@ -233,18 +217,17 @@ export default function Home() {
               <h3 className="text-xl font-semibold mb-4">Estado de Membresía</h3>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-4xl font-bold">{userContext.user.membresia?.fecha_fin ? calculateRemainingDays(new Date(userContext.user.membresia.fecha_fin)) : "N/A"}</p>
+                  <p className="text-4xl font-bold">{user.membresia?.fecha_fin ? calculateRemainingDays(new Date(user.membresia.fecha_fin)) : "N/A"}</p>
                   <p className="text-sm opacity-80">días restantes</p>
                 </div>
                 <div className="w-1/2">
                   <div className="h-2 bg-white/20 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-white rounded-full"
-                      style={{ width: `${(calculateRemainingDays(membresia.fecha_fin) / 365) * 100}%` }}
+                      style={{ width: `${(user?.membresia?.fecha_fin ? calculateRemainingDays(new Date(user.membresia.fecha_fin)) / 365 : 0) * 100}%` }}
                     ></div>
                   </div>
                   <p className="text-sm mt-2 text-right opacity-80">
-                    Vence: {membresia.fecha_fin.toLocaleDateString()}
                   </p>
                 </div>
               </div>

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clase;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ClaseController extends Controller
@@ -13,7 +15,14 @@ class ClaseController extends Controller
      */
     public function index()
     {
-        $clases = Clase::with(['horarios', 'entrenador'])->get();
+        $user = Auth::user();
+        $clases = Clase::with(['horarios', 'entrenador', 'participantes'])->get();
+
+        $clases = $clases->map(function ($clase) use ($user) {
+            $clase->presente = $clase->participantes->contains('id', $user->id);
+            return $clase;
+        });
+
         return response()->json($clases);
     }
 
@@ -143,29 +152,41 @@ class ClaseController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
     public function inscribir(Request $request, $id)
     {
         try {
             // Validar datos recibidos
-            $validated = $request->validate([
-                'user_id' => 'required|exists:users,id',
-            ]);
+            $user = Auth::user();
             $clase = Clase::findOrFail($id);
 
-            if ($clase->participantes()->where('user_id', $validated['user_id'])->exists()) {
+            if ($clase->participantes()->where('user_id', $user->id)->exists()) {
                 return response()->json(['message' => 'El usuario ya está inscrito en esta clase'], 400);
             }
 
             if ($clase->participantes()->count() >= $clase->maximo_participantes) {
                 return response()->json(['message' => 'La clase ya está llena'], 400);
             }
-            $clase->participantes()->attach($validated['user_id']);
+            $clase->participantes()->attach($user->id);
+            $user = User::findOrFail($user->id)->load('clases.horarios', 'membresia', 'clases.entrenador');
+            $clase->load('horarios');
 
-            return response()->json(['message' => 'Usuario inscrito correctamente'], 200);
+            return response()->json(['message' => 'Usuario inscrito correctamente', 'classe' => $clase, 'user' => $user], 200);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function desinscribir($id){
+        try {
+            $clase = Clase::findOrFail($id);
+            $user = Auth::user();
+            $clase->participantes()->detach($user->id);
+            $user = User::findOrFail($user->id)->load('clases.horarios', 'membresia', 'clases.entrenador');
+            return response()->json(['message' => 'Usuario desinscrito correctamente', 'classe' => $clase, 'user' => $user], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
 }
