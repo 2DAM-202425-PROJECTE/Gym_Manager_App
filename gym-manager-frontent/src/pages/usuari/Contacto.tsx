@@ -249,7 +249,7 @@ export default function ContactPage() {
                         </div>
                         <div className="ml-3">
                           <p className="text-sm font-medium text-gray-900">Teléfono</p>
-                          <p className="text-sm text-gray-600">+34 912 345 678</p>
+                          <p className="text-sm text-gray-600">+34 643 03 06 68</p>
                           <p className="text-sm text-gray-600">Lun-Vie: 9:00 - 20:00</p>
                         </div>
                       </div>
@@ -262,8 +262,8 @@ export default function ContactPage() {
                         </div>
                         <div className="ml-3">
                           <p className="text-sm font-medium text-gray-900">Email</p>
-                          <p className="text-sm text-gray-600">info@powergym.com</p>
-                          <p className="text-sm text-gray-600">soporte@powergym.com</p>
+                          <p className="text-sm text-gray-600">gymmanager@gmail.com</p>
+                          <p className="text-sm text-gray-600">soporte@gymmanager.com</p>
                         </div>
                       </div>
 
@@ -274,9 +274,9 @@ export default function ContactPage() {
                           </div>
                         </div>
                         <div className="ml-3">
-                          <p className="text-sm font-medium text-gray-900">Dirección</p>
-                          <p className="text-sm text-gray-600">Calle Fitness 123</p>
-                          <p className="text-sm text-gray-600">28001 Madrid, España</p>
+                          <p className="text-sm font-medium text-gray-900">Direccion</p>
+                          <p className="text-sm text-gray-600">Carrer Gymmanager</p>
+                          <p className="text-sm text-gray-600">43500 Tortosa, España</p>
                         </div>
                       </div>
 
@@ -298,16 +298,16 @@ export default function ContactPage() {
                     <div className="mt-6">
                       <p className="text-sm font-medium text-gray-900 mb-3">Síguenos en redes sociales</p>
                       <div className="flex space-x-4">
-                        <a href="#" className="bg-maroon-100 p-2 rounded-full hover:bg-maroon-200 transition-colors">
+                        <a href="https://www.facebook.com/Gymmanager005" className="bg-maroon-100 p-2 rounded-full hover:bg-maroon-200 transition-colors">
                           <Facebook className="h-5 w-5 text-maroon-600" />
                         </a>
-                        <a href="#" className="bg-maroon-100 p-2 rounded-full hover:bg-maroon-200 transition-colors">
+                        <a href="https://www.instagram.com/gym.manager/?hl=es" className="bg-maroon-100 p-2 rounded-full hover:bg-maroon-200 transition-colors">
                           <Instagram className="h-5 w-5 text-maroon-600" />
                         </a>
-                        <a href="#" className="bg-maroon-100 p-2 rounded-full hover:bg-maroon-200 transition-colors">
+                        <a href="https://x.com/gymmanagergame" className="bg-maroon-100 p-2 rounded-full hover:bg-maroon-200 transition-colors">
                           <Twitter className="h-5 w-5 text-maroon-600" />
                         </a>
-                        <a href="#" className="bg-maroon-100 p-2 rounded-full hover:bg-maroon-200 transition-colors">
+                        <a href="https://Linkedin.com" className="bg-maroon-100 p-2 rounded-full hover:bg-maroon-200 transition-colors">
                           <Linkedin className="h-5 w-5 text-maroon-600" />
                         </a>
                       </div>
