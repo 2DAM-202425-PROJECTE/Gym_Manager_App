@@ -53,4 +53,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('clases/desinscribir/{id}', [ClaseController::class, 'desinscribir']);
 });
 
-Route::post('membresia/admin/{id}', [MembresiaController::class, 'create_admin_membresia']);
