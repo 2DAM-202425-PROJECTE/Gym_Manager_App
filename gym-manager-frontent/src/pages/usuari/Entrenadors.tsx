@@ -1,22 +1,21 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Star, Calendar, Dumbbell, Clock, X, Phone, Mail } from "lucide-react"
 import Sidebar from "../../components/sidebar/sidebar"
 import Footer from "../../components/footer/footer"
 import apiClient from "../../api/prefijo"
-import type { User } from "../type/user"
 import TrainerInfoModal from "../../components/modals/TrainerInfoModal"
+import { Entrenador } from "../type/entrenadors"
 
 export default function TrainersPage() {
-  const [trainers, setTrainers] = useState<User[]>([])
-  const [selectedTrainer, setSelectedTrainer] = useState<User | null>(null)
+  const [trainers, setTrainers] = useState<Entrenador[]>([])
+  const [selectedTrainer, setSelectedTrainer] = useState<Entrenador | null>(null)
 
   useEffect(() => {
     const fetchTrainers = async () => {
       try {
-        const response = await apiClient.get("/entrenadors")
-        console.log(response.data)
+        const response = await apiClient.get("/alltrainers")
+        setTrainers(response.data)
       } catch (error) {
         console.error("Error fetching trainers:", error)
       }
@@ -24,7 +23,7 @@ export default function TrainersPage() {
     fetchTrainers()
   }, [])
 
-  const openTrainerInfo = (trainer: User) => {
+  const openTrainerInfo = (trainer: Entrenador) => {
     setSelectedTrainer(trainer)
     // Add overflow hidden to body when modal is open
     document.body.style.overflow = "hidden"
@@ -50,17 +49,17 @@ export default function TrainersPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {trainers.map((trainer) => (
                 <div
-                  key={trainer.id}
-                  className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden"
+                  key={trainer.entrenador_id}
+                  className="flex flex-col justify-center items-center bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden"
                 >
                   <img
-                    src={trainer.profile_photo_url || "/placeholder.svg?height=192&width=384"}
-                    alt={`${trainer.name}`}
-                    className="w-full h-48 object-cover"
+                    src={"/src/assets/pingu.png"}
+                    alt={`${trainer.user.name}`}
+                    className="h-48 w-64 object-cover"
                   />
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-maroon-600 mb-2">{trainer.name}</h3>
-                    <p className="text-gray-600 mb-4">{trainer.email}</p>
+                    <h3 className="text-xl font-semibold text-maroon-600 mb-2">{trainer.user.name}</h3>
+                    <p className="text-gray-600 mb-4">{trainer.user.email}</p>
 
                     <button
                       onClick={() => openTrainerInfo(trainer)}

@@ -22,6 +22,12 @@ class Entrenador extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'entrenador_id', 'id');
+        return $this->belongsTo(User::class, 'entrenador_id');
     }
+
+    public function diasDisponibles()
+    {
+        return $this->belongsToMany(DiaSemana::class, 'disponibilidades_entrenadores', 'entrenador_id', 'dia_semana_id');
+    }
+
 }

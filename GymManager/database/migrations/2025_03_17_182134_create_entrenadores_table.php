@@ -11,10 +11,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('entrenadors', function (Blueprint $table) {
-            $table->foreignId('entrenador_id')->constrained('users')->onDelete('cascade')->primary();
+            // Definir el ID del entrenador como clave primaria
+            $table->id(); // Clave primaria auto incrementada
+
+            // Relación con la tabla 'users', asegurando que la clave foránea sea 'entrenador_id'
+            $table->foreignId('entrenador_id')->constrained('users')->onDelete('cascade');
+
             $table->string('especialidad');
-            $table->string('experiencia');
-            $table->string('disponibilidad');
+            $table->integer('experiencia');
             $table->integer('phone_number');
             $table->string('certificaciones', 255);
             $table->text('descripcion');
