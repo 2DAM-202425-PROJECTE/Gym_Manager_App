@@ -30,4 +30,14 @@ class Entrenador extends Model
         return $this->belongsToMany(DiaSemana::class, 'disponibilidades_entrenadores', 'entrenador_id', 'dia_semana_id');
     }
 
+    public function valoraciones()
+    {
+        return $this->hasMany(ValoracionEntrenador::class, 'entrenador_id', 'id');
+    }
+
+    public function valoracionMedia()
+    {
+        return $this->valoraciones()->avg('puntuacion');
+    }
+
 }

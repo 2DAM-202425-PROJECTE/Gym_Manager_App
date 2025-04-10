@@ -1,6 +1,7 @@
 import { User } from "./user";
 
 export type Entrenador = {
+    id: number;
     entrenador_id: number;
     especialidad: string;
     experiencia: string;
@@ -9,5 +10,5 @@ export type Entrenador = {
     certificaciones: string;
     descripcion: string;
     user: User;
+    valoracion_media: number; // Valoración media del entrenador
   };
-  

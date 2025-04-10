@@ -4,15 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Entrenador;
 use App\Models\User;
+use App\Models\ValoracionEntrenador;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EntrenadorController extends Controller
 {
     public function index()
     {
-        $entrenadores = Entrenador::with('user')->get()->toArray();
+        $entrenadores = Entrenador::with('user')
+            ->get()
+            ->map(function ($entrenador) {
+                $entrenador->valoracion_media = $entrenador->valoracionMedia() ?? 0; // Asegura que no sea null
+                return $entrenador;
+            });
+
         return response()->json($entrenadores);
-    }
+    }   
 
     public function store(Request $request)
     {
@@ -69,5 +77,21 @@ class EntrenadorController extends Controller
         $entrenador->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function valorar(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'puntuacion' => 'required|integer|min:1|max:5',
+            'entrenador_id' => 'required|exists:entrenadors,id',
+        ]);
+
+        $validated['user_id'] = $user->id;
+
+        ValoracionEntrenador::create($validated);
+
+        return response()->json(['message' => 'Valoración añadida'], 201);
     }
 }

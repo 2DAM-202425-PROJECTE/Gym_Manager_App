@@ -21,7 +21,6 @@ Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logou
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('my_info', [UserController::class, 'my_info']);
 });
-Route::middleware('auth:sanctum')->get('alltarifas', [TarifaController::class, 'all_tarifas']);
 
 
 Route::middleware([
@@ -51,5 +50,7 @@ Route::post('membresia/admin/{id}', [MembresiaController::class, 'from_admin']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('clases/inscribir/{id}', [ClaseController::class, 'inscribir']);
     Route::post('clases/desinscribir/{id}', [ClaseController::class, 'desinscribir']);
+    Route::get('alltarifas', [TarifaController::class, 'all_tarifas']);
+    Route::post('valorar', [EntrenadorController::class, 'valorar']);
 });
 
