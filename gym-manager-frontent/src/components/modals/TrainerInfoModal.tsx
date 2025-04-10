@@ -1,4 +1,4 @@
-import { X, Star, Dumbbell, Calendar, Clock, Mail, Phone } from "lucide-react"
+import { X, Star, Dumbbell, Calendar, Mail, Phone } from "lucide-react"
 import { Entrenador } from "../../pages/type/entrenadors"
 
 interface TrainerInfoModalProps {

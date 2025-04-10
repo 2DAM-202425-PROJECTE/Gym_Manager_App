@@ -39,7 +39,14 @@ class UserController extends Controller
         ]);
         $validated['role'] = $validated['role'] ?? 'client';
 
+
         $user = User::create($validated);
+
+        if ($user->role === 'client') {
+            $user->assignRole('regular');
+        } elseif ($user->role === 'admin') {
+            $user->assignRole('admin');
+        }
 
         return response()->json($user, 201);
     }

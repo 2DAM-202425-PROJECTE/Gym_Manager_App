@@ -15,6 +15,7 @@ export default function TrainersPage() {
     const fetchTrainers = async () => {
       try {
         const response = await apiClient.get("/alltrainers")
+        console.log(response.data)
         setTrainers(response.data)
       } catch (error) {
         console.error("Error fetching trainers:", error)
