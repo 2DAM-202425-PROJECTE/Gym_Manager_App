@@ -19,7 +19,6 @@ import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n'; 
 import { useState } from 'react';
 import { Tarifa } from './type/tarifas';
-import Espacios from './pages/usuari/Espacios';
 import DashboardEntrenador from './pages/entrenador/Dashboardentrenador';
 
 
@@ -46,7 +45,6 @@ function App() {
               <Route path='/configuracio' element={<Configuracio />} />
               <Route path='/nutricion' element={<Nutricion />} />
 
-              <Route path='/espacios' element={<Espacios/>} />
               <Route path='/dashboardentrenador' element={<DashboardEntrenador />} />
               
 
