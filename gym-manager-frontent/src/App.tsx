@@ -13,6 +13,8 @@ import Clases  from './pages/usuari/Clases';
 import Entrenadors from './pages/usuari/Entrenadors';
 import Configuracio from './pages/usuari/Configuracio';
 import Nutricion from './pages/usuari/Nutricion';
+import Contacto from './pages/usuari/Contacto';
+
 
 import DashboardAdmin from './pages/admin/DashboardAdmin';
 import { I18nextProvider } from 'react-i18next';
@@ -44,6 +46,9 @@ function App() {
               <Route path='/entrenadors' element={<Entrenadors />} />
               <Route path='/configuracio' element={<Configuracio />} />
               <Route path='/nutricion' element={<Nutricion />} />
+              <Route path='/contacto' element={<Contacto />} />
+              
+              {/* Rutas para el dashboard del entrenador */}
 
               <Route path='/dashboardentrenador' element={<DashboardEntrenador />} />
               
