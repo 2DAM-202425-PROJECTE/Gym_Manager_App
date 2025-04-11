@@ -143,9 +143,7 @@ const Dashboard: React.FC = () => {
       case "entrenadors":
         return <GestionEntrenadores/>;
 
-        
-      case "espacios":
-        return <GestionEspacios />;
+   
       default:
         return renderDashboard();
     }

@@ -1,4 +1,4 @@
-import { MapPin, Phone, Mail, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { MapPin, Phone, Mail, Facebook, Instagram, Twitter, Youtube, Linkedin } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -39,32 +39,32 @@ export default function Footer() {
               <ul className="space-y-2">
                 <li className="flex items-center">
                   <MapPin className="h-4 w-4 mr-2" />
-                  <span className="text-sm">123 Calle Fitness, Ciudad</span>
+                  <span className="text-sm">Carrer Gymmanager, Tortosa</span>
                 </li>
                 <li className="flex items-center">
                   <Phone className="h-4 w-4 mr-2" />
-                  <span className="text-sm">+1 234 567 890</span>
+                  <span className="text-sm">+34 643 03 06 68</span>
                 </li>
                 <li className="flex items-center">
                   <Mail className="h-4 w-4 mr-2" />
-                  <span className="text-sm">info@powergym.com</span>
+                  <span className="text-sm">soporte@gymmanager.com</span>
                 </li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">Síguenos</h4>
               <div className="flex space-x-4">
-                <a href="#" className="text-white hover:text-gray-300">
+                <a href="https://www.facebook.com/Gymmanager005" className="text-white hover:text-gray-300">
                   <Facebook className="h-6 w-6" />
                 </a>
-                <a href="#" className="text-white hover:text-gray-300">
+                <a href="https://www.instagram.com/gym.manager/?hl=es" className="text-white hover:text-gray-300">
                   <Instagram className="h-6 w-6" />
                 </a>
-                <a href="#" className="text-white hover:text-gray-300">
+                <a href="https://x.com/gymmanagergame" className="text-white hover:text-gray-300">
                   <Twitter className="h-6 w-6" />
                 </a>
-                <a href="#" className="text-white hover:text-gray-300">
-                  <Youtube className="h-6 w-6" />
+                <a href="https://Linkedin.com" className="text-white hover:text-gray-300">
+                  <Linkedin className="h-6 w-6" />
                 </a>
               </div>
             </div>
