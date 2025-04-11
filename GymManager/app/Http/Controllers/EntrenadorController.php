@@ -102,7 +102,6 @@ class EntrenadorController extends Controller
     {
         $entrenador = Entrenador::findOrFail($id);
         $entrenador->delete();
-
         return response()->json(null, 204);
     }
 

@@ -139,8 +139,16 @@ const GestionEntrenadores: React.FC = () => {
   }
 
   const handleDelete = (id: number) => {
-    setEntrenadores(entrenadores.filter((entrenador) => entrenador.entrenador_id !== id))
-    setShowConfirm(null)
+try{
+  console.log(id)
+  const response = apiClient.delete(`/borrarEntrenador/${id}`)
+  console.log(response)
+
+  setEntrenadores(entrenadores.filter((entrenador) => entrenador.entrenador_id !== id))
+  setShowConfirm(null)
+}catch{
+  toast.error("Error al borrar")
+}
   }
 
   const trainerStats = {
