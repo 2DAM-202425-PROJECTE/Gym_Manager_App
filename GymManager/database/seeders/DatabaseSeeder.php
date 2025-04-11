@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\helpers\RolesPermission;
+use App\Models\Clase;
 use App\Models\DiaSemana;
 use App\Models\Entrenador;
 use App\Models\Membresia;
@@ -32,7 +33,7 @@ class DatabaseSeeder extends Seeder
         membresia::truncate();
         Entrenador::truncate();
         Tarifa::truncate();
-
+        Clase::truncate();
         // Enable foreign key constraints
         DB::statement('PRAGMA foreign_keys = ON;');
 
@@ -77,5 +78,7 @@ class DatabaseSeeder extends Seeder
         Entrenador::factory(5)->create();
 
         Tarifa::factory(2)->create();
+
+        Clase::factory(5)->create();
     }
 }

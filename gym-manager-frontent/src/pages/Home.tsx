@@ -14,6 +14,7 @@ import { User as UserType } from "./type/user"
 import apiClient from "../api/prefijo"
 import { logout } from "../api/user/auth"
 import { useNavigate } from "react-router-dom";
+import CardBestTrainers from "../components/cards/CardBestTrainers"
 
 type Workout = {
   id: number
@@ -240,27 +241,9 @@ export default function Home() {
           {/* Workout History and Upcoming Classes */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Workout History */}
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h3 className="text-xl font-semibold mb-4">Historial de Entrenamientos</h3>
-              <div className="space-y-4">
-                {workouts.map((workout) => (
-                  <div key={workout.id} className="flex items-center justify-between py-2 border-b last:border-b-0">
-                    <div className="flex items-center">
-                      <Dumbbell className="h-5 w-5 text-maroon-600 mr-3" />
-                      <div>
-                        <p className="font-medium">{workout.name}</p>
-                        <p className="text-sm text-gray-500">{workout.date.toLocaleDateString()}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium">{workout.duration} min</p>
-                      <p className="text-sm text-gray-500">{workout.calories} cal</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <HomeButton text="Ver todo el historial"></HomeButton>
-            </div>
+            <CardBestTrainers>
+              
+            </CardBestTrainers>
 
             {/* Upcoming Classes */}
             <div className="bg-white rounded-xl shadow-md p-6">

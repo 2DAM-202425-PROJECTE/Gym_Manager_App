@@ -11,4 +11,5 @@ export type Entrenador = {
     descripcion: string;
     user: User;
     valoracion_media: number;
+    nombre_completo?: string;
   };
