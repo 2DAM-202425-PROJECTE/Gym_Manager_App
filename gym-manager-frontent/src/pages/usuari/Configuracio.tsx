@@ -1,7 +1,10 @@
-import { useState } from "react";
-import { User, Lock, Bell, CreditCard, HelpCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { User, Lock, Bell, CreditCard } from "lucide-react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Footer from "../../components/footer/footer";
+import { useNavigate } from "react-router-dom";
+import apiClient from "../../api/prefijo";
+import { User as UserType} from "../type/user"
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -11,8 +14,31 @@ export default function SettingsPage() {
     { id: "security", label: "Seguridad", icon: Lock },
     { id: "notifications", label: "Notificaciones", icon: Bell },
     { id: "billing", label: "Facturación", icon: CreditCard },
-    { id: "help", label: "Ayuda", icon: HelpCircle },
   ];
+  const [user, setUser] = useState<UserType>()
+    
+  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      try {
+        const response = await apiClient.get("/my_info");
+        console.log(response);
+        setUser(response.data);
+
+      } catch (error) {
+        console.log(error);
+        navigate('/login');
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -137,10 +163,7 @@ export default function SettingsPage() {
                 <div>
                   <h3 className="text-xl font-semibold mb-4">Información de Facturación</h3>
                   <p className="mb-4">
-                    Plan actual: <span className="font-semibold">Premium</span>
-                  </p>
-                  <p className="mb-4">
-                    Próxima facturación: <span className="font-semibold">15/07/2023</span>
+                    Próxima facturación: <span className="font-semibold">{user?.membresia?.fecha_fin}</span>
                   </p>
                   <button onClick={() => window.location.href = "/tarifas"} className="px-4 py-2 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
                     Cambiar Plan

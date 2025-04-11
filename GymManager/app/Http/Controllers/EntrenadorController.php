@@ -115,8 +115,8 @@ class EntrenadorController extends Controller
 
         $validated['user_id'] = $user->id;
 
-        ValoracionEntrenador::create($validated);
+        $valoracion = ValoracionEntrenador::create($validated);
 
-        return response()->json(['message' => 'Valoración añadida'], 201);
+        return response()->json($valoracion, 201);
     }
 }

@@ -22,7 +22,10 @@ class EntrenadorFactory extends Factory
             'experiencia' => $this->faker->numberBetween(1, 10),
             'phone_number' => $this->faker->phoneNumber,
             'certificaciones' => $this->faker->sentence,
-            'descripcion' => $this->faker->paragraph,
+            'disponibilidad' => $this->faker->randomElements(
+                ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+                $this->faker->numberBetween(1, 7)
+            ),            'descripcion' => $this->faker->paragraph,
         ];
     }
 

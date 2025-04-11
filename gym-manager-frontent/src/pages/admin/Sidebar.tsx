@@ -1,7 +1,8 @@
 import { LogOut } from "lucide-react";
 import type React from "react"
 import { useState } from "react"
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../api/user/auth";
 
 
 interface SidebarProps {
@@ -11,6 +12,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) => {
   const [isExpanded, setIsExpanded] = useState(false)
+  const navigate = useNavigate();
 
   const menuItems = [
     {
@@ -38,6 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
       icon: "M12 2a10 10 0 1 0 10 10A10.01 10.01 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm0-13a3 3 0 0 1 3 3 3 3 0 0 1-1 2.24V13a1 1 0 0 1-2 0v-2.76A3 3 0 0 1 12 7zm-1 9h2v2h-2z",
       section: "entrenadors",
     },
+
   ]
 
   return (
@@ -82,13 +85,15 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
         ))}
       </nav>
       <div className="mt-auto">
-      <Link
-          to={"/login"}
-          className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-blau_fosc"
-        >
-          <LogOut className="inline-block w-5 h-5 mr-2" />
-          {isExpanded && "Cerrar sesión"}
-        </Link>
+        {isExpanded ? (
+          <button
+            onClick={() => {logout({navigate})}}
+            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+          >
+            <LogOut className="inline-block w-4 h-4 mr-2" />
+            Cerrar sesión
+          </button>
+        ): <LogOut></LogOut> }
       </div>
     </div>
   )

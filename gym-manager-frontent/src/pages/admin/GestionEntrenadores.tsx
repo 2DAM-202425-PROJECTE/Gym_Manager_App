@@ -316,7 +316,6 @@ const GestionEntrenadores: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal de detalles del entrenador */}
       {editingTrainer && editingTrainer.entrenador_id && !showConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">

@@ -49,7 +49,7 @@ export default function Home() {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate('/login'); // Redirigir al login si no hay token
+        navigate('/login');
         return;
       }
 

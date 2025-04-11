@@ -5,10 +5,10 @@ export type Entrenador = {
     entrenador_id: number;
     especialidad: string;
     experiencia: string;
-    disponibilidad: string;
+    disponibilidad: string[];
     phone_number: string;
     certificaciones: string;
     descripcion: string;
     user: User;
-    valoracion_media: number; // Valoración media del entrenador
+    valoracion_media: number;
   };

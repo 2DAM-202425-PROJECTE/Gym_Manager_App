@@ -104,8 +104,14 @@ export default function TrainerInfoModal({ trainer, onClose }: TrainerInfoModalP
           <div className="border-t border-gray-200 pt-4">
             <h3 className="text-lg font-semibold text-gray-800 mb-3">Horarios Disponibles</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-             <p className="text-gray-600">No hay horarios disponibles.</p>
-          </div>
+              {trainer.disponibilidad.length > 0 ? (
+                trainer.disponibilidad.map((horario, index) => (
+                  <p key={index} className="text-gray-600">{horario}</p>
+                ))
+              ) : (
+                <p className="text-gray-600">No hay horarios disponibles.</p>
+              )}
+            </div>
           </div>
 
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
