@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DiaSemana;
 use App\Models\Entrenador;
 use App\Models\User;
 use App\Models\ValoracionEntrenador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class EntrenadorController extends Controller
 {
@@ -20,32 +23,45 @@ class EntrenadorController extends Controller
             });
 
         return response()->json($entrenadores);
-    }   
+    }
 
     public function store(Request $request)
     {
+        try {
 
+        // Validar datos del usuario
         $validated_user_info = $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'password' => 'required|string',
         ]);
+
         $validated = $request->validate([
             'especialidad' => 'required|string',
             'experiencia' => 'required|string',
-            'disponibilidad' => 'required|string',
-            'phone_number' => 'required|numeric',
+            'disponibilidad' => 'nullable|array',
+            'disponibilidad.*' => 'string',
+            'phone_number' => 'required|string',
             'certificaciones' => 'required|string',
+            'descripcion' => 'nullable|string',
         ]);
 
-        $client = User::create($validated_user_info, ['role' => 'trainer']);
 
-        // Add the client id to the validated data
-        $validated['entrenador_id'] = $client->id;
 
+        // Crear el usuario
+        $user = User::create(array_merge($validated_user_info, ['role' => 'trainer']));
+
+        // Crear el entrenador asociado al usuario
+        $validated['entrenador_id'] = $user->id;
         $entrenador = Entrenador::create($validated);
 
-        return response()->json($entrenador, 201);
+
+        return response()->json($entrenador->load('user'));
+
+        } catch (ValidationException $ve) {
+            Log::error('Error de validación: ' . $ve->getMessage());
+            return response()->json(['error' => 'Error de validación.', 'details' => $ve->errors()], 422);
+        }
     }
 
     public function show($id)
@@ -87,6 +103,15 @@ class EntrenadorController extends Controller
             'puntuacion' => 'required|integer|min:1|max:5',
             'entrenador_id' => 'required|exists:entrenadors,id',
         ]);
+
+        $existe = ValoracionEntrenador::where('user_id', $user->id)
+            ->where('entrenador_id', $validated['entrenador_id'])
+            ->exists();
+
+        if ($existe) {
+            return response()->json(['message' => 'Solo se permite una valoración por entrenador'], 409);
+        }
+
 
         $validated['user_id'] = $user->id;
 

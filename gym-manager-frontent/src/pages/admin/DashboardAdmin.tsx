@@ -17,7 +17,6 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
-import GestionEspacios from "./GestionEspacios";
 import GestionEntrenadores from "./GestionEntrenadores";
 
 ChartJS.register(

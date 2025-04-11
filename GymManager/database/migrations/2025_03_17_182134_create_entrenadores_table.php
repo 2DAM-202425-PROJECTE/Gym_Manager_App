@@ -16,10 +16,10 @@ return new class extends Migration
 
             // Relación con la tabla 'users', asegurando que la clave foránea sea 'entrenador_id'
             $table->foreignId('entrenador_id')->constrained('users')->onDelete('cascade');
-
+            $table->json('disponibilidad')->nullable();
             $table->string('especialidad');
             $table->integer('experiencia');
-            $table->integer('phone_number');
+            $table->string('phone_number');
             $table->string('certificaciones', 255);
             $table->text('descripcion');
             $table->timestamps();

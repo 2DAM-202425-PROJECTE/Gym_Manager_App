@@ -32,7 +32,6 @@ class DatabaseSeeder extends Seeder
         membresia::truncate();
         Entrenador::truncate();
         Tarifa::truncate();
-        DiaSemana::truncate();
 
         // Enable foreign key constraints
         DB::statement('PRAGMA foreign_keys = ON;');
@@ -78,21 +77,5 @@ class DatabaseSeeder extends Seeder
         Entrenador::factory(5)->create();
 
         Tarifa::factory(2)->create();
-
-        $dias = [
-            'Lunes',
-            'Martes',
-            'Miércoles',
-            'Jueves',
-            'Viernes',
-            'Sábado',
-            'Domingo',
-        ];
-
-        foreach ($dias as $dia) {
-            DB::table('dias_semana')->insert([
-                'nombre' => $dia,
-            ]);
-        }
     }
 }

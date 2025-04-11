@@ -30,8 +30,7 @@ export default function TrainerInfoModal({ trainer, onClose }: TrainerInfoModalP
       setShowRatingModal(false);
      
     } catch (error) {
-      console.error("Error al enviar la valoración:", error);
-        toast.error("Error al enviar la valoración");
+        toast.error(error.response.data.message)
       }
     
   };

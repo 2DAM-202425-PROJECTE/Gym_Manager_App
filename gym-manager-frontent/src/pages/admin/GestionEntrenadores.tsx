@@ -16,7 +16,7 @@ type newTrainer = {
   phone_number: string
   especialidad: string
   experiencia: string
-  disponibilidad: string
+  disponibilidad: string[]
   certificaciones: string
   descripcion: string
   password: string
@@ -31,7 +31,7 @@ const GestionEntrenadores: React.FC = () => {
     phone_number: "",
     especialidad: "",
     experiencia: "",
-    disponibilidad: "",
+    disponibilidad: [],
     certificaciones: "",
     descripcion: "",
     password: "",
@@ -63,7 +63,7 @@ const GestionEntrenadores: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      console.log(nuevoEntrenador)
+
       const response = await apiClient.post("/entrenadors", nuevoEntrenador)
       setEntrenadores([...entrenadores, response.data])
       toast("Entrenador añadido")
@@ -102,6 +102,15 @@ const GestionEntrenadores: React.FC = () => {
   const handleSaveInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setNuevoEntrenador((prev) => (prev ? { ...prev, [name]: value } : prev))
+  }
+
+  const toggleDaySelection = (day: string) => {
+    setNuevoEntrenador((prev) => ({
+      ...prev,
+      disponibilidad: prev.disponibilidad.includes(day)
+        ? prev.disponibilidad.filter((d) => d !== day)
+        : [...prev.disponibilidad, day],
+    }))
   }
 
   const handleDelete = (id: number) => {
@@ -172,14 +181,25 @@ const GestionEntrenadores: React.FC = () => {
                 placeholder="Experiencia (años)"
                 className="border p-2 rounded"
               />
-              <input
-                type="text"
-                name="disponibilidad"
-                value={nuevoEntrenador?.disponibilidad}
-                onChange={handleSaveInputChange}
-                placeholder="Disponibilidad"
-                className="border p-2 rounded"
-              />
+              <div className="col-span-2">
+                <p className="font-medium mb-2">Disponibilidad</p>
+                <div className="flex gap-2 flex-wrap">
+                  {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"].map((day) => (
+                    <button
+                      key={day}
+                      type="button"
+                      onClick={() => toggleDaySelection(day)}
+                      className={`px-4 py-2 rounded ${
+                        nuevoEntrenador.disponibilidad.includes(day)
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 text-gray-700"
+                      } hover:bg-blue-400 hover:text-white transition`}
+                    >
+                      {day}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <input
                 type="text"
                 name="certificaciones"

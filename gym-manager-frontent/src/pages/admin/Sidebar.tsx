@@ -38,11 +38,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
       icon: "M12 2a10 10 0 1 0 10 10A10.01 10.01 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm0-13a3 3 0 0 1 3 3 3 3 0 0 1-1 2.24V13a1 1 0 0 1-2 0v-2.76A3 3 0 0 1 12 7zm-1 9h2v2h-2z",
       section: "entrenadors",
     },
-    {/*
-      name: "Espacios",
-      icon: "M4 6v12h16V6H4zm0-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm8 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6z",
-      section: "espacios",
-    */},
   ]
 
   return (
@@ -67,7 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) =>
       <nav >
         {menuItems.map((item) => (
           <button
-            key={item.section}
+            key={item.section} // Ensure each child has a unique key
             onClick={() => setActiveSection(item.section)}
             className={`flex items-center w-full p-2 rounded-md mb-4 ${
               activeSection === item.section ? "bg-blau_fosc" : "hover:bg-blau_fosc"

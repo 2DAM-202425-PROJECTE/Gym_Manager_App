@@ -8,26 +8,25 @@ use Illuminate\Database\Eloquent\Model;
 class Entrenador extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'entrenador_id';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'especialidad',
         'experiencia',
         'disponibilidad',
+        'entrenador_id',
         'phone_number',
         'certificaciones',
         'descripcion',
+        'disponibilidad'
     ];
 
-
+    protected $casts = [
+        'disponibilidad' => 'array',
+    ];
     public function user()
     {
         return $this->belongsTo(User::class, 'entrenador_id');
-    }
-
-    public function diasDisponibles()
-    {
-        return $this->belongsToMany(DiaSemana::class, 'disponibilidades_entrenadores', 'entrenador_id', 'dia_semana_id');
     }
 
     public function valoraciones()
