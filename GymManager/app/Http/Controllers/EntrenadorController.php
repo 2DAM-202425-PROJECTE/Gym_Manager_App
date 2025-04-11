@@ -72,14 +72,25 @@ class EntrenadorController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'especialidad' => 'string',
-            'experiencia' => 'string',
-            'disponibilidad' => 'string',
-            'phone_number' => 'numeric',
-            'certificaciones' => 'string',
-            'descripcion' => 'string',
+        $validated_user_info = $request->validate([
+            'name' => 'required|string',
         ]);
+
+        $validated = $request->validate([
+            'especialidad' => 'required|string',
+            'experiencia' => 'required|integer',
+            'disponibilidad' => 'nullable|array',
+            'disponibilidad.*' => 'string',
+            'phone_number' => 'required|string',
+            'certificaciones' => 'required|string',
+            'descripcion' => 'nullable|string',
+        ]);
+
+
+        $entrenador = Entrenador::findOrFail($id);
+        $user = User::findOrFail($entrenador->entrenador_id);
+        $user->update($validated_user_info);
+
 
         $entrenador = Entrenador::findOrFail($id);
         $entrenador->update($validated);

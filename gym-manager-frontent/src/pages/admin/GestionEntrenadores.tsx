@@ -77,7 +77,17 @@ const GestionEntrenadores: React.FC = () => {
     toast("Entrenador actualizado")
     try {
       console.log(editingTrainer)
-      apiClient.put(`/trainers/${editingTrainer?.entrenador_id}`, editingTrainer)
+      const dataToSend = {
+        name: editingTrainer?.user.name,
+        especialidad: editingTrainer?.especialidad,
+        experiencia: editingTrainer?.experiencia,
+        disponibilidad: editingTrainer?.disponibilidad,
+        phone_number: editingTrainer?.phone_number,
+        certificaciones: editingTrainer?.certificaciones,
+        descripcion: editingTrainer?.descripcion
+      } 
+      const response =  apiClient.put(`/entrenadors/${editingTrainer?.id}`, dataToSend)
+      console.log(response)
       const trainerEdited = editingTrainer
 
       setEntrenadores(
@@ -93,6 +103,21 @@ const GestionEntrenadores: React.FC = () => {
       toast("Error al actualizar el entrenador")
     }
   }
+
+  const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+  
+    // Crear una copia del objeto editingTrainer
+    const updatedTrainer = {
+      ...editingTrainer,
+      id: editingTrainer?.id || 0, // Ensure 'id' is defined
+      user: {
+        ...editingTrainer?.user,
+        name: value,
+      },
+    };
+    setEditingTrainer(updatedTrainer);
+  };
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -327,7 +352,7 @@ const GestionEntrenadores: React.FC = () => {
                   type="text"
                   name="name"
                   value={editingTrainer.user.name}
-                  onChange={(e) => handleEditInputChange(e)}
+                  onChange={(e) => handleChangeName(e)}
                   className="border p-2 rounded w-full"
                 />
               </div>
@@ -364,7 +389,7 @@ const GestionEntrenadores: React.FC = () => {
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Experiencia</label>
                 <input
-                  type="text"
+                  type="number"
                   name="experiencia"
                   value={editingTrainer.experiencia}
                   onChange={(e) => handleEditInputChange(e)}
@@ -373,13 +398,20 @@ const GestionEntrenadores: React.FC = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Disponibilidad</label>
-                <input
-                  type="text"
-                  name="disponibilidad"
-                  value={editingTrainer.disponibilidad}
-                  onChange={(e) => handleEditInputChange(e)}
-                  className="border p-2 rounded w-full"
-                />
+                {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"].map((day) => (
+                    <button
+                      key={day}
+                      type="button"
+                      onClick={() => toggleDaySelection(day)}
+                      className={`px-4 py-2 m-1 rounded ${
+                        nuevoEntrenador.disponibilidad.includes(day)
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 text-gray-700"
+                      } hover:bg-blue-400 hover:text-white transition`}
+                    >
+                      {day}
+                    </button>
+                  ))}
               </div>
               <div className="mb-4 col-span-2">
                 <label className="block text-sm font-medium mb-1">Certificaciones</label>

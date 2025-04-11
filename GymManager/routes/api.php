@@ -35,12 +35,9 @@ Route::middleware([
         Route::apiResource('clases', ClaseController::class);
     });
 });
-
 Route::middleware('auth:sanctum')->apiResource('membresias', MembresiaController::class);
-
 Route::middleware('auth:sanctum')->get('allclases', [ClaseController::class, 'index']);
 Route::middleware('auth:sanctum')->get('alltrainers', [EntrenadorController::class, 'index']);
-
 
 Route::get('users/{id}/membresia', [UserController::class, 'membresia']);
 
