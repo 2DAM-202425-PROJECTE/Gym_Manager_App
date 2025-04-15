@@ -24,7 +24,7 @@ export default function HomeStats({user}:{user: User}) {
           <Zap className="h-6 w-6 text-orange-600" />
         </div>
       </div>
-      <p className="text-sm text-orange-600 mt-2">↑ 5% vs. semana pasada</p>
+      <p className="text-sm text-orange-600 mt-2">Apuntate a la clase que quieras</p>
     </div>
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6">
       <div className="flex items-center justify-between">
