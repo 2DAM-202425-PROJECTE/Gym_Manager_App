@@ -4,7 +4,7 @@ import Sidebar from "../../components/sidebar/sidebar";
 import Footer from "../../components/footer/footer";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../api/prefijo";
-import { User as UserType} from "../type/user"
+import { User as UserType} from "../../type/user"
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");

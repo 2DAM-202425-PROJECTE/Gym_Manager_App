@@ -1,7 +1,7 @@
 import { useState } from "react"
 import apiClient from "../../api/prefijo"
 import { toast } from "react-toastify"
-import { User } from "../../pages/type/user"
+import { User } from "../../type/user"
 
 interface ModalEditarFechaProps {
   user: User

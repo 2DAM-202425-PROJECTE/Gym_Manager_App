@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { X, Dumbbell, Calendar, Mail, Star } from "lucide-react"
-import { Entrenador } from "../../pages/type/entrenadors"
+import { Entrenador } from "../../type/entrenadors"
 import apiClient from "../../api/prefijo"
 import { toast } from "react-toastify"
 

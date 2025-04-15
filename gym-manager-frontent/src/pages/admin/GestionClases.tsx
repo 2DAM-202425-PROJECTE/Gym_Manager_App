@@ -2,10 +2,10 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { Bar } from "react-chartjs-2"
 import apiClient from "../../api/prefijo"
-import { Clase, Horario, HorarioToSend } from "../type/clases"
+import { Clase, Horario, HorarioToSend } from "../../type/clases"
 import { toast } from "react-toastify"
 import { HandleViewHorario } from "../../components/clases/HandleViewHorario"
-import { User } from "../type/user"
+import { User } from "../../type/user"
 import { TextFieldAdmin } from "../../components/textFields/TextFieldAdmin"
 
 

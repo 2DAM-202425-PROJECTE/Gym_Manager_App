@@ -3,7 +3,7 @@ import { Calendar, User } from 'lucide-react'
 import Sidebar from "../../components/sidebar/sidebar"
 import Footer from "../../components/footer/footer"
 import apiClient from "../../api/prefijo"
-import { Clase } from "../type/clases"
+import { Clase } from "../../type/clases"
 import { UserContext } from "../../context/userContext"
 import { toast } from "react-toastify"
 

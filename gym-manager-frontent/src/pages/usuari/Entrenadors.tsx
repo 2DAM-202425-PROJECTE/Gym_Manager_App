@@ -5,7 +5,7 @@ import Sidebar from "../../components/sidebar/sidebar"
 import Footer from "../../components/footer/footer"
 import apiClient from "../../api/prefijo"
 import TrainerInfoModal from "../../components/modals/TrainerInfoModal"
-import { Entrenador } from "../type/entrenadors"
+import { Entrenador } from "../../type/entrenadors"
 
 export default function TrainersPage() {
   const [trainers, setTrainers] = useState<Entrenador[]>([])

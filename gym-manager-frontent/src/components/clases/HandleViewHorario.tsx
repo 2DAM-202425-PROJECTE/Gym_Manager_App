@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Clase, Horario } from "../../pages/type/clases";
+import { Clase, Horario } from "../../type/clases";
 import { BlueButtonAdmin } from "../buttons/BlueButtonAdmin";
 import { GreenButtonAdmin } from "../buttons/GreenButtonAdmin";
 

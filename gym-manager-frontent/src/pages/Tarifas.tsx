@@ -4,7 +4,7 @@ import { Calendar, Info, ArrowRight, Zap } from "lucide-react"
 import apiClient from "../api/prefijo"
 import { MotionFeatures } from "../components/galeries/MotionFeatures"
 import { useNavigate } from "react-router-dom"
-import { Tarifa } from "./type/tarifas"
+import { Tarifa } from "../type/tarifas"
 
 const features = [
   "Acceso 24/7 a todas las instalaciones",

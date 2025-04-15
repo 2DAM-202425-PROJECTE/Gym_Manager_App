@@ -9,7 +9,7 @@ import { Lock, HelpCircle, CreditCard, AlertCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { useNavigate } from "react-router-dom"
 import { AxiosResponse } from "axios"
-import { Membresia } from "./type/membresia"
+import { Membresia } from "../type/membresia"
 
 // Tipo para la tarifa
 type Tarifa = {
@@ -115,11 +115,6 @@ export default function PaginaDePago({ tarifa }: { tarifa: Tarifa | null | undef
             <h2 className="text-2xl font-bold mb-4 text-gray-800">Detalles de Pago</h2>
             <div className="flex space-x-4 mb-4">
               <CreditCard className="w-10 h-10 text-maroon-600" />
-              <div className="flex space-x-2">
-                <img src="/visa.svg" alt="Visa" className="h-8" />
-                <img src="/mastercard.svg" alt="Mastercard" className="h-8" />
-                <img src="/paypal.svg" alt="Paypal" className="h-8" />
-              </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">

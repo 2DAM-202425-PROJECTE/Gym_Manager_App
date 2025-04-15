@@ -5,7 +5,7 @@ import { getUsers } from "../../api/user/getUsers"
 import { GreenButtonAdmin } from "../../components/buttons/GreenButtonAdmin"
 import { BlueButtonAdmin } from "../../components/buttons/BlueButtonAdmin"
 import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin"
-import { User } from "../type/user"
+import { User } from "../../type/user"
 import { ModalEditarFecha } from "../../components/modals/ModalEditarFecha"
 
 type newUser = {

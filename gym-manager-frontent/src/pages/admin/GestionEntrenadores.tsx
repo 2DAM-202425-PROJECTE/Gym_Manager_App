@@ -8,7 +8,7 @@ import { toast } from "react-toastify"
 import { GreenButtonAdmin } from "../../components/buttons/GreenButtonAdmin"
 import { BlueButtonAdmin } from "../../components/buttons/BlueButtonAdmin"
 import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin"
-import type { Entrenador } from "../type/entrenadors"
+import type { Entrenador } from "../../type/entrenadors"
 
 type newTrainer = {
   name: string
