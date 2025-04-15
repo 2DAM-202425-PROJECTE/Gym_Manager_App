@@ -45,6 +45,10 @@ export default function Home() {
       try {
         const response = await apiClient.get("/my_info");
         console.log(response);
+        if (!response.data.membresia || new Date(response.data.membresia.fecha_fin) < new Date()) {
+          navigate('/tarifas'); // Redirigir a tarifas si no hay membresía o si la membresía ha expirado
+          return;
+        }
         setUser(response.data);
         setMembresia(response.data.membresia || null);
         setClases(response.data.clases);
@@ -89,16 +93,8 @@ export default function Home() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-6">
         <p className="text-2xl font-bold text-center text-gray-800">
-          Debes iniciar sesión para continuar
+          cargando...
         </p>
-  
-        <Link
-          to="/login"
-          className="px-6 py-3 text-white text-lg font-semibold rounded-2xl shadow-md transition duration-200"
-          style={{ backgroundColor: "#800000" }}
-        >
-          Iniciar sesión
-        </Link>
       </div>
     );
   } 
