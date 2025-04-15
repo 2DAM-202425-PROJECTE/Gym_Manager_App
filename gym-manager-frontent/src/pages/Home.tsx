@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { CalendarDays,Clock, CreditCard, LogOut, User, Dumbbell, TrendingUp,  Bell, Volume2,  VolumeX
+import { CalendarDays,Clock, CreditCard, LogOut, User, Volume2,  VolumeX
 } from "lucide-react"
 import Sidebar from "../components/sidebar/sidebar"
 import Footer from "../components/footer/footer"
@@ -15,27 +15,15 @@ import apiClient from "../api/prefijo"
 import { logout } from "../api/user/auth"
 import { useNavigate } from "react-router-dom";
 import CardBestTrainers from "../components/cards/CardBestTrainers"
+import { formatDate } from "../utils/splitDate"
 
-type Workout = {
-  id: number
-  name: string
-  duration: number
-  calories: number
-  date: Date
-}
 
-type Notification = {
-  id: number
-  message: string
-  date: Date
-}
+
 
 export default function Home() {
   const [membresia, setMembresia] = useState<Membresia | null>(null)
-  const [workouts, setWorkouts] = useState<Workout[]>([])
   const [activeTab, setActiveTab] = useState("today")
   const [showNotifications, setShowNotifications] = useState(false)
-  const [notifications, setNotifications] = useState<Notification[]>([])
   const [isMuted, setIsMuted] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [ user, setUser ] = useState<UserType | null>(null)
@@ -56,7 +44,7 @@ export default function Home() {
 
       try {
         const response = await apiClient.get("/my_info");
-        console.log("cargado");
+        console.log(response);
         setUser(response.data);
         setMembresia(response.data.membresia || null);
         setClases(response.data.clases);
@@ -133,12 +121,7 @@ export default function Home() {
                     onClick={() => setShowNotifications(!showNotifications)}
                     className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors relative"
                   >
-                    <Bell className="h-5 w-5 text-gray-600" />
-                    {notifications.length > 0 && (
-                      <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                        {notifications.length}
-                      </span>
-                    )}
+
                   </button>
                   {showNotifications && (
                     <div
@@ -150,13 +133,6 @@ export default function Home() {
                         <button onClick={toggleMute} className="text-gray-600 hover:text-gray-800">
                           {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
                         </button>
-                      </div>
-                      <div className="py-2 max-h-64 overflow-y-auto">
-                        {notifications.map((notification) => (
-                          <div key={notification.id} className="px-4 py-2 hover:bg-gray-100">
-                            <p className="text-sm text-gray-800">{notification.message}</p>
-                          </div>
-                        ))}
                       </div>
                       <div className="py-2 px-4 bg-gray-100 text-center rounded-b-md">
                         <button className="text-sm text-blue-600 hover:text-blue-800">Ver todas</button>
@@ -187,15 +163,11 @@ export default function Home() {
                         </a>
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <CreditCard className="inline-block w-4 h-4 mr-2" />
-                          Membresía: {"oro"}
+                          Membresía: {`${user.membresia?.last_tarifa.nombre || "N/A"}`}
                         </a>
                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <CalendarDays className="inline-block w-4 h-4 mr-2" />
-                          Miembro desde: {user.created_at}
-                        </a>
-                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                          <TrendingUp className="inline-block w-4 h-4 mr-2" />
-                          Total de visitas: {"no se"}
+                          Miembro desde: {formatDate(user.created_at)}
                         </a>
                         <button
                           onClick={() => {logout({navigate})}}
@@ -236,7 +208,7 @@ export default function Home() {
           )}
 
           {/* Quick Stats */}
-          <HomeStats></HomeStats>
+          <HomeStats user={user} ></HomeStats>
 
           {/* Workout History and Upcoming Classes */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
