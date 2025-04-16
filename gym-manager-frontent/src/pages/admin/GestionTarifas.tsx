@@ -7,6 +7,7 @@ import { toast } from "react-toastify"
 import { BlueButtonAdmin } from "../../components/buttons/BlueButtonAdmin"
 import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin"
 import { GreenButtonAdmin } from "../../components/buttons/GreenButtonAdmin"
+import { label } from "framer-motion/client"
 
 interface Tarifa {
   id: number
@@ -98,7 +99,7 @@ const GestionTarifas: React.FC = () => {
   }
 
   const chartData = {
-    labels: tarifas.map((t) => `${t.meses} meses`),
+    labels: tarifas.map((t) => `${t.nombre}`),
     datasets: [
       {
         data: tarifas.map((t) => t.precio),
@@ -138,7 +139,7 @@ const GestionTarifas: React.FC = () => {
           <table className="w-full">
             <thead>
               <tr className="bg-[#1c2541] text-white">
-                <th className="p-3">ID</th>
+                <th className="p-3">Nombre</th>
                 <th className="p-3">Precio</th>
                 <th className="p-3">Meses</th>
                 <th className="p-3">Acciones</th>
@@ -147,8 +148,14 @@ const GestionTarifas: React.FC = () => {
             <tbody>
               {tarifas.map((tarifa : Tarifa) => (
                 <tr key={tarifa.id} className="border-b">
-                  <td className="p-3">{tarifa.id}</td>
                   <td className="p-3">
+                    {editingTarifa && editingTarifa.id === tarifa.id ? (
+                      <TextFieldAdmin name="nombre" value={editingTarifa.nombre} handleChange={(e) => handleEditInputChange(e)} placeholder={""} string ></TextFieldAdmin>
+
+                    ) : (
+                      `${tarifa.nombre}`
+                    )}
+                  </td>                  <td className="p-3">
                     {editingTarifa && editingTarifa.id === tarifa.id ? (
                       <TextFieldAdmin name="precio" value={editingTarifa.precio} handleChange={(e) => handleEditInputChange(e)} placeholder={""} ></TextFieldAdmin>
 

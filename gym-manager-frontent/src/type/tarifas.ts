@@ -4,5 +4,6 @@ export type Tarifa = {
     nombre: string;
     precio: number;
     meses: number;
+    cantidad_pagos: number;
   }
   
