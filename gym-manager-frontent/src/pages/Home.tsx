@@ -44,7 +44,6 @@ export default function Home() {
 
       try {
         const response = await apiClient.get("/my_info");
-        console.log(response);
         if (!response.data.membresia || new Date(response.data.membresia.fecha_fin) < new Date()) {
           navigate('/tarifas'); // Redirigir a tarifas si no hay membresía o si la membresía ha expirado
           return;

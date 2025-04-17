@@ -23,6 +23,8 @@ import { getUsers } from "../../api/user/getUsers";
 import { User } from "../../type/user";
 import apiClient from "../../api/prefijo";
 import { Tarifa } from "../../type/tarifas";
+import { PagosPorMes } from "../../type/PagoPorMes";
+import { ordenarPagosPorMes } from "../../utils/ordenarMeses";
 
 ChartJS.register(
   CategoryScale,
@@ -41,28 +43,32 @@ const Dashboard: React.FC = () => {
 
   const [usuarios, setUsuarios] = useState<User[]>([])
   const [tarifas, setTarifas] = useState<Tarifa[]>([]);
-
+  const [pagos, setPagos] = useState<PagosPorMes>({});
   useEffect(() => {
-    const obtindreTarifes = async () => {
+    const fetchData = async () => {
       try {
         const response = await apiClient.get("/tarifas");
         const tarifasObtingudes = response.data as Tarifa[];
         setTarifas(tarifasObtingudes);
-        console.log(tarifasObtingudes);
+
+        const responseUsers = await getUsers()
+        if (responseUsers){
+            setUsuarios(responseUsers)
+          }
+
+          const responsePago = await apiClient.get("/pagos");
+          const pagos = responsePago.data as PagosPorMes;
+          const pagosOrdenadors = ordenarPagosPorMes(pagos)
+          console.log(pagosOrdenadors);
+          setPagos(pagosOrdenadors);
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setTarifas([]);
       }
     };
-    obtindreTarifes();
+    fetchData();
   }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await getUsers()
-      if (response) setUsuarios(response)
-      }
-    fetchData()
-  }, [])
 
 
 
@@ -86,13 +92,12 @@ const Dashboard: React.FC = () => {
       },
     ],
   };
-
   const ingresosData = {
-    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
+    labels: Object.keys(pagos), // Extrae las claves del objeto pagos
     datasets: [
       {
         label: "Ingresos ($)",
-        data: [5000, 6000, 5500, 7000, 7500],
+        data: Object.values(pagos), // Extrae los valores del objeto pagos
         borderColor: "#5bc0be",
         backgroundColor: "rgba(91, 192, 190, 0.2)",
       },

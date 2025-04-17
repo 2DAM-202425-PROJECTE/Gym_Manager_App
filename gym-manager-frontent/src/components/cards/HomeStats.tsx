@@ -1,12 +1,5 @@
-import { TrendingUp, Trophy, Zap } from "lucide-react";
+import { Trophy, Zap } from "lucide-react";
 import { User } from "../../type/user";
-const workouts = [
-  { calories: 200 },
-  { calories: 300 },
-  { calories: 250 },
-  // Add more workout objects as needed
-];
-const totalCalories = workouts.reduce((sum, workout) => sum + workout.calories, 0);
 
 
 export default function HomeStats({user}:{user: User}) {
@@ -30,7 +23,7 @@ export default function HomeStats({user}:{user: User}) {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-gray-500 mb-1">Tipo de membresía</p>
-          <p className="text-3xl font-bold text-gray-700">{ user.membresia?.last_tarifa.nombre}</p>
+          <p className="text-3xl font-bold text-gray-700">{ user.membresia?.last_tarifa?.nombre}</p>
         </div>
         <div className="bg-yellow-100 p-3 rounded-full">
           <Trophy className="h-6 w-6 text-yellow-600" />
