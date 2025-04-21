@@ -8,7 +8,6 @@ type Clase = {
   duracion: number;
   capacidad: number;
   inscritos: number;
-  sala: string;
 };
 
 interface ClasesEntProps {
@@ -33,7 +32,6 @@ export default function ClasesEnt({ clases, diasSemana, getClasesPorDia }: Clase
                 <th className="p-2 text-left">Día</th>
                 <th className="p-2 text-left">Hora</th>
                 <th className="p-2 text-left">Duración</th>
-                <th className="p-2 text-left">Sala</th>
                 <th className="p-2 text-left">Ocupación</th>
               </tr>
             </thead>
@@ -44,7 +42,6 @@ export default function ClasesEnt({ clases, diasSemana, getClasesPorDia }: Clase
                   <td className="p-2">{clase.dia}</td>
                   <td className="p-2">{clase.hora}</td>
                   <td className="p-2">{clase.duracion} min</td>
-                  <td className="p-2">{clase.sala}</td>
                   <td className="p-2">
                     <div className="flex items-center">
                       <div className="w-24 h-2 bg-gray-200 rounded-full mr-2">

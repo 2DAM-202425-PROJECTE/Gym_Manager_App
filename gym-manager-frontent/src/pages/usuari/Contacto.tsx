@@ -83,7 +83,7 @@ export default function ContactPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Contact Form */}
               <div className="lg:col-span-2">
-                <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="bg-white rounded-xl shadow-md overflow-hidden">
                   <div className="bg-gradient-to-r from-maroon-600 to-maroon-800 p-6">
                     <h3 className="text-xl font-semibold text-white flex items-center">
                       <MessageSquare className="mr-2 h-5 w-5" />
@@ -126,7 +126,7 @@ export default function ContactPage() {
                                 id="nombre"
                                 name="nombre"
                                 required
-                                className="w-full pl-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 focus:border-maroon-500"
+                                className="w-full pl-10 px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-maroon-500 focus:border-maroon-500"
                                 placeholder="Tu nombre"
                                 />
                             </div>
@@ -145,7 +145,7 @@ export default function ContactPage() {
                                 id="email"
                                 name="email"
                                 required
-                                className="w-full pl-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 focus:border-maroon-500"
+                                className="w-full pl-10 px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-maroon-500 focus:border-maroon-500"
                                 placeholder="tu@email.com"
                                 />
                             </div>
@@ -165,7 +165,7 @@ export default function ContactPage() {
                                 type="tel"
                                 id="telefono"
                                 name="telefono"
-                                className="w-full pl-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 focus:border-maroon-500"
+                                className="w-full pl-10 px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-maroon-500 focus:border-maroon-500"
                                 placeholder="+34 XXX XXX XXX"
                                 />
                             </div>
@@ -177,7 +177,7 @@ export default function ContactPage() {
                             <select
                                 id="asunto"
                                 name="asunto"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 focus:border-maroon-500"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-maroon-500 focus:border-maroon-500"
                             >
                                 <option value="general">Consulta general</option>
                                 <option value="membresia">Membresía</option>
@@ -197,7 +197,7 @@ export default function ContactPage() {
                             name="mensaje"
                             rows={5}
                             required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 focus:border-maroon-500"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-maroon-500 focus:border-maroon-500"
                             placeholder="¿En qué podemos ayudarte?"
                             ></textarea>
                         </div>
@@ -217,7 +217,7 @@ export default function ContactPage() {
 
                         <button
                             type="submit"
-                            className="w-full py-3 px-4 bg-maroon-600 text-white rounded-md hover:bg-maroon-700 transition-colors flex items-center justify-center"
+                            className="w-full py-3 px-4 bg-maroon-600 text-white rounded-xl hover:bg-maroon-700 transition-colors flex items-center justify-center"
                         >
                             <Send className="h-5 w-5 mr-2" />
                             Enviar mensaje
