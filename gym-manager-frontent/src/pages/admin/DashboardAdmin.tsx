@@ -25,6 +25,7 @@ import apiClient from "../../api/prefijo";
 import { Tarifa } from "../../type/tarifas";
 import { PagosPorMes } from "../../type/PagoPorMes";
 import { ordenarPagosPorMes } from "../../utils/ordenarMeses";
+import { Clase } from "../../type/clases";
 
 ChartJS.register(
   CategoryScale,
@@ -44,6 +45,7 @@ const Dashboard: React.FC = () => {
   const [usuarios, setUsuarios] = useState<User[]>([])
   const [tarifas, setTarifas] = useState<Tarifa[]>([]);
   const [pagos, setPagos] = useState<PagosPorMes>({});
+  const [ clases, setClases] = useState<Clase[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -103,7 +105,7 @@ const Dashboard: React.FC = () => {
       },
     ],
   };
-
+/*
   const retencionData = {
     labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
     datasets: [
@@ -115,7 +117,7 @@ const Dashboard: React.FC = () => {
       },
     ],
   };
-
+*/
   const renderDashboard = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
@@ -131,10 +133,12 @@ const Dashboard: React.FC = () => {
           <h2 className="text-2xl font-bold mb-4 text-[#092756]">Ingresos Mensuales</h2>
           <Line data={ingresosData} />
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold mb-4 text-[#092756]">Retención de Clientes</h2>
-          <Line data={retencionData} />
-        </div>
+        {/**    
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-bold mb-4 text-[#092756]">Retención de Clientes</h2>
+            <Line data={retencionData} />
+          </div>
+         */}
         <div className="bg-white rounded-lg shadow-md p-6 col-span-2">
           <h2 className="text-2xl font-bold mb-4 text-[#092756]">Asistencia a Clases</h2>
           <Bar data={clasesData} />

@@ -16,7 +16,7 @@ class PagoFactory extends Factory
         return [
             'membresia_id' => Membresia::factory(),
             'tarifa_id' => Tarifa::factory(),
-            'fecha_pago' => $this->faker->date(),
+            'fecha_pago' => $this->faker->dateTimeBetween('-4 months', 'now')->format('Y-m-d'),
             'estado' => $this->faker->randomElement(['pendiente', 'completado', 'fallido']),
         ];
     }
