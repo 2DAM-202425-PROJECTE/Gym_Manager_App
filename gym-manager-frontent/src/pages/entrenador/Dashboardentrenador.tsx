@@ -58,7 +58,6 @@ export default function VistaEntrenador() {
       try {
         const res = await fetch("/api/clases")
         const data: Clase[] = await res.json()
-
         const clasesEntrenador = data.filter(clase => clase.entrenadorId === idEntrenadorActual)
         setClases(clasesEntrenador)
       } catch (error) {
@@ -69,27 +68,27 @@ export default function VistaEntrenador() {
     fetchClases()
   }, [])
 
-  // Reseñas falsas mientras no hay backend de reseñas
+  // Fetch de reseñas desde backend
   useEffect(() => {
-    const resenasData: Resena[] = [
-      {
-        id: 1,
-        usuario: "Elena Ruiz",
-        puntuacion: 5,
-        comentario: "Excelente entrenador, muy motivador.",
-        fecha: new Date("2023-06-05"),
-        avatar: "/placeholder.svg"
-      },
-      {
-        id: 2,
-        usuario: "Roberto Fernández",
-        puntuacion: 4,
-        comentario: "Muy buenas clases.",
-        fecha: new Date("2023-05-28"),
-        avatar: "/placeholder.svg"
-      },
-    ]
-    setResenas(resenasData)
+    const fetchResenas = async () => {
+      try {
+        const res = await fetch("/api/valoraciones_entrenadores")
+        const data: any[] = await res.json()
+
+        const resenasEntrenador = data
+          .filter(resena => resena.entrenadorId === idEntrenadorActual)
+          .map(resena => ({
+            ...resena,
+            fecha: new Date(resena.fecha)
+          }))
+
+        setResenas(resenasEntrenador)
+      } catch (error) {
+        console.error("Error al cargar reseñas:", error)
+      }
+    }
+
+    fetchResenas()
   }, [])
 
   useEffect(() => {
