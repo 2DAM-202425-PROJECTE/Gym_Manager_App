@@ -45,7 +45,8 @@ const Dashboard: React.FC = () => {
   const [usuarios, setUsuarios] = useState<User[]>([])
   const [tarifas, setTarifas] = useState<Tarifa[]>([]);
   const [pagos, setPagos] = useState<PagosPorMes>({});
-  const [ clases, setClases] = useState<Clase[]>([]);
+  const [clases, setClases] = useState<Clase[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -68,16 +69,12 @@ const Dashboard: React.FC = () => {
           const pagosOrdenadors = ordenarPagosPorMes(pagos)
           console.log(pagosOrdenadors);
           setPagos(pagosOrdenadors);
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setTarifas([]);
       }
     };
     fetchData();
   }, []);
-
-
 
   const chartData = {
     labels: tarifas.map((t) => `${t.nombre}`),
@@ -99,6 +96,7 @@ const Dashboard: React.FC = () => {
       },
     ],
   };
+
   const ingresosData = {
     labels: Object.keys(pagos), // Extrae las claves del objeto pagos
     datasets: [
@@ -110,41 +108,23 @@ const Dashboard: React.FC = () => {
       },
     ],
   };
-/*
-  const retencionData = {
-    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
-    datasets: [
-      {
-        label: "Tasa de Retención (%)",
-        data: [80, 78, 82, 85, 88],
-        borderColor: "#3a506b",
-        backgroundColor: "rgba(58, 80, 107, 0.2)",
-      },
-    ],
-  };
-*/
+
   const renderDashboard = () => {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="bg-white rounded-lg shadow-md p-1">
           <h2 className="text-2xl font-bold mb-4 text-[#092756]">Estadísticas de Usuarios</h2>
           <UserPanel usuarios={usuarios} />
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-md p-1">
           <h2 className="text-2xl font-bold mb-4 text-[#092756]">Tarifas Vendidas</h2>
           <Doughnut data={chartData} />
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-md p-1">
           <h2 className="text-2xl font-bold mb-4 text-[#092756]">Ingresos Mensuales</h2>
           <Line data={ingresosData} />
         </div>
-        {/**    
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold mb-4 text-[#092756]">Retención de Clientes</h2>
-            <Line data={retencionData} />
-          </div>
-         */}
-        <div className="bg-white rounded-lg shadow-md p-6 col-span-2">
+        <div className="bg-white rounded-lg shadow-md p-1 sm:col-span-2 lg:col-span-3">
           <h2 className="text-2xl font-bold mb-4 text-[#092756]">Asistencia a Clases</h2>
           <Bar data={clasesData} />
         </div>
@@ -163,7 +143,6 @@ const Dashboard: React.FC = () => {
       case "entrenadors":
         return <GestionEntrenadores/>;
 
-   
       default:
         return renderDashboard();
     }
