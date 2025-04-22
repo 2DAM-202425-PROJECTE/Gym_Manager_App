@@ -16,6 +16,9 @@ class Clase extends Model
         'id_entrenador',
         'maximo_participantes',
     ];
+
+
+
     public function entrenador()
     {
         return $this->belongsTo(User::class, 'id_entrenador');
@@ -32,4 +35,5 @@ class Clase extends Model
     {
         return $this->hasMany(Horario::class);
     }
+
 }

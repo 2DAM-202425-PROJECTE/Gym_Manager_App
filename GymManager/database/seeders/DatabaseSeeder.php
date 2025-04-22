@@ -65,6 +65,20 @@ class DatabaseSeeder extends Seeder
             'qr_data' => Str::uuid()->toString(),
         ]);
 
+        $userWithMembresiados = User::factory()->create([
+            'name' => 'miquel Fumador',
+            'email' => 'membresia@gmail.com',
+            'password' => Hash::make('password'),
+            'role' => 'client',
+        ]);
+
+        // Assign membership to the user
+        $userWithMembresiados->membresia()->create([
+            'user_id' => $userWithMembresiados->id,
+            'fecha_fin' => now()->addYear(),
+            'qr_data' => Str::uuid()->toString(),
+        ]);
+
         // Create an administrator
         $user = User::factory()->create([
             'name' => 'Administrador',

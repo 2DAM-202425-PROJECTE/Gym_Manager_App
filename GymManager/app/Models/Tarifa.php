@@ -16,9 +16,15 @@ class Tarifa extends Model
         'meses',
     ];
 
-
+    protected $appends = [
+        'cantidad_pagos',
+    ];
     public function pagos()
     {
         return $this->hasMany(Pago::class);
+    }
+    public function getCantidadPagosAttribute()
+    {
+        return $this->pagos()->count();
     }
 }

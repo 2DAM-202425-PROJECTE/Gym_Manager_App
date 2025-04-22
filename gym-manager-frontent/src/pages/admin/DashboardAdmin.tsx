@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import GestionTarifas from "../admin/GestionTarifas";
 import GestionUsuarios from "../admin/GestionUsuarios";
@@ -18,6 +18,13 @@ import {
   ArcElement,
 } from "chart.js";
 import GestionEntrenadores from "./GestionEntrenadores";
+import { UserPanel } from "../../components/analitycs/UserPanel";
+import { getUsers } from "../../api/user/getUsers";
+import { User } from "../../type/user";
+import apiClient from "../../api/prefijo";
+import { Tarifa } from "../../type/tarifas";
+import { PagosPorMes } from "../../type/PagoPorMes";
+import { ordenarPagosPorMes } from "../../utils/ordenarMeses";
 
 ChartJS.register(
   CategoryScale,
@@ -34,23 +41,46 @@ ChartJS.register(
 const Dashboard: React.FC = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
 
-  const userStats = {
-    total: 500,
-    clientes: 450,
-    admin: 10,
-    entrenadores: 40,
-  };
+  const [usuarios, setUsuarios] = useState<User[]>([])
+  const [tarifas, setTarifas] = useState<Tarifa[]>([]);
+  const [pagos, setPagos] = useState<PagosPorMes>({});
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await apiClient.get("/tarifas");
+        const tarifasObtingudes = response.data as Tarifa[];
+        setTarifas(tarifasObtingudes);
 
-  const tarifasData = {
-    labels: ["Mensual", "Trimestral", "Semestral", "Anual"],
+        const responseUsers = await getUsers()
+        if (responseUsers){
+            setUsuarios(responseUsers)
+          }
+
+          const responsePago = await apiClient.get("/pagos");
+          const pagos = responsePago.data as PagosPorMes;
+          const pagosOrdenadors = ordenarPagosPorMes(pagos)
+          console.log(pagosOrdenadors);
+          setPagos(pagosOrdenadors);
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        setTarifas([]);
+      }
+    };
+    fetchData();
+  }, []);
+
+
+
+  const chartData = {
+    labels: tarifas.map((t) => `${t.nombre}`),
     datasets: [
       {
-        label: "Tarifas vendidas",
-        data: [65, 40, 30, 15],
+        data: tarifas.map((t) => t.cantidad_pagos),
         backgroundColor: ["#092756", "#1c2541", "#3a506b", "#5bc0be"],
       },
-    ],
-  };
+    ], 
+  }
 
   const clasesData = {
     labels: ["Yoga", "Spinning", "Zumba", "Pilates", "Boxeo"],
@@ -62,13 +92,12 @@ const Dashboard: React.FC = () => {
       },
     ],
   };
-
   const ingresosData = {
-    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
+    labels: Object.keys(pagos), // Extrae las claves del objeto pagos
     datasets: [
       {
         label: "Ingresos ($)",
-        data: [5000, 6000, 5500, 7000, 7500],
+        data: Object.values(pagos), // Extrae los valores del objeto pagos
         borderColor: "#5bc0be",
         backgroundColor: "rgba(91, 192, 190, 0.2)",
       },
@@ -92,28 +121,11 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold mb-4 text-[#092756]">Estadísticas de Usuarios</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-[#092756] text-white p-4 rounded-lg">
-              <p className="text-lg">Total Usuarios</p>
-              <p className="text-3xl font-bold">{userStats.total}</p>
-            </div>
-            <div className="bg-[#1c2541] text-white p-4 rounded-lg">
-              <p className="text-lg">Clientes</p>
-              <p className="text-3xl font-bold">{userStats.clientes}</p>
-            </div>
-            <div className="bg-[#3a506b] text-white p-4 rounded-lg">
-              <p className="text-lg">Administradores</p>
-              <p className="text-3xl font-bold">{userStats.admin}</p>
-            </div>
-            <div className="bg-[#5bc0be] text-white p-4 rounded-lg">
-              <p className="text-lg">Entrenadores</p>
-              <p className="text-3xl font-bold">{userStats.entrenadores}</p>
-            </div>
-          </div>
+          <UserPanel usuarios={usuarios} />
         </div>
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold mb-4 text-[#092756]">Tarifas Vendidas</h2>
-          <Doughnut data={tarifasData} />
+          <Doughnut data={chartData} />
         </div>
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold mb-4 text-[#092756]">Ingresos Mensuales</h2>

@@ -11,7 +11,7 @@ import { toast } from "react-toastify"
 export default function ClassesPage() {
 
 
-  const { userContext, setUser } = useContext(UserContext)
+  const { setUser } = useContext(UserContext)
   const [classes, setClasses] = useState<Clase[]>([])
   
   useEffect(() => {

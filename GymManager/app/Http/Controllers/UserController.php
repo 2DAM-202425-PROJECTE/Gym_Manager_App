@@ -11,7 +11,12 @@ class UserController extends Controller
 
     public function my_info()
     {
-        $user = Auth::user()->load('membresia', 'clases.horarios', 'clases.entrenador');
+        $user = Auth::user()->load(['membresia', 'clases.horarios', 'clases.entrenador']);
+
+        if ($user->membresia) {
+            $user->membresia->append('lastTarifa');
+        }
+
         return response()->json($user);
     }
 
