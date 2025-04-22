@@ -27,7 +27,7 @@ class ClaseFactory extends Factory
     {
         return $this->afterCreating(function (Clase $clase) {
             // Crear entre 1 y 5 horarios para cada clase
-            Horario::factory()->count($this->faker->numberBetween(1, 5))->create([
+            Horario::factory()->count($this->faker->numberBetween(1, 3))->create([
                 'clase_id' => $clase->id,
             ]);
         });

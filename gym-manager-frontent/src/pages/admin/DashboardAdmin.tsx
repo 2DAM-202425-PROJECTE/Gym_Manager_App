@@ -53,6 +53,11 @@ const Dashboard: React.FC = () => {
         const tarifasObtingudes = response.data as Tarifa[];
         setTarifas(tarifasObtingudes);
 
+        const responseClases = await apiClient.get("/clases");
+        const clasesObtingudes = responseClases.data as Clase[];
+        console.log(clasesObtingudes);
+        setClases(clasesObtingudes);
+
         const responseUsers = await getUsers()
         if (responseUsers){
             setUsuarios(responseUsers)
@@ -85,11 +90,11 @@ const Dashboard: React.FC = () => {
   }
 
   const clasesData = {
-    labels: ["Yoga", "Spinning", "Zumba", "Pilates", "Boxeo"],
+    labels: clases.map((t) => `${t.nombre}`),
     datasets: [
       {
         label: "Asistencia promedio",
-        data: [12, 19, 15, 10, 8],
+        data: clases.map((t) => t.participantes.length),
         backgroundColor: "#092756",
       },
     ],
