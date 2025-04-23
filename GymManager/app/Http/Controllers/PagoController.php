@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pago;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PagoController extends Controller
@@ -12,7 +13,23 @@ class PagoController extends Controller
      */
     public function index()
     {
-        $pagos = Pago::all();
+        Carbon::setLocale('es'); // Configura Carbon en español
+
+        $pagos = Pago::whereBetween('fecha_pago', [
+            now()->subMonths(5)->startOfMonth(),
+            now()->endOfMonth()
+        ])
+            ->with('tarifa') // Carga la relación tarifa
+            ->get()
+            ->groupBy(function ($pago) {
+                return Carbon::parse($pago->fecha_pago)->translatedFormat('F'); // Agrupa por mes en letras
+            })
+            ->map(function ($group) {
+                return $group->sum(function ($pago) {
+                    return $pago->tarifa->precio; // Suma los precios de las tarifas
+                });
+            });
+
         return response()->json($pagos);
     }
 

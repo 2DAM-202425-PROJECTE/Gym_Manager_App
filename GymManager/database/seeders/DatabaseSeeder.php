@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use App\helpers\RolesPermission;
 use App\Models\Clase;
-use App\Models\DiaSemana;
 use App\Models\Entrenador;
 use App\Models\Membresia;
+use App\Models\Pago;
 use App\Models\Tarifa;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -30,10 +30,13 @@ class DatabaseSeeder extends Seeder
         Permission::query()->delete();
         Role::query()->delete();
         User::truncate();
-        membresia::truncate();
+        Membresia::truncate();
         Entrenador::truncate();
         Tarifa::truncate();
         Clase::truncate();
+        Pago::truncate();
+
+
         // Enable foreign key constraints
         DB::statement('PRAGMA foreign_keys = ON;');
 
@@ -59,10 +62,30 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Assign membership to the user
-        $userWithMembresia->membresia()->create([
+        $tarifa = Tarifa::create([
+            'nombre' => 'Tarifa Básica',
+            'precio' => 100.00,
+            'meses' => 12,
+        ]);
+
+// Create the membership first
+        $membresia = $userWithMembresia->membresia()->create([
             'user_id' => $userWithMembresia->id,
-            'fecha_fin' => now()->addYear(),
+            'fecha_fin' => now()->addMonths(12), // Assuming 12 months for the membership
             'qr_data' => Str::uuid()->toString(),
+        ]);
+
+// Create the payment associated with the membership and tariff
+        $pago = Pago::create([
+            'membresia_id' => $membresia->id, // Use the created membership ID
+            'tarifa_id' => $tarifa->id,
+            'fecha_pago' => now(),
+            'estado' => 'completado',
+        ]);
+
+// Actualizar el pago con la membresía creada
+        $pago->update([
+            'membresia_id' => $membresia->id,
         ]);
 
         // Create an administrator
@@ -78,7 +101,7 @@ class DatabaseSeeder extends Seeder
         Entrenador::factory(5)->create();
 
         Tarifa::factory(2)->create();
-
+        Pago::factory(5)->create();
         Clase::factory(5)->create();
     }
 }

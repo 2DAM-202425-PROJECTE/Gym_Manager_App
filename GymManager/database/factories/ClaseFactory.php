@@ -23,4 +23,13 @@ class ClaseFactory extends Factory
             'maximo_participantes' => $this->faker->numberBetween(10, 30),
         ];
     }
+    public function configure()
+    {
+        return $this->afterCreating(function (Clase $clase) {
+            // Crear entre 1 y 5 horarios para cada clase
+            Horario::factory()->count($this->faker->numberBetween(1, 5))->create([
+                'clase_id' => $clase->id,
+            ]);
+        });
+    }
 }

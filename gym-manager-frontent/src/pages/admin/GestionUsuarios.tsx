@@ -7,6 +7,7 @@ import { BlueButtonAdmin } from "../../components/buttons/BlueButtonAdmin"
 import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin"
 import { User } from "../../type/user"
 import { ModalEditarFecha } from "../../components/modals/ModalEditarFecha"
+import { UserPanel } from "../../components/analitycs/UserPanel"
 
 type newUser = {
   name: string
@@ -46,7 +47,6 @@ const GestionUsuarios: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      console.log(nuevoUsuario)
       const response = await apiClient.post("/users", nuevoUsuario)
       setUsuarios([...usuarios, response.data])
       toast("Usuario añadido")
@@ -59,7 +59,6 @@ const GestionUsuarios: React.FC = () => {
   const handleSave = () => {
     toast("Usuario actualizado")
     try{
-      console.log(editingUser)
       apiClient.put(`/users/${editingUser?.id}`, editingUser)
      const userEdited = editingUser
      if (userEdited && userEdited.membresia) {
@@ -106,32 +105,13 @@ const GestionUsuarios: React.FC = () => {
     setEditingUser(null)
   }
 
-  const userStats = {
-    total: usuarios.length,
-    clientes: usuarios.filter((u) => u.role === "client").length,
-    admin: usuarios.filter((u) => u.role === "admin").length,
-  }
-
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-2xl font-bold mb-6 text-[#092756]">Gestión de Usuarios</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <h3 className="text-xl font-bold mb-4 text-[#092756]">Estadísticas de Usuarios</h3>
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-[#092756] text-white p-4 rounded-lg">
-              <p className="text-lg">Total Usuarios</p>
-              <p className="text-3xl font-bold">{userStats.total}</p>
-            </div>
-            <div className="bg-[#1c2541] text-white p-4 rounded-lg">
-              <p className="text-lg">Clientes</p>
-              <p className="text-3xl font-bold">{userStats.clientes}</p>
-            </div>
-            <div className="bg-[#3a506b] text-white p-4 rounded-lg">
-              <p className="text-lg">Administradores</p>
-              <p className="text-3xl font-bold">{userStats.admin}</p>
-            </div>
-          </div>
+            <UserPanel usuarios={usuarios} />
           <form onSubmit={handleSubmit} className="mb-6">
             <div className="grid grid-cols-2 gap-4">
               <input

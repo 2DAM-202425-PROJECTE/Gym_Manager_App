@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+    use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClaseController;
 use App\Http\Controllers\EntrenadorController;
 use App\Http\Controllers\MembresiaController;
+use App\Http\Controllers\PagoController;
 use App\Http\Controllers\TarifaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -42,6 +43,7 @@ Route::middleware([
         Route::apiResource('tarifas', TarifaController::class);
         Route::apiResource('entrenadors', EntrenadorController::class);
         Route::apiResource('clases', ClaseController::class);
+        Route::apiResource('pagos', PagoController::class);
     });
 });
 Route::middleware('auth:sanctum')->apiResource('membresias', MembresiaController::class);

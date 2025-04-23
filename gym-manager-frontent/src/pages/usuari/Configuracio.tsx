@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { User, Lock, Bell, CreditCard } from "lucide-react";
+import { User, Lock, CreditCard } from "lucide-react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Footer from "../../components/footer/footer";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,6 @@ export default function SettingsPage() {
   const tabs = [
     { id: "profile", label: "Perfil", icon: User },
     { id: "security", label: "Seguridad", icon: Lock },
-    { id: "notifications", label: "Notificaciones", icon: Bell },
     { id: "billing", label: "Facturación", icon: CreditCard },
   ];
   const [user, setUser] = useState<UserType>()
@@ -71,6 +70,7 @@ export default function SettingsPage() {
                         Nombre
                       </label>
                       <input
+                        value={user?.name}
                         type="text"
                         id="name"
                         name="name"
@@ -81,12 +81,9 @@ export default function SettingsPage() {
                       <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                         Correo Electrónico
                       </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500"
-                      />
+                      <p>
+                        {user?.email}
+                      </p>
                     </div>
                     <button className="px-4 py-2 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
                       Guardar Cambios
@@ -137,28 +134,7 @@ export default function SettingsPage() {
                   </form>
                 </div>
               )}
-              {activeTab === "notifications" && (
-                <div>
-                  <h3 className="text-xl font-semibold mb-4">Preferencias de Notificaciones</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center">
-                      <input type="checkbox" id="email-notifications" className="mr-2" />
-                      <label htmlFor="email-notifications">Recibir notificaciones por correo electrónico</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input type="checkbox" id="push-notifications" className="mr-2" />
-                      <label htmlFor="push-notifications">Recibir notificaciones push</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input type="checkbox" id="sms-notifications" className="mr-2" />
-                      <label htmlFor="sms-notifications">Recibir notificaciones por SMS</label>
-                    </div>
-                  </div>
-                  <button className="mt-4 px-4 py-2 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors">
-                    Guardar Preferencias
-                  </button>
-                </div>
-              )}
+             
               {activeTab === "billing" && (
                 <div>
                   <h3 className="text-xl font-semibold mb-4">Información de Facturación</h3>

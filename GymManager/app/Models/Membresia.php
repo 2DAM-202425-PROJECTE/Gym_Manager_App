@@ -15,6 +15,9 @@ class Membresia extends Model
         'fecha_fin',
         'qr_data',
     ];
+    protected $appends = [
+        'last_tarifa', // Ensure this accessor is included in JSON responses
+    ];
 
     public function user()
     {
@@ -28,5 +31,11 @@ class Membresia extends Model
     public function getFechaFinAttribute($value)
     {
         return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    public function getLastTarifaAttribute()
+    {
+        $lastPago = $this->pagos()->latest('fecha_pago')->first();
+        return $lastPago ? $lastPago->tarifa : null;
     }
 }
