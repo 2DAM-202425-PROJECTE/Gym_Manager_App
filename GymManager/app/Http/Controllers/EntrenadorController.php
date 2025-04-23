@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DiaSemana;
 use App\Models\Entrenador;
 use App\Models\User;
 use App\Models\ValoracionEntrenador;
@@ -13,6 +12,17 @@ use Illuminate\Validation\ValidationException;
 
 class EntrenadorController extends Controller
 {
+
+    public function trainer_info()
+    {
+        $user = Auth::user();
+
+        $trainer = Entrenador::with('clases')->where('entrenador_id', $user->id)->first();
+
+        return response()->json([
+            'trainer' => $trainer,
+        ]);
+    }
     public function index()
     {
         $entrenadores = Entrenador::with('user')
@@ -28,35 +38,34 @@ class EntrenadorController extends Controller
     public function store(Request $request)
     {
         try {
+            // Validar datos del usuario
+            $validated_user_info = $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|string',
+            ]);
 
-        // Validar datos del usuario
-        $validated_user_info = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string',
-        ]);
+            $validated = $request->validate([
+                'especialidad' => 'required|string',
+                'experiencia' => 'required|string',
+                'disponibilidad' => 'nullable|array',
+                'disponibilidad.*' => 'string',
+                'phone_number' => 'required|string',
+                'certificaciones' => 'required|string',
+                'descripcion' => 'nullable|string',
+            ]);
 
-        $validated = $request->validate([
-            'especialidad' => 'required|string',
-            'experiencia' => 'required|string',
-            'disponibilidad' => 'nullable|array',
-            'disponibilidad.*' => 'string',
-            'phone_number' => 'required|string',
-            'certificaciones' => 'required|string',
-            'descripcion' => 'nullable|string',
-        ]);
+            // Crear el usuario
+            $user = User::create(array_merge($validated_user_info, ['role' => 'trainer']));
 
+            // Asignar el permiso de trainer al usuario
+            $user->givePermissionTo('trainer');
 
+            // Crear el entrenador asociado al usuario
+            $validated['entrenador_id'] = $user->id;
+            $entrenador = Entrenador::create($validated);
 
-        // Crear el usuario
-        $user = User::create(array_merge($validated_user_info, ['role' => 'trainer']));
-
-        // Crear el entrenador asociado al usuario
-        $validated['entrenador_id'] = $user->id;
-        $entrenador = Entrenador::create($validated);
-
-
-        return response()->json($entrenador->load('user'));
+            return response()->json($entrenador->load('user'));
 
         } catch (ValidationException $ve) {
             Log::error('Error de validación: ' . $ve->getMessage());

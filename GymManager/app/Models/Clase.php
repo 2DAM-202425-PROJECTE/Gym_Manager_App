@@ -16,6 +16,9 @@ class Clase extends Model
         'id_entrenador',
         'maximo_participantes',
     ];
+
+    protected $appends = ['total_participantes'];
+
     public function entrenador()
     {
         return $this->belongsTo(User::class, 'id_entrenador');
@@ -31,5 +34,15 @@ class Clase extends Model
     public function horarios()
     {
         return $this->hasMany(Horario::class);
+    }
+
+    public function total_participantes_clase()
+    {
+        return $this->participantes()->count();
+    }
+
+    public function getTotalParticipantesAttribute()
+    {
+        return $this->total_participantes_clase();
     }
 }

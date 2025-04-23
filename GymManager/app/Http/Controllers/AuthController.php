@@ -20,11 +20,13 @@ class AuthController
         if (Auth::attempt($credentials)) {
             $user = Auth::user()->load('membresia', 'clases.horarios', 'clases.entrenador');
             $token = $user->createToken('YourAppName')->plainTextToken;
+            $permissions = $user->getAllPermissions()->pluck('name');
 
             return response()->json([
                 'message' => 'User logged in successfully',
                 'token' => $token,
                 'user' => $user,
+                'permissions' => $permissions, // Incluye los permisos en la respuesta
             ], 200);
         }
         return response()->json(['message' => 'Unauthorized'], 401);

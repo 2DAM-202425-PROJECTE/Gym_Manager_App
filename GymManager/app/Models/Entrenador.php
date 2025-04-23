@@ -39,4 +39,8 @@ class Entrenador extends Model
         return $this->valoraciones()->avg('puntuacion');
     }
 
+    public function clases()
+    {
+        return $this->hasMany(Clase::class, "id_entrenador", "entrenador_id");
+    }
 }

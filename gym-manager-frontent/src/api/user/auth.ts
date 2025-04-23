@@ -7,6 +7,8 @@ export async function login({ email, password }: { email: string; password: stri
     try {
         const response = await apiClient.post("/login", { email, password });
         const user = response.data.user as User;
+        const permisos = response.data.permissions as string[];
+        
         const token = response.data.token;
 
         if (token) {
@@ -16,8 +18,7 @@ export async function login({ email, password }: { email: string; password: stri
           console.warn("⚠️ No se recibió ningún token en la respuesta.");
         }
         toast.success('Inici de sessio correcte');
-        
-        return user;
+        return {user, permisos};
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         if (error.response) {

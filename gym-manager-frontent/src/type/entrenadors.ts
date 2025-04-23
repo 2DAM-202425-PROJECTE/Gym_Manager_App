@@ -1,3 +1,4 @@
+import { Clase } from "./clases";
 import { User } from "./user";
 
 export type Entrenador = {
@@ -12,4 +13,5 @@ export type Entrenador = {
     user: User;
     valoracion_media: number;
     nombre_completo?: string;
+    clases?: Clase[];
   };

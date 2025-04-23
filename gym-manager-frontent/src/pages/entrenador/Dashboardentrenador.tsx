@@ -1,15 +1,16 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Calendar, Clock, Users, MessageSquare, Settings, ChevronLeft, ChevronRight, Bell, User, LogOut, Dumbbell, BarChart2, Star, Plus, CheckCircle } from 'lucide-react'
-import Sidebar from "../../components/sidebar/sidebar"
+import {  Settings, Bell, User, LogOut, Dumbbell, Star } from 'lucide-react'
 import SidebarEntrenador from "./sidebarentrenadors"
 import ClasesEnt from "./ClasesEnt"
 import HorarioEnt from "./HorariEnt"
 import ResenasEnt from "./ResenaEnt"
 import StatsEntrenador from "../../components/cards/StatsEntrenador"
 import AjustesEntrenador from "./AjustesEnt"
-import Login from "../Login"
+import { use } from "i18next"
+import apiClient from "../../api/prefijo"
+import { Entrenador } from "../../type/entrenadors"
 
 // Tipos simplificados
 type Clase = {
@@ -23,14 +24,6 @@ type Clase = {
   sala: string
 }
 
-type Mensaje = {
-  id: number
-  remitente: string
-  contenido: string
-  fecha: Date
-  leido: boolean
-  avatar: string
-}
 
 type Resena = {
   id: number
@@ -58,10 +51,21 @@ export default function VistaEntrenador() {
   const horasDia = ["09:00", "10:00", "11:00", "17:00", "18:00", "19:00", "20:00"]
   
   // Datos de la aplicación
-  const [clases, setClases] = useState<Clase[]>([])
   const [resenas, setResenas] = useState<Resena[]>([])
-  
+
+
+  const [ entrenador, setEntrenador] = useState<Entrenador>()
+
   useEffect(() => {
+
+    async function fetchUser(){
+      const response = await apiClient.get("/trainer_info")
+      setEntrenador(response.data.trainer)
+      
+    }
+
+    fetchUser()
+
     // Datos simplificados
     const clasesData: Clase[] = [
       { id: 1, nombre: "Spinning", dia: "Lunes", hora: "10:00", duracion: 45, capacidad: 20, inscritos: 15, sala: "Sala 1" },
@@ -91,7 +95,6 @@ export default function VistaEntrenador() {
       },
     ]
     
-    setClases(clasesData)
     setResenas(resenasData)
   }, [])
   
@@ -114,22 +117,11 @@ export default function VistaEntrenador() {
   // Funciones auxiliares optimizadas
   const handlePrevWeek = () => setCurrentWeek(prev => prev - 1)
   const handleNextWeek = () => setCurrentWeek(prev => prev + 1)
-  const handleLogout = () => console.log("Cerrar sesión")
   
-  
-  
-  const getClasesPorDia = (dia: string) => clases.filter(clase => clase.dia === dia)
-  const getTotalInscritos = () => clases.reduce((total, clase) => total + clase.inscritos, 0)
-  
-  const getPorcentajeOcupacion = () => {
-    const capacidadTotal = clases.reduce((total, clase) => total + clase.capacidad, 0)
-    const inscritosTotal = getTotalInscritos()
-    return capacidadTotal > 0 ? Math.round((inscritosTotal / capacidadTotal) * 100) : 0
-  }
   
   const getClasesPopulares = () => {
-    return [...clases]
-      .sort((a, b) => (b.inscritos / b.capacidad) - (a.inscritos / a.capacidad))
+    return [...entrenador?.clases || []]
+      .sort((a, b) => (b.total_participantes / b.maximo_participantes) - (a.total_participantes / a.maximo_participantes))
       .slice(0, 3)
   }
   
@@ -239,9 +231,7 @@ export default function VistaEntrenador() {
 
             {/* Stats Cards */}
             <StatsEntrenador
-              clases={clases}
-              getTotalInscritos={getTotalInscritos}
-              getPorcentajeOcupacion={getPorcentajeOcupacion}
+              clases={entrenador?.clases || []}
             />
 
             {/* Clases Populares */}
@@ -254,12 +244,11 @@ export default function VistaEntrenador() {
                       <Dumbbell className="h-5 w-5 text-maroon-600 mr-3" />
                       <div>
                         <p className="font-medium">{clase.nombre}</p>
-                        <p className="text-sm text-gray-500">{clase.dia} a las {clase.hora}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">{clase.inscritos}/{clase.capacidad}</p>
-                      <p className="text-sm text-gray-500">{Math.round((clase.inscritos / clase.capacidad) * 100)}% ocupación</p>
+                      <p className="font-medium">{clase.total_participantes}/{clase.maximo_participantes}</p>
+                      <p className="text-sm text-gray-500">{Math.round((clase.total_participantes / clase.maximo_participantes) * 100)}% ocupación</p>
                     </div>
                   </div>
                 ))}

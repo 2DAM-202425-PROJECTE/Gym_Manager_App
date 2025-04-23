@@ -22,6 +22,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('my_info', [UserController::class, 'my_info']);
 });
 
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::middleware(['auth', 'can:trainer'])->group(function () {
+        Route::get('trainer_info', [EntrenadorController::class, 'trainer_info']);
+    });
+});
 
 Route::middleware([
     'auth:sanctum',

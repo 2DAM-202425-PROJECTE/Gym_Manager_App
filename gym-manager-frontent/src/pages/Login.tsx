@@ -8,8 +8,11 @@ import { DefaultButton } from "../components/buttons/ButtonDefault";
 import { SelectLanguage } from "../components/buttons/SelectLanguage";
 import { toast } from "react-toastify";
 
-type LoginResponse = User | { error: string };
-
+type LoginResponse = {
+  user: User;
+  permisos: string[]; // Ajusta el tipo de permisos según tu estructura real
+  error?: string; // Opcional, si hay un error
+};
 
 export default function Login() {
 
@@ -24,22 +27,26 @@ export default function Login() {
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const response = await login({ email: name, password: password }) as LoginResponse;
+    const {user, permisos} = await login({ email: name, password: password }) as LoginResponse;
 
-    if ("error" in response) {
+    if ("error" in user) {
       toast.error("error");
       return
     }
 
-    if(response.role === 'admin') {
+    if (permisos.includes("trainer")) {
+      navigate("/dashboardentrenador");
+      return;
+    }
+
+    if(user.role === 'admin') {
       navigate('/admin');
       return;
+      
     }else {
-       
 
-
-        if (response.membresia?.fecha_fin) {
-          const fechaFin = new Date(response.membresia.fecha_fin);
+        if (user.membresia?.fecha_fin) {
+          const fechaFin = new Date(user.membresia.fecha_fin);
           const fechaActual = new Date(); 
 
           console.log(localStorage.getItem("token"));
