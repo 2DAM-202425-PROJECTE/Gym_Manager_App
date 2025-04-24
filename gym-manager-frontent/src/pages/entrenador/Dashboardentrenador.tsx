@@ -3,55 +3,21 @@
 import { useState, useEffect, useRef } from "react"
 import {  Settings, Bell, User, LogOut, Dumbbell, Star } from 'lucide-react'
 import SidebarEntrenador from "./sidebarentrenadors"
-import ClasesEnt from "./ClasesEnt"
-import HorarioEnt from "./HorariEnt"
-import ResenasEnt from "./ResenaEnt"
+
 import StatsEntrenador from "../../components/cards/StatsEntrenador"
 import AjustesEntrenador from "./AjustesEnt"
-import { use } from "i18next"
 import apiClient from "../../api/prefijo"
 import { Entrenador } from "../../type/entrenadors"
-
-// Tipos simplificados
-type Clase = {
-  id: number
-  nombre: string
-  dia: string
-  hora: string
-  duracion: number
-  capacidad: number
-  inscritos: number
-  sala: string
-}
-
-
-type Resena = {
-  id: number
-  usuario: string
-  puntuacion: number
-  comentario: string
-  fecha: Date
-  avatar: string
-}
 
 export default function VistaEntrenador() {
   // Estados principales
   const [activeTab, setActiveTab] = useState("dashboard")
-  const [currentWeek, setCurrentWeek] = useState(0)
   const [showNotifications, setShowNotifications] = useState(false)
-  const [showProfileMenu, setShowProfileMenu] = useState(false)
-  const [selectedDay, setSelectedDay] = useState<string | null>(null)
-  
+  const [showProfileMenu, setShowProfileMenu] = useState(false)  
   // Referencias para cerrar menús al hacer clic fuera
   const notificationRef = useRef<HTMLDivElement>(null)
   const profileMenuRef = useRef<HTMLDivElement>(null)
   
-  // Datos estáticos
-  const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
-  const horasDia = ["09:00", "10:00", "11:00", "17:00", "18:00", "19:00", "20:00"]
-  
-  // Datos de la aplicación
-  const [resenas, setResenas] = useState<Resena[]>([])
 
 
   const [ entrenador, setEntrenador] = useState<Entrenador>()
@@ -60,42 +26,13 @@ export default function VistaEntrenador() {
 
     async function fetchUser(){
       const response = await apiClient.get("/trainer_info")
+      console.log(response.data)
       setEntrenador(response.data.trainer)
       
     }
 
     fetchUser()
-
-    // Datos simplificados
-    const clasesData: Clase[] = [
-      { id: 1, nombre: "Spinning", dia: "Lunes", hora: "10:00", duracion: 45, capacidad: 20, inscritos: 15, sala: "Sala 1" },
-      { id: 2, nombre: "Yoga", dia: "Miércoles", hora: "17:00", duracion: 60, capacidad: 15, inscritos: 12, sala: "Sala 2" },
-      { id: 3, nombre: "CrossFit", dia: "Martes", hora: "10:00", duracion: 45, capacidad: 12, inscritos: 10, sala: "Sala 3" },
-      { id: 4, nombre: "Pilates", dia: "Sábado", hora: "18:00", duracion: 60, capacidad: 15, inscritos: 8, sala: "Sala 2" },
-      { id: 5, nombre: "Zumba", dia: "Jueves", hora: "19:00", duracion: 45, capacidad: 25, inscritos: 22, sala: "Sala 1" },
-    ]
     
-    
-    const resenasData: Resena[] = [
-      { 
-        id: 1, 
-        usuario: "Elena Ruiz", 
-        puntuacion: 5, 
-        comentario: "Excelente entrenador, muy motivador y atento a los detalles.", 
-        fecha: new Date("2023-06-05"), 
-        avatar: "/placeholder.svg?height=40&width=40"
-      },
-      { 
-        id: 2, 
-        usuario: "Roberto Fernández", 
-        puntuacion: 4, 
-        comentario: "Buenas clases, aunque a veces van un poco rápido para principiantes.", 
-        fecha: new Date("2023-05-28"), 
-        avatar: "/placeholder.svg?height=40&width=40"
-      },
-    ]
-    
-    setResenas(resenasData)
   }, [])
   
   // Efecto para cerrar menús al hacer clic fuera
@@ -113,10 +50,6 @@ export default function VistaEntrenador() {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
-  
-  // Funciones auxiliares optimizadas
-  const handlePrevWeek = () => setCurrentWeek(prev => prev - 1)
-  const handleNextWeek = () => setCurrentWeek(prev => prev + 1)
   
   
   const getClasesPopulares = () => {
@@ -257,72 +190,21 @@ export default function VistaEntrenador() {
 
             {/* Últimas Reseñas */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-semibold mb-4">Últimas Reseñas</h3>
+              <h3 className="text-xl font-semibold mb-4">Valoracion media</h3>
               <div className="space-y-4">
-                {resenas.map((resena) => (
-                  <div key={resena.id} className="py-2 border-b last:border-b-0">
+                  <div className="py-2 border-b last:border-b-0">
                     <div className="flex items-center mb-2">
-                      <div className="w-8 h-8 rounded-full bg-gray-300 mr-2 overflow-hidden">
-                        <img 
-                          src={resena.avatar || "/placeholder.svg"} 
-                          alt={resena.usuario} 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
                       <div>
-                        <p className="font-medium">{resena.usuario}</p>
+                        <p className="font-medium">{entrenador?.valoracion_media}/5</p>
                         <div className="flex">
-                          {renderStars(resena.puntuacion)}
+                          {renderStars(entrenador?.valoracion_media || 0)}
                         </div>
                       </div>
-                      <p className="text-xs text-gray-500 ml-auto">{resena.fecha.toLocaleDateString()}</p>
                     </div>
-                    <p className="text-sm text-gray-700">{resena.comentario}</p>
                   </div>
-                ))}
               </div>
-              <button 
-                className="w-full mt-4 py-2 px-4 bg-maroon-600 text-white rounded hover:bg-maroon-700 transition-colors"
-                onClick={() => setActiveTab("resenas")}
-              >
-                Ver todas las reseñas
-              </button>
             </div>
           </div>
-        )}
-
-      
-        {/* Horario */}
-        {activeTab === "horario" && (
-          <HorarioEnt
-            clases={clases}
-            diasSemana={diasSemana}
-            horasDia={horasDia}
-            currentWeek={currentWeek}
-            selectedDay={selectedDay}
-            setSelectedDay={setSelectedDay}
-            handlePrevWeek={handlePrevWeek}
-            handleNextWeek={handleNextWeek}
-          />
-        )}
-
-        {/* Clases */}
-        {activeTab === "clases" && (
-          <ClasesEnt
-            clases={clases}
-            diasSemana={diasSemana}
-            getClasesPorDia={getClasesPorDia}
-          />
-        )}
-
-
-
-        {/* Reseñas */}
-        {activeTab === "resenas" && (
-          <ResenasEnt
-            resenas={resenas}
-            renderStars={renderStars}
-          />
         )}
 
         {/* Ajustes */}

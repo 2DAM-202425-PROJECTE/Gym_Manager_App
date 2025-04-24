@@ -67,10 +67,30 @@ const GestionEntrenadores: React.FC = () => {
       const response = await apiClient.post("/entrenadors", nuevoEntrenador)
       setEntrenadores([...entrenadores, response.data])
       toast("Entrenador añadido")
+    
+      setNuevoEntrenador(
+        {
+          name: "",
+          email: "",
+          phone_number: "",
+          especialidad: "",
+          experiencia: "",
+          disponibilidad: [],
+          certificaciones: "",
+          descripcion: "",
+          password: "",
+        }
+      )
+
+      const fieldPassword = document.getElementById("password") as HTMLFormElement
+      fieldPassword.value = ""
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    
     } catch (error) {
       toast.error("Error al añadir el entrenador")
     }
+
   }
 
   const handleSave = () => {
@@ -250,6 +270,7 @@ try{
                 rows={3}
               />
               <input
+                id="password"
                 type="password"
                 name="password"
                 onChange={handleSaveInputChange}

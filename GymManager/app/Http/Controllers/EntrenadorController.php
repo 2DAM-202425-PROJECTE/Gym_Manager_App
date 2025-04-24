@@ -12,12 +12,15 @@ use Illuminate\Validation\ValidationException;
 
 class EntrenadorController extends Controller
 {
-
     public function trainer_info()
     {
         $user = Auth::user();
 
         $trainer = Entrenador::with('clases')->where('entrenador_id', $user->id)->first();
+
+        if ($trainer) {
+            $trainer->valoracion_media = $trainer->valoracionMedia() ?? 0; // Asegura que no sea null
+        }
 
         return response()->json([
             'trainer' => $trainer,
