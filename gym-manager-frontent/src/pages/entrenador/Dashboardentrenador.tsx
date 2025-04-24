@@ -8,6 +8,9 @@ import StatsEntrenador from "../../components/cards/StatsEntrenador"
 import AjustesEntrenador from "./AjustesEnt"
 import apiClient from "../../api/prefijo"
 import { Entrenador } from "../../type/entrenadors"
+import HorarioEnt from "./HorariEnt"
+import ClasesEnt from "./ClasesEnt"
+import ResenasEnt from "./ResenaEnt"
 
 export default function VistaEntrenador() {
   // Estados principales
@@ -206,11 +209,34 @@ export default function VistaEntrenador() {
             </div>
           </div>
         )}
+        {/* Horario */}
+        {activeTab === "horario" && (
+          <HorarioEnt
+            clases={entrenador?.clases || []}
+          />
+        )}
 
-        {/* Ajustes */}
+        {/* Clases 
+        {activeTab === "clases" && (
+          <ClasesEnt
+            clases={entrenador?.clases || []}
+            diasSemana={diasSemana}
+            getClasesPorDia={getClasesPorDia}
+          />
+        )}
+
+
+
+        {activeTab === "resenas" && (
+          <ResenasEnt
+            resenas={resenas}
+            renderStars={renderStars}
+          />
+        )}
+
         {activeTab === "ajustes" && (
             <AjustesEntrenador />
-        )}
+        )}*/}
         </main>
         </div>
         )
