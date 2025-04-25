@@ -17,7 +17,7 @@ class EntrenadorFactory extends Factory
     public function definition(): array
     {
         return [
-            'entrenador_id' => User::factory(),
+            'entrenador_id' => User::factory()->create(),
             'especialidad' => $this->faker->word,
             'experiencia' => $this->faker->numberBetween(1, 10),
             'phone_number' => $this->faker->phoneNumber,

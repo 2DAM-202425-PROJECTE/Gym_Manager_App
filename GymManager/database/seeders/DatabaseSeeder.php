@@ -24,24 +24,18 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Disable foreign key constraints
-        DB::statement('PRAGMA foreign_keys = OFF;');
 
-        // Truncate tables
+        Entrenador::truncate();
+        User::truncate();
         Permission::query()->delete();
         Role::query()->delete();
-        User::truncate();
         Membresia::truncate();
-        Entrenador::truncate();
         Tarifa::truncate();
         Clase::truncate();
         Pago::truncate();
 
-
-        // Enable foreign key constraints
-        DB::statement('PRAGMA foreign_keys = ON;');
-
         // Seed data
-        User::factory(10)->create();
+        $users = User::factory(10)->create();
 
         RolesPermission::registerPolicies();
 
@@ -68,16 +62,14 @@ class DatabaseSeeder extends Seeder
             'meses' => 12,
         ]);
 
-// Create the membership first
         $membresia = $userWithMembresia->membresia()->create([
             'user_id' => $userWithMembresia->id,
-            'fecha_fin' => now()->addMonths(12), // Assuming 12 months for the membership
+            'fecha_fin' => now()->addMonths(12),
             'qr_data' => Str::uuid()->toString(),
         ]);
 
-// Create the payment associated with the membership and tariff
         $pago = Pago::create([
-            'membresia_id' => $membresia->id, // Use the created membership ID
+            'membresia_id' => $membresia->id,
             'tarifa_id' => $tarifa->id,
             'fecha_pago' => now(),
             'estado' => 'completado',
@@ -103,5 +95,25 @@ class DatabaseSeeder extends Seeder
         Tarifa::factory(2)->create();
         Pago::factory(5)->create();
         Clase::factory(5)->create();
+
+        $trainerUser = User::factory()->create([
+            'name' => 'trainer',
+            'email' => 'trainer@gmail.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $trainerUser->assignRole('trainer');
+
+        Entrenador::factory(5)->create([
+            'entrenador_id' => $trainerUser->id,
+        ]);
+
+        $clases = Clase::factory(3)->create([
+            'id_entrenador' => $trainerUser->id,
+        ]);
+
+        foreach ($clases as $clase) {
+            $clase->participantes()->attach($users->random(rand(1, 5))->pluck('id')->toArray());
+        }
     }
 }

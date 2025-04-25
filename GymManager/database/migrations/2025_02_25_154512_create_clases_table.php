@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->text('descripcion');
-            $table->foreignId('id_entrenador')->constrained('users'); // Relación con la tabla users
+            $table->foreignId('id_entrenador')->constrained('users')->onDelete('cascade'); // Relación con la tabla users
             $table->integer('maximo_participantes');
             $table->timestamps();
         });
