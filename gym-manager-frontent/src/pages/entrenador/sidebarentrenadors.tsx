@@ -61,7 +61,6 @@ export default function SidebarEntrenador({ activeTab, setActiveTab, mensajesNoL
             { tab: "dashboard", label: "Dashboard", icon: <BarChart2 className="h-5 w-5 mr-3" /> },
             { tab: "horario", label: "Horario", icon: <Calendar className="h-5 w-5 mr-3" /> },
             { tab: "clases", label: "Mis Clases", icon: <Users className="h-5 w-5 mr-3" /> },
-            { tab: "resenas", label: "Reseñas", icon: <Star className="h-5 w-5 mr-3" /> },
             { tab: "ajustes", label: "Ajustes", icon: <Settings className="h-5 w-5 mr-3" /> },
           ].map(({ tab, label, icon }) => (
             <button
