@@ -19,7 +19,7 @@ class EntrenadorController extends Controller
         $trainer = Entrenador::with('clases.horarios')->where('entrenador_id', $user->id)->first();
 
         if ($trainer) {
-            $trainer->valoracion_media = $trainer->valoracionMedia() ?? 0; // Asegura que no sea null
+            $trainer->valoracion_media = $trainer->valoracionMedia() ?? 0;
         }
 
         return response()->json([
