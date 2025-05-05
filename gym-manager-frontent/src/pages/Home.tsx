@@ -112,12 +112,7 @@ export default function Home() {
             {user && (
               <div className="flex items-center space-x-4">
                 <div className="relative">
-                  <button
-                    onClick={() => setShowNotifications(!showNotifications)}
-                    className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors relative"
-                  >
-
-                  </button>
+            
                   {showNotifications && (
                     <div
                       ref={notificationRef}

@@ -41,7 +41,7 @@ export default function Sidebar() {
       {/* Botón para mostrar/ocultar el sidebar en móvil */}
       <button
         id="sidebar-toggle"
-        className="fixed top-4 left-4 z-50 p-2 rounded-md bg-white shadow-md md:hidden"
+        className="fixed top-4 left-4 z-50 p-2 rounded-xl bg-white shadow-md md:hidden"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <X className="h-6 w-6 text-maroon-600" /> : <Menu className="h-6 w-6 text-maroon-600" />}

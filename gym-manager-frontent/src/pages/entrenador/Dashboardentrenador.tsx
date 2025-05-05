@@ -7,7 +7,6 @@ import SidebarEntrenador from "./sidebarentrenadors"
 import StatsEntrenador from "../../components/cards/StatsEntrenador"
 import apiClient from "../../api/prefijo"
 import { Entrenador } from "../../type/entrenadors"
-import HorarioEnt from "./HorariEnt"
 import ClasesEnt from "./ClasesEnt"
 import HorarioRectangular from "./HorariEnt"
 
@@ -90,14 +89,7 @@ export default function VistaEntrenador() {
           </h2>
           <div className="flex items-center space-x-4">
             <div className="relative">
-              <button
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors relative"
-              >
-                <Bell className="h-5 w-5 text-gray-600" />
-              
-    
-              </button>
+            
               {showNotifications && (
                 <div ref={notificationRef} className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10">
                   <div className="py-2 px-4 bg-gray-100 text-gray-800 font-semibold rounded-t-md">
