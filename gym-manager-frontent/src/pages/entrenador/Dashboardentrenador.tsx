@@ -5,12 +5,10 @@ import {  Settings, Bell, User, LogOut, Dumbbell, Star } from 'lucide-react'
 import SidebarEntrenador from "./sidebarentrenadors"
 
 import StatsEntrenador from "../../components/cards/StatsEntrenador"
-import AjustesEntrenador from "./AjustesEnt"
 import apiClient from "../../api/prefijo"
 import { Entrenador } from "../../type/entrenadors"
 import HorarioEnt from "./HorariEnt"
 import ClasesEnt from "./ClasesEnt"
-import ResenasEnt from "./ResenaEnt"
 
 export default function VistaEntrenador() {
   // Estados principales
@@ -128,7 +126,7 @@ export default function VistaEntrenador() {
                 className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden"
               >
                 <img
-                  src="/placeholder.svg?height=40&width=40"
+                  src="/src/assets/users.png"
                   alt="Perfil"
                   className="w-full h-full object-cover"
                 />
@@ -216,16 +214,14 @@ export default function VistaEntrenador() {
           />
         )}
 
-        {/* Clases 
         {activeTab === "clases" && (
           <ClasesEnt
             clases={entrenador?.clases || []}
-            diasSemana={diasSemana}
-            getClasesPorDia={getClasesPorDia}
           />
         )}
 
 
+        {/* Clases 
 
         {activeTab === "resenas" && (
           <ResenasEnt
