@@ -35,17 +35,32 @@ const horas = [
   "18:00", "19:00", "20:00", "21:00"
 ]
 
+function normalizarHora(hora: string) {
+  if (hora.length === 4 && !hora.includes(':')) {
+    return `${hora.slice(0, 2)}:${hora.slice(2)}`
+  }
+  return hora
+}
+
 function compararHoras(h1: string, h2: string) {
-  return h1.localeCompare(h2)
+  const hora1 = normalizarHora(h1)
+  const hora2 = normalizarHora(h2)
+  return hora1.localeCompare(hora2)
 }
 
 function esHoraDentroDeRango(hora: string, inicio: string, fin: string) {
-  return compararHoras(hora, inicio) >= 0 && compararHoras(hora, fin) < 0
+  const h = normalizarHora(hora)
+  const i = normalizarHora(inicio)
+  const f = normalizarHora(fin)
+  return compararHoras(h, i) >= 0 && compararHoras(h, f) < 0
 }
 
 function contarHoras(horaInicio: string, horaFin: string) {
-  const [h1] = horaInicio.split(":").map(Number)
-  const [h2] = horaFin.split(":").map(Number)
+  const inicio = normalizarHora(horaInicio)
+  const fin = normalizarHora(horaFin)
+  
+  const [h1] = inicio.split(":").map(Number)
+  const [h2] = fin.split(":").map(Number)
   return h2 - h1
 }
 
@@ -65,15 +80,13 @@ export default function HorarioRectangular({ clases }: Props) {
 
   // Crear una estructura para almacenar la información
   const mapa: Record<string, Record<string, { clase: Clase; horario: Horario }[]>> = {}
-  const renderizado: Record<string, Record<string, boolean>> = {}
+  const horariosRenderizados = new Set<string>()
 
-  // Inicializar mapa y renderizado para cada día y cada hora
+  // Inicializar mapa para cada día y cada hora
   diasSemana.forEach((dia) => {
     mapa[dia] = {}
-    renderizado[dia] = {}
     horas.forEach((hora) => {
       mapa[dia][hora] = []
-      renderizado[dia][hora] = false
     })
   })
 
@@ -89,6 +102,11 @@ export default function HorarioRectangular({ clases }: Props) {
       })
     })
   })
+
+  // Función para generar un ID único para cada horario
+  const getHorarioId = (dia: string, horaInicio: string) => {
+    return `${dia}-${normalizarHora(horaInicio)}`
+  }
 
   return (
     <div className="overflow-auto p-4">
@@ -108,36 +126,28 @@ export default function HorarioRectangular({ clases }: Props) {
               {diasSemana.map((dia) => {
                 const slots = mapa[dia][hora]
                 
-                // Si no hay clases en este slot o ya fue renderizado, retornar celda vacía
-                if (slots.length === 0 || renderizado[dia][hora]) {
+                // Si no hay clases en este slot, retornar celda vacía
+                if (slots.length === 0) {
                   return <td key={`${dia}-${hora}`} className="border h-16 text-center" />
                 }
 
                 // Buscar el primer slot que no haya sido renderizado aún
                 const slot = slots.find(s => {
-                  const duracion = contarHoras(s.horario.hora_inicio, s.horario.hora_fin)
-                  const horaIndex = horas.indexOf(hora)
-                  return !horas.slice(horaIndex, horaIndex + duracion).some(h => renderizado[dia][h])
+                  const horarioId = getHorarioId(dia, s.horario.hora_inicio)
+                  return !horariosRenderizados.has(horarioId)
                 })
 
                 if (!slot) {
                   return <td key={`${dia}-${hora}`} className="border h-16 text-center" />
                 }
 
-                // Calcular la duración de la clase
                 const duracion = contarHoras(slot.horario.hora_inicio, slot.horario.hora_fin)
-
-                // Marcar las siguientes horas como ya renderizadas para esta clase
-                for (let j = 0; j < duracion; j++) {
-                  const horaIndex = horas.indexOf(hora)
-                  if (horaIndex + j < horas.length) {
-                    renderizado[dia][horas[horaIndex + j]] = true
-                  }
-                }
+                const horarioId = getHorarioId(dia, slot.horario.hora_inicio)
+                horariosRenderizados.add(horarioId)
 
                 return (
                   <td
-                    key={`${dia}-${hora}`}
+                    key={`${dia}-${hora}-${horarioId}`}
                     rowSpan={duracion}
                     className="border relative p-0"
                   >
@@ -146,7 +156,9 @@ export default function HorarioRectangular({ clases }: Props) {
                       className="absolute inset-0 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-xs p-2 cursor-pointer shadow-md transition-all flex flex-col justify-center items-center"
                     >
                       <strong className="text-sm">{slot.clase.nombre}</strong>
-                      <span>{slot.horario.hora_inicio} - {slot.horario.hora_fin}</span>
+                      <span>
+                        {normalizarHora(slot.horario.hora_inicio)} - {normalizarHora(slot.horario.hora_fin)}
+                      </span>
                     </div>
                   </td>
                 )
@@ -169,7 +181,7 @@ export default function HorarioRectangular({ clases }: Props) {
             <h2 className="text-lg font-semibold mb-1">{selectedClase.nombre}</h2>
             <p className="text-sm text-gray-700 mb-2">{selectedClase.descripcion}</p>
             <p className="text-sm"><strong>Día:</strong> {selectedHorario.dia}</p>
-            <p className="text-sm"><strong>Hora:</strong> {selectedHorario.hora_inicio} - {selectedHorario.hora_fin}</p>
+            <p className="text-sm"><strong>Hora:</strong> {normalizarHora(selectedHorario.hora_inicio)} - {normalizarHora(selectedHorario.hora_fin)}</p>
             <p className="text-sm"><strong>Participantes:</strong> {selectedClase.total_participantes}/{selectedClase.maximo_participantes}</p>
           </div>
         </div>
