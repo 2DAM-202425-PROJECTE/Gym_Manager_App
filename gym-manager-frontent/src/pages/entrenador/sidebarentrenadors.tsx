@@ -1,4 +1,4 @@
-import { BarChart2, Calendar, Dumbbell, Settings, Users, Menu } from "lucide-react";
+import { BarChart2, Calendar, Dumbbell, Users, Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 import apiClient from "../../api/prefijo";
 import { Entrenador } from "../../type/entrenadors";
@@ -60,7 +60,7 @@ export default function SidebarEntrenador({ activeTab, setActiveTab }: SidebarEn
         <div className="p-4">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full bg-maroon-100 flex items-center justify-center overflow-hidden">
-              <img src="/placeholder.svg?height=48&width=48" alt="Entrenador" className="w-full h-full object-cover" />
+              <img src="/src/assets/user.png" alt="Entrenador" className="w-full h-full object-cover" />
             </div>
             <div>
               <h2 className="font-semibold text-gray-800 text-sm">{entrenador?.user.name}</h2>
@@ -73,7 +73,6 @@ export default function SidebarEntrenador({ activeTab, setActiveTab }: SidebarEn
             { tab: "dashboard", label: "Dashboard", icon: <BarChart2 className="h-5 w-5 mr-3" /> },
             { tab: "horario", label: "Horario", icon: <Calendar className="h-5 w-5 mr-3" /> },
             { tab: "clases", label: "Mis Clases", icon: <Users className="h-5 w-5 mr-3" /> },
-            { tab: "ajustes", label: "Ajustes", icon: <Settings className="h-5 w-5 mr-3" /> },
           ].map(({ tab, label, icon }) => (
             <button
               key={tab}
