@@ -1,171 +1,96 @@
-import { useState, useMemo } from "react"
-import { format, parse, addMinutes } from "date-fns"
-import { Clase } from "../../type/clases"
 
-interface WeeklyClassScheduleProps {
-  classes: Clase[]
+type Horario = {
+  id: number
+  clase_id: number
+  dia: string
+  hora_inicio: string
+  hora_fin: string
+  created_at: string
+  updated_at: string
 }
 
-// Map Spanish day names to English for sorting
-const dayOrder = {
-  lunes: 0,
-  martes: 1,
-  miércoles: 2,
-  jueves: 3,
-  viernes: 4,
-  sábado: 5,
-  domingo: 6,
+type Clase = {
+  id: number
+  nombre: string
+  descripcion: string
+  id_entrenador: number
+  maximo_participantes: number
+  created_at: string
+  updated_at: string
+  total_participantes: number
+  horarios: Horario[]
 }
 
-// Time slot interval in minutes
-const TIME_SLOT_INTERVAL = 30
+type Props = {
+  clases: Clase[]
+}
 
-export default function HorarioEnt({ classes }: WeeklyClassScheduleProps) {
-  const [hoveredClass, setHoveredClass] = useState<Clase | null>(null)
+const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+const horas = [
+  "08:00", "09:00", "10:00", "11:00", "12:00",
+  "13:00", "14:00", "15:00", "16:00", "17:00",
+  "18:00", "19:00", "20:00", "21:00"
+]
 
-  // Process the data to organize classes by day and time
-  const { timeSlots, classesByDayAndTime, days } = useMemo(() => {
-    // Extract all unique days from classes
-    const uniqueDays = Array.from(
-      new Set(
-        classes.flatMap((clase) =>
-          Array.isArray(clase.horarios) ? clase.horarios.map((h) => h.dia) : []
-        )
-      )
-    ).sort((a, b) => dayOrder[a.toLowerCase()] - dayOrder[b.toLowerCase()])
-    
-    // Find earliest and latest times across all classes
-    let earliestTime = "23:59"
-    let latestTime = "00:00"
+function compararHoras(h1: string, h2: string) {
+  return h1.localeCompare(h2)
+}
 
-    classes.forEach((clase) => {
-      clase.horarios.forEach((horario) => {
-        if (horario.hora_inicio < earliestTime) earliestTime = horario.hora_inicio
-        if (horario.hora_fin > latestTime) latestTime = horario.hora_fin
-      })
+function esHoraDentroDeRango(hora: string, inicio: string, fin: string) {
+  return compararHoras(hora, inicio) >= 0 && compararHoras(hora, fin) < 0
+}
+
+export default function HorarioRectangular({ clases }: Props) {
+  const mapa: Record<string, Record<string, { clase: Clase; horario: Horario }>> = {}
+
+  // Inicializar el mapa vacío
+  diasSemana.forEach((dia) => {
+    mapa[dia] = {}
+    horas.forEach((hora) => {
+      mapa[dia][hora] = null
     })
+  })
 
-    // Generate time slots from earliest to latest in 30-minute intervals
-    const startTime = parse(earliestTime, "HH:mm", new Date())
-    const endTime = parse(latestTime, "HH:mm", new Date())
-
-    const slots = []
-    let currentTime = startTime
-
-    while (currentTime <= endTime) {
-      slots.push(format(currentTime, "HH:mm"))
-      currentTime = addMinutes(currentTime, TIME_SLOT_INTERVAL)
-    }
-
-    // Organize classes by day and time
-    const classesByDayAndTime: Record<string, Record<string, Clase[]>> = {}
-
-    uniqueDays.forEach((day) => {
-      classesByDayAndTime[day] = {}
-      slots.forEach((slot) => {
-        classesByDayAndTime[day][slot] = []
-      })
-    })
-
-    classes.forEach((clase) => {
-      clase.horarios.forEach((horario) => {
-        const startTimeStr = horario.hora_inicio
-        const endTimeStr = horario.hora_fin
-
-        // Find all slots that this class spans
-        const classStartTime = parse(startTimeStr, "HH:mm", new Date())
-        const classEndTime = parse(endTimeStr, "HH:mm", new Date())
-
-        slots.forEach((slot) => {
-          const slotTime = parse(slot, "HH:mm", new Date())
-          if (slotTime >= classStartTime && slotTime < classEndTime) {
-            if (!classesByDayAndTime[horario.dia][slot]) {
-              classesByDayAndTime[horario.dia][slot] = []
+  // Llenar el mapa con las clases en su día y hora
+  clases.forEach((clase) => {
+    clase.horarios.forEach((horario) => {
+      diasSemana.forEach((dia) => {
+        if (horario.dia === dia) {
+          horas.forEach((hora) => {
+            if (esHoraDentroDeRango(hora, horario.hora_inicio, horario.hora_fin)) {
+              mapa[horario.dia][hora] = { clase, horario }
             }
-
-            // Only add the class if it's not already in this slot
-            const alreadyAdded = classesByDayAndTime[horario.dia][slot].some((c) => c.id === clase.id)
-            if (!alreadyAdded) {
-              classesByDayAndTime[horario.dia][slot].push({
-                ...clase,
-                horarios: [horario], // Include only the relevant horario
-              })
-            }
-          }
-        })
+          })
+        }
       })
     })
-
-    return {
-      timeSlots: slots,
-      classesByDayAndTime,
-      days: uniqueDays,
-    }
-  }, [classes])
-
-  // Format day name for display
-  const formatDayName = (day: string) => {
-    return day.charAt(0).toUpperCase() + day.slice(1)
-  }
+  })
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full border-collapse">
+    <div className="overflow-auto p-4">
+      <table className="w-full border-collapse">
         <thead>
-          <tr className="bg-gray-100">
-            <th className="border p-2 min-w-[80px]">Hora</th>
-            {days.map((day) => (
-              <th key={day} className="border p-2 min-w-[150px]">
-                {formatDayName(day)}
-              </th>
+          <tr>
+            <th className="border px-4 py-2 bg-gray-200 w-24">Hora</th>
+            {diasSemana.map((dia) => (
+              <th key={dia} className="border px-4 py-2 bg-gray-200 text-center">{dia}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {timeSlots.map((timeSlot, index) => (
-            <tr key={timeSlot} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-              <td className="border p-2 text-center font-medium">{timeSlot}</td>
-              {days.map((day) => {
-                const classesInSlot = classesByDayAndTime[day]?.[timeSlot] || []
-
+          {horas.map((hora) => (
+            <tr key={hora}>
+              <td className="border px-2 py-2 text-sm bg-gray-100 text-center">{hora}</td>
+              {diasSemana.map((dia) => {
+                const slot = mapa[dia][hora]
                 return (
-                  <td key={`${day}-${timeSlot}`} className="border p-1 relative">
-                    {classesInSlot.map((clase) => {
-                      // Check if this is the first slot for this class in this day
-                      const horario = clase.horarios[0]
-                      const isFirstSlot = horario.hora_inicio === timeSlot
-
-                      // Only render the class card on the first slot it appears in
-                      if (!isFirstSlot) return null
-
-                      // Calculate how many slots this class spans
-                      const startTime = parse(horario.hora_inicio, "HH:mm", new Date())
-                      const endTime = parse(horario.hora_fin, "HH:mm", new Date())
-                      const durationMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60)
-                      const rowSpan = Math.ceil(durationMinutes / TIME_SLOT_INTERVAL)
-
-                      return (
-                        <div
-                          key={clase.id}
-                          className={`
-                            p-1 rounded text-xs mb-1 cursor-pointer
-                            ${hoveredClass?.id === clase.id ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}
-                            transition-colors duration-200
-                          `}
-                          onMouseEnter={() => setHoveredClass(clase)}
-                          onMouseLeave={() => setHoveredClass(null)}
-                        >
-                          <div className="font-bold">{clase.nombre}</div>
-                          <div className="text-xs">
-                            {horario.hora_inicio} - {horario.hora_fin}
-                          </div>
-                          <div className="text-xs truncate">{clase.entrenador?.name || "Sin entrenador"}</div>
-                          <div className="text-xs">
-                            {clase.total_participantes}/{clase.maximo_participantes} participantes
-                          </div>
-                        </div>
-                      )
-                    })}
+                  <td key={dia + hora} className="border h-16 text-center align-middle">
+                    {slot ? (
+                      <div className="bg-blue-500 text-white rounded p-1 text-xs">
+                        <strong>{slot.clase.nombre}</strong><br />
+                        {slot.horario.hora_inicio} - {slot.horario.hora_fin}
+                      </div>
+                    ) : null}
                   </td>
                 )
               })}
@@ -173,23 +98,6 @@ export default function HorarioEnt({ classes }: WeeklyClassScheduleProps) {
           ))}
         </tbody>
       </table>
-
-      {/* Class details popup when hovering */}
-      {hoveredClass && (
-        <div className="fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 max-w-sm border border-gray-200 z-10">
-          <h3 className="font-bold text-lg">{hoveredClass.nombre}</h3>
-          <p className="text-sm text-gray-600 mt-1">{hoveredClass.descripcion}</p>
-          <div className="mt-2">
-            <p className="text-sm">
-              <span className="font-medium">Entrenador:</span> {hoveredClass.entrenador?.name || "Sin entrenador"}
-            </p>
-            <p className="text-sm">
-              <span className="font-medium">Participantes:</span> {hoveredClass.total_participantes}/
-              {hoveredClass.maximo_participantes}
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

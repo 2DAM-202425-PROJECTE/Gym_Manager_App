@@ -1,6 +1,8 @@
-import { BarChart2, Calendar, Dumbbell, MessageSquare, Settings, Star, Users, Menu } from "lucide-react";
-import { useContext, useState, useEffect } from "react";
-import { UserContext } from "../../context/userContext";
+import { BarChart2, Calendar, Dumbbell, Settings, Users, Menu } from "lucide-react";
+import { useState, useEffect } from "react";
+import apiClient from "../../api/prefijo";
+import { Entrenador } from "../../type/entrenadors";
+
 
 interface SidebarEntrenadorProps {
   activeTab: string;
@@ -8,11 +10,11 @@ interface SidebarEntrenadorProps {
   mensajesNoLeidos: number;
 }
 
-export default function SidebarEntrenador({ activeTab, setActiveTab, mensajesNoLeidos }: SidebarEntrenadorProps) {
-  const { userContext } = useContext(UserContext);
+export default function SidebarEntrenador({ activeTab, setActiveTab }: SidebarEntrenadorProps) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const [entrenador, setEntrenador] = useState<Entrenador>();
   useEffect(() => {
+
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -22,6 +24,16 @@ export default function SidebarEntrenador({ activeTab, setActiveTab, mensajesNoL
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    async function fetchTrainer () {
+
+    const response = await apiClient.get("/trainer_info")
+    console.log(response.data)
+    setEntrenador(response.data.trainer)
+    }
+    fetchTrainer()
+  }, [])
 
   return (
     <>
@@ -51,8 +63,8 @@ export default function SidebarEntrenador({ activeTab, setActiveTab, mensajesNoL
               <img src="/placeholder.svg?height=48&width=48" alt="Entrenador" className="w-full h-full object-cover" />
             </div>
             <div>
-              <h2 className="font-semibold text-gray-800 text-sm">{userContext.user.name}</h2>
-              <p className="text-xs text-gray-500">{userContext.user.email}</p>
+              <h2 className="font-semibold text-gray-800 text-sm">{entrenador?.user.name}</h2>
+              <p className="text-xs text-gray-500">{entrenador?.user.email}</p>
             </div>
           </div>
         </div>

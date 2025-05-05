@@ -16,7 +16,7 @@ class EntrenadorController extends Controller
     {
         $user = Auth::user();
 
-        $trainer = Entrenador::with('clases.horarios')->where('entrenador_id', $user->id)->first();
+        $trainer = Entrenador::with('clases.horarios', 'user')->where('entrenador_id', $user->id)->first();
 
         if ($trainer) {
             $trainer->valoracion_media = $trainer->valoracionMedia() ?? 0;

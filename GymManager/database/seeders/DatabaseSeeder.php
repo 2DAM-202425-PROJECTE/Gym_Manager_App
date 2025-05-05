@@ -23,7 +23,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Disable foreign key constraints
 
         Entrenador::truncate();
         User::truncate();
@@ -34,7 +33,6 @@ class DatabaseSeeder extends Seeder
         Clase::truncate();
         Pago::truncate();
 
-        // Seed data
         $users = User::factory(10)->create();
 
         RolesPermission::registerPolicies();
@@ -104,7 +102,7 @@ class DatabaseSeeder extends Seeder
 
         $trainerUser->assignRole('trainer');
 
-        Entrenador::factory(5)->create([
+        Entrenador::factory(1)->create([
             'entrenador_id' => $trainerUser->id,
         ]);
 
