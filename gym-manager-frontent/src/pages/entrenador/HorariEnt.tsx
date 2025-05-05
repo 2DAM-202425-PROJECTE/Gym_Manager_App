@@ -43,6 +43,12 @@ function esHoraDentroDeRango(hora: string, inicio: string, fin: string) {
   return compararHoras(hora, inicio) >= 0 && compararHoras(hora, fin) < 0
 }
 
+function contarHoras(horaInicio: string, horaFin: string) {
+  const [h1] = horaInicio.split(":").map(Number)
+  const [h2] = horaFin.split(":").map(Number)
+  return h2 - h1
+}
+
 export default function HorarioRectangular({ clases }: Props) {
   const [selectedClase, setSelectedClase] = useState<Clase | null>(null)
   const [selectedHorario, setSelectedHorario] = useState<Horario | null>(null)
@@ -57,21 +63,28 @@ export default function HorarioRectangular({ clases }: Props) {
     setSelectedHorario(null)
   }
 
-  const mapa: Record<string, Record<string, { clase: Clase; horario: Horario } | null>> = {}
+  // Crear una estructura para almacenar la información
+  const mapa: Record<string, Record<string, { clase: Clase; horario: Horario }[]>> = {}
+  const renderizado: Record<string, Record<string, boolean>> = {}
 
+  // Inicializar mapa y renderizado para cada día y cada hora
   diasSemana.forEach((dia) => {
     mapa[dia] = {}
+    renderizado[dia] = {}
     horas.forEach((hora) => {
-      mapa[dia][hora] = null
+      mapa[dia][hora] = []
+      renderizado[dia][hora] = false
     })
   })
 
+  // Asignar las clases a sus respectivos días y horas
   clases.forEach((clase) => {
     clase.horarios.forEach((horario) => {
       if (!diasSemana.includes(horario.dia)) return
+      
       horas.forEach((hora) => {
         if (esHoraDentroDeRango(hora, horario.hora_inicio, horario.hora_fin)) {
-          mapa[horario.dia][hora] = { clase, horario }
+          mapa[horario.dia][hora].push({ clase, horario })
         }
       })
     })
@@ -79,32 +92,62 @@ export default function HorarioRectangular({ clases }: Props) {
 
   return (
     <div className="overflow-auto p-4">
-      <table className="w-full border-collapse">
+      <table className="w-full border-collapse text-sm">
         <thead>
           <tr>
-            <th className="border px-4 py-2 bg-gray-200 w-24">Hora</th>
+            <th className="bg-zinc-100 text-zinc-700 px-3 py-2 text-left w-20">Hora</th>
             {diasSemana.map((dia) => (
-              <th key={dia} className="border px-4 py-2 bg-gray-200 text-center">{dia}</th>
+              <th key={dia} className="bg-zinc-100 text-center px-3 py-2 text-zinc-700">{dia}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {horas.map((hora) => (
             <tr key={hora}>
-              <td className="border px-2 py-2 text-sm bg-gray-100 text-center">{hora}</td>
+              <td className="bg-zinc-50 text-center border px-2 py-2">{hora}</td>
               {diasSemana.map((dia) => {
-                const slot = mapa[dia][hora]
+                const slots = mapa[dia][hora]
+                
+                // Si no hay clases en este slot o ya fue renderizado, retornar celda vacía
+                if (slots.length === 0 || renderizado[dia][hora]) {
+                  return <td key={`${dia}-${hora}`} className="border h-16 text-center" />
+                }
+
+                // Buscar el primer slot que no haya sido renderizado aún
+                const slot = slots.find(s => {
+                  const duracion = contarHoras(s.horario.hora_inicio, s.horario.hora_fin)
+                  const horaIndex = horas.indexOf(hora)
+                  return !horas.slice(horaIndex, horaIndex + duracion).some(h => renderizado[dia][h])
+                })
+
+                if (!slot) {
+                  return <td key={`${dia}-${hora}`} className="border h-16 text-center" />
+                }
+
+                // Calcular la duración de la clase
+                const duracion = contarHoras(slot.horario.hora_inicio, slot.horario.hora_fin)
+
+                // Marcar las siguientes horas como ya renderizadas para esta clase
+                for (let j = 0; j < duracion; j++) {
+                  const horaIndex = horas.indexOf(hora)
+                  if (horaIndex + j < horas.length) {
+                    renderizado[dia][horas[horaIndex + j]] = true
+                  }
+                }
+
                 return (
-                  <td key={dia + hora} className="border h-16 text-center align-middle">
-                    {slot ? (
-                      <div
-                        onClick={() => abrirPopup(slot.clase, slot.horario)}
-                        className="bg-blue-500 text-white rounded p-1 text-xs cursor-pointer hover:bg-blue-600 transition"
-                      >
-                        <strong>{slot.clase.nombre}</strong><br />
-                        {slot.horario.hora_inicio} - {slot.horario.hora_fin}
-                      </div>
-                    ) : null}
+                  <td
+                    key={`${dia}-${hora}`}
+                    rowSpan={duracion}
+                    className="border relative p-0"
+                  >
+                    <div
+                      onClick={() => abrirPopup(slot.clase, slot.horario)}
+                      className="absolute inset-0 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-xs p-2 cursor-pointer shadow-md transition-all flex flex-col justify-center items-center"
+                    >
+                      <strong className="text-sm">{slot.clase.nombre}</strong>
+                      <span>{slot.horario.hora_inicio} - {slot.horario.hora_fin}</span>
+                    </div>
                   </td>
                 )
               })}
@@ -115,20 +158,19 @@ export default function HorarioRectangular({ clases }: Props) {
 
       {/* Popup */}
       {selectedClase && selectedHorario && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl shadow-lg max-w-sm w-full p-6 relative">
             <button
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+              className="absolute top-2 right-2 text-gray-500 hover:text-black text-lg"
               onClick={cerrarPopup}
             >
               ✕
             </button>
-            <h2 className="text-xl font-semibold mb-2">{selectedClase.nombre}</h2>
+            <h2 className="text-lg font-semibold mb-1">{selectedClase.nombre}</h2>
             <p className="text-sm text-gray-700 mb-2">{selectedClase.descripcion}</p>
-            <p className="text-sm mb-1"><strong>Día:</strong> {selectedHorario.dia}</p>
-            <p className="text-sm mb-1"><strong>Hora:</strong> {selectedHorario.hora_inicio} - {selectedHorario.hora_fin}</p>
-            <p className="text-sm mb-1"><strong>Participantes:</strong> {selectedClase.total_participantes}/{selectedClase.maximo_participantes}</p>
-            <p className="text-xs text-gray-500 mt-4">Clase ID: {selectedClase.id}</p>
+            <p className="text-sm"><strong>Día:</strong> {selectedHorario.dia}</p>
+            <p className="text-sm"><strong>Hora:</strong> {selectedHorario.hora_inicio} - {selectedHorario.hora_fin}</p>
+            <p className="text-sm"><strong>Participantes:</strong> {selectedClase.total_participantes}/{selectedClase.maximo_participantes}</p>
           </div>
         </div>
       )}

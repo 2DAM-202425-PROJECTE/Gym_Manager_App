@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import {  Settings, Bell, User, LogOut, Dumbbell, Star } from 'lucide-react'
+import { Bell, LogOut, Dumbbell, Star } from 'lucide-react'
 import SidebarEntrenador from "./sidebarentrenadors"
 
 import StatsEntrenador from "../../components/cards/StatsEntrenador"
@@ -9,13 +9,13 @@ import apiClient from "../../api/prefijo"
 import { Entrenador } from "../../type/entrenadors"
 import HorarioEnt from "./HorariEnt"
 import ClasesEnt from "./ClasesEnt"
+import HorarioRectangular from "./HorariEnt"
 
 export default function VistaEntrenador() {
   // Estados principales
   const [activeTab, setActiveTab] = useState("dashboard")
   const [showNotifications, setShowNotifications] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)  
-  // Referencias para cerrar menús al hacer clic fuera
   const notificationRef = useRef<HTMLDivElement>(null)
   const profileMenuRef = useRef<HTMLDivElement>(null)
   
@@ -126,7 +126,7 @@ export default function VistaEntrenador() {
                 className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden"
               >
                 <img
-                  src="/src/assets/users.png"
+                  src="/src/assets/user.png"
                   alt="Perfil"
                   className="w-full h-full object-cover"
                 />
@@ -137,14 +137,6 @@ export default function VistaEntrenador() {
                     Perfil de Entrenador
                   </div>
                   <div className="py-2">
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      <User className="inline-block w-4 h-4 mr-2" />
-                      Ver perfil
-                    </a>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      <Settings className="inline-block w-4 h-4 mr-2" />
-                      Configuración
-                    </a>
                     <a
                       href="/login"
                       className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
@@ -209,7 +201,7 @@ export default function VistaEntrenador() {
         )}
         {/* Horario */}
         {activeTab === "horario" && (
-          <HorarioEnt
+          <HorarioRectangular
             clases={entrenador?.clases || []}
           />
         )}
