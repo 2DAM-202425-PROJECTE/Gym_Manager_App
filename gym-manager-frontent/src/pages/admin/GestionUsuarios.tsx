@@ -83,9 +83,22 @@ const GestionUsuarios: React.FC = () => {
     setNuevoUsuario((prev) => (prev ? { ...prev, [name]: value } : prev));
   };
 
-  const handleDelete = (id: number) => {
-    setUsuarios(usuarios.filter((usuario) => usuario.id !== id));
-    setShowConfirm(null);
+
+  const handleDelete = async (id: number) => {
+    try {
+      // Make an API call to delete the user from the backend
+      await apiClient.delete(`/users/${id}`);
+      
+      // Remove the user from the frontend list
+      setUsuarios(usuarios.filter((usuario) => usuario.id !== id));
+      
+      toast.success("Usuario eliminado correctamente");
+    } catch (error: any) {
+      console.error("Error al eliminar el usuario:", error.response || error.message);
+      toast.error("Error al eliminar el usuario");
+    } finally {
+      setShowConfirm(null);
+    }
   };
 
   const handleOpenModal = (user: User) => {
