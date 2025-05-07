@@ -16,6 +16,7 @@ import { logout } from "../api/user/auth"
 import { useNavigate } from "react-router-dom";
 import CardBestTrainers from "../components/cards/CardBestTrainers"
 import { formatDate } from "../utils/splitDate"
+import MembershipStatus from "../components/cards/MembershipStatus"
 
 
 
@@ -174,27 +175,14 @@ export default function Home() {
             )}
           </header>
 
-          {/* Membership Status */}
-          { membresia && (
-            <div className="mb-8 bg-gradient-to-r from-[#800000]  to-[#560000] rounded-xl text-white shadow-lg p-6">
-              <h3 className="text-xl font-semibold mb-4">Estado de Membresía</h3>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-4xl font-bold">{user.membresia?.fecha_fin ? calculateRemainingDays(new Date(user.membresia.fecha_fin)) : "N/A"}</p>
-                  <p className="text-sm opacity-80">días restantes</p>
-                </div>
-                <div className="w-1/2">
-                  <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-white rounded-full"
-                      style={{ width: `${(user?.membresia?.fecha_fin ? calculateRemainingDays(new Date(user.membresia.fecha_fin)) / 365 : 0) * 100}%` }}
-                    ></div>
-                  </div>
-                  <p className="text-sm mt-2 text-right opacity-80">
-                  </p>
-                </div>
-              </div>
-            </div>
+          {membresia && (
+            <MembershipStatus
+              membresia={{
+                fecha_inicio: membresia?.fecha_inicio || new Date(),
+                fecha_fin: membresia?.fecha_fin ? new Date(membresia.fecha_fin) : new Date(),
+              }}
+              calculateRemainingDays={calculateRemainingDays}
+            />
           )}
 
           {/* Quick Stats */}
