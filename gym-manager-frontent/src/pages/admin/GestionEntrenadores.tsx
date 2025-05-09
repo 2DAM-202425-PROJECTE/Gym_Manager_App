@@ -8,6 +8,7 @@ import { toast } from "react-toastify"
 import { GreenButtonAdmin } from "../../components/buttons/GreenButtonAdmin"
 import { BlueButtonAdmin } from "../../components/buttons/BlueButtonAdmin"
 import { RedButtonAdmin } from "../../components/buttons/RedButtonAdmin"
+import { ErrorNotification } from "../../components/notifications/errorMessage";
 import type { Entrenador } from "../../type/entrenadors"
 
 type newTrainer = {
@@ -61,37 +62,31 @@ const GestionEntrenadores: React.FC = () => {
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-
-      const response = await apiClient.post("/entrenadors", nuevoEntrenador)
-      setEntrenadores([...entrenadores, response.data])
-      toast("Entrenador añadido")
-    
-      setNuevoEntrenador(
-        {
-          name: "",
-          email: "",
-          phone_number: "",
-          especialidad: "",
-          experiencia: "",
-          disponibilidad: [],
-          certificaciones: "",
-          descripcion: "",
-          password: "",
-        }
-      )
-
-      const fieldPassword = document.getElementById("password") as HTMLFormElement
-      fieldPassword.value = ""
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    
-    } catch (error) {
-      toast.error("Error al añadir el entrenador")
+      const response = await apiClient.post("/entrenadors", nuevoEntrenador);
+      setEntrenadores([...entrenadores, response.data]);
+      toast("Entrenador añadido");
+  
+      setNuevoEntrenador({
+        name: "",
+        email: "",
+        phone_number: "",
+        especialidad: "",
+        experiencia: "",
+        disponibilidad: [],
+        certificaciones: "",
+        descripcion: "",
+        password: "",
+      });
+  
+      const fieldPassword = document.getElementById("password") as HTMLFormElement;
+      fieldPassword.value = "";
+    } catch (error: any) {
+      console.error("Error al añadir el entrenador:", error.response?.data || error.message);
+      toast.error("Error al añadir el entrenador");
     }
-
-  }
+  };
 
   const handleSave = () => {
     toast("Entrenador actualizado")
@@ -158,18 +153,26 @@ const GestionEntrenadores: React.FC = () => {
     }))
   }
 
-  const handleDelete = (id: number) => {
-try{
-  console.log(id)
-  const response = apiClient.delete(`/borrarEntrenador/${id}`)
-  console.log(response)
-
-  setEntrenadores(entrenadores.filter((entrenador) => entrenador.entrenador_id !== id))
-  setShowConfirm(null)
-}catch{
-  toast.error("Error al borrar")
-}
-  }
+  const handleDelete = async (id: number) => {
+    try {
+      console.log("Deleting entrenador with id:", id);
+      await apiClient.delete(`/entrenadors/${id}`);
+      
+      // Update the frontend list immediately
+      setEntrenadores((prevEntrenadores) =>
+        prevEntrenadores.filter((entrenador) => entrenador.id !== id)
+      );
+      
+      // Use the ErrorNotification component for success messages
+      ErrorNotification({ message: "Entrenador eliminado correctamente" });
+    } catch (error) {
+      console.error("Error al realizar la acción:", error);
+      // Use the ErrorNotification component for error messages
+      ErrorNotification({ message: "Error al realizar la acción" });
+    } finally {
+      setShowConfirm(null);
+    }
+  };
 
   const trainerStats = {
     total: entrenadores.length,
@@ -300,10 +303,10 @@ try{
               </thead>
               <tbody>
                 {entrenadores.map((entrenador: Entrenador) => (
-                  <tr key={entrenador.entrenador_id} className="border-b">
-                    <td className="p-2">{entrenador.entrenador_id}</td>
+                  <tr key={entrenador.id} className="border-b"> {/* Use `id` as the key */}
+                    <td className="p-2">{entrenador.entrenador_id}</td> {/* Display `entrenador_id` */}
                     <td className="p-2">
-                      {editingTrainer?.entrenador_id === entrenador.entrenador_id ? (
+                      {editingTrainer?.id === entrenador.id ? (
                         <input
                           type="text"
                           name="name"
@@ -316,7 +319,7 @@ try{
                       )}
                     </td>
                     <td className="p-2">
-                      {editingTrainer?.entrenador_id === entrenador.entrenador_id ? (
+                      {editingTrainer?.id === entrenador.id ? (
                         <input
                           type="text"
                           name="especialidad"
@@ -329,7 +332,7 @@ try{
                       )}
                     </td>
                     <td className="p-2">
-                      {editingTrainer?.entrenador_id === entrenador.entrenador_id ? (
+                      {editingTrainer?.id === entrenador.id ? (
                         <input
                           type="tel"
                           name="phone_number"
@@ -342,7 +345,7 @@ try{
                       )}
                     </td>
                     <td className="p-2">
-                      {editingTrainer?.entrenador_id === entrenador.entrenador_id ? (
+                      {editingTrainer?.id === entrenador.id ? (
                         <input
                           type="text"
                           name="experiencia"
@@ -355,16 +358,17 @@ try{
                       )}
                     </td>
                     <td className="flex gap-2 p-2">
-                      {editingTrainer?.entrenador_id === entrenador.entrenador_id ? (
+                      {editingTrainer?.id === entrenador.id ? (
                         <GreenButtonAdmin action={() => handleSave()} text="Guardar" />
                       ) : (
                         <BlueButtonAdmin text="Editar" action={() => handleEdit(entrenador)} />
                       )}
-                      <RedButtonAdmin text="Eliminar" action={() => setShowConfirm(entrenador.entrenador_id)} />
+                      <RedButtonAdmin text="Eliminar" action={() => setShowConfirm(entrenador.id)} /> {/* Use `id` for actions */}
                     </td>
                   </tr>
                 ))}
               </tbody>
+              
             </table>
           </div>
         </div>
@@ -485,11 +489,11 @@ try{
       {showConfirm !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <p className="mb-4 text-lg">¿Estás seguro de que quieres eliminar este entrenador?</p>
-            <div>
+            <p className="mb-4 text-lg">¿Estás seguro de que deseas eliminar este entrenador?</p>
+            <div className="flex justify-center gap-4">
               <button
                 onClick={() => handleDelete(showConfirm)}
-                className="bg-red-500 text-white px-4 py-2 rounded mr-2 hover:bg-red-600"
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
               >
                 Eliminar
               </button>
